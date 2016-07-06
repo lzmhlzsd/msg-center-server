@@ -4,7 +4,7 @@
 module.exports = {
     apiprovider: {
         ip: '192.168.121.25',
-        port: 8001
+        port: 8008
     },
     open:{
         ip: '192.168.121.25',
