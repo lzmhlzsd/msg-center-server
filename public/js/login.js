@@ -1,4 +1,7 @@
 /**
+ * Created by lkj on 2016/7/10.
+ */
+/**
  * Created by lkj on 2016/6/27.
  */
 import { Button, Form, Input } from 'antd';
@@ -107,16 +110,16 @@ let BasicDemo = React.createClass({
             <Form horizontal form={this.props.form}>
                 <FormItem
 {...formItemLayout}
-                    label="用户名"
+                    label="账号"
                     hasFeedback
                     help={isFieldValidating('name') ? '校验中...' : (getFieldError('name') || []).join(', ')}
                 >
-                    <Input {...nameProps} placeholder="实时校验，输入 JasonWood 看看" />
+                    <Input {...nameProps} placeholder="手机号码1233" />
                 </FormItem>
 
                 <FormItem
 {...formItemLayout}
-                    label="邮箱"
+                    label="邮箱1"
                     hasFeedback
                 >
                     <Input {...emailProps} type="email" placeholder="onBlur 与 onChange 相结合" />
@@ -144,7 +147,7 @@ let BasicDemo = React.createClass({
 
                 <FormItem
 {...formItemLayout}
-                    label="备注"
+                    label="备1注"
                 >
                     <Input {...textareaProps} type="textarea" placeholder="随便写" id="textarea" name="textarea" />
                 </FormItem>
@@ -159,6 +162,6 @@ let BasicDemo = React.createClass({
     }
 });
 
-BasicDemo = createForm()(BasicDemo);
-
-ReactDOM.render(<BasicDemo />, document.getElementById("app"));
+module.exports = BasicDemo = createForm()(BasicDemo);
+//
+//ReactDOM.render(<BasicDemo />, document.getElementById("app"));
