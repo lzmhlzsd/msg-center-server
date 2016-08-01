@@ -6,191 +6,358 @@ var pool = require('../libs/mysql'),
     request = require('request'),
     utool = require('../libs/utool'),
     config = require('../libs/config'),
-    logger = require('../libs/logger');
+    code = require('../libs/errors').code,
+    md5 = require('MD5'),
+    u = require('underscore');
+logger = require('../libs/logger');
 
 /**
  * @method 主页面
  * @author lukaijie
  * @datetime 16/5/12
  */
-exports.oauth = function (req, res, next) {
-    var params = {
-        code: req.query.code,
-        client_id: config.oauth.client_id,
-        client_secret: config.oauth.client_secret
+exports.login = function (req, res, next) {
+    var sqlInfo = {
+        method: 'login',
+        memo: '登录系统',
+        params: {
+            user_name: req.body.user_name,
+            pwd: req.body.pwd
+        },
+        desc: ""
     }
-    //session中没有shopexid
-    if (!utool.checkSession(req.session)) {
-        //request.post('https://openapi.shopex.cn/oauth/token?grant_type=authorization_code&code=' + params.code + '&client_id=' + params.client_id + '&client_secret=' + params.client_secret, function (error, response, result) {
-        //    result = JSON.parse(result);
-        //    if (result.result == 'error') { //oauth服务器返回错误
-        //        res.redirect('/');
-        //        return;
-        //    }
-        //    utool.reqErr(error, response, res, result, function () {
-        //        req.session['shopexid'] = result.data.shopexid;
-        //        req.session['fd_uid'] = result.data.shopexid;
-        //        req.session['realName'] = result.data.realName;
-        //        req.session['username'] = result.data.username;
-        //        checkShopexId(result.data.shopexid, req.session, res);
-        //        res.redirect('/apis');
-        //    })
-        //});
-
-
-
-                req.session['shopexid'] = '13917609856';
-                req.session['fd_uid'] = '13917609856';
-                req.session['realName'] = '';
-                req.session['username'] = '';
-                checkShopexId('13917609856', req.session, res);
-                res.redirect('/apis');
-    }
-    else {
-        checkShopexId(req.session.shopexid, req.session, res);
-        res.redirect('/apis');
-    }
-}
-
-/**
- * @method 根据shopexid获取所有的服务
- * @author lukaijie
- * @datetime 16/5/13
- */
-exports.apis = function (req, res) {
-    if (utool.checkSession(req.session)) {
-        //查询服务
-        var shopexid = req.session['shopexid'];
-        var ErrInfo = {
-            method: 'apis',
-            memo: '查询所有的全平台可见并且是已经上线的服务',
-            params: {fd_shopexid: shopexid}
-        }
-        utool.sqlExect('SELECT * FROM t_service WHERE fd_visible= ? AND fd_status= ? ORDER BY fd_create_time DESC', [1, 4], ErrInfo, function (err, result) {
-            if (err) {
-                utool.errView(res, err);
-            }
-            else {
-                if(result.length > 0){
-                    res.redirect('/apis/db/' + result[0].fd_serviceid);
-                    return;
-                }
-                res.render('home/index', {title: 'index', apis: result, uid: req.session['fd_uid']});
-            }
-        });
-    }
-    else {
-        res.redirect('/');
-    }
-}
-
-/**
- * @method 根据服务id查询所有的服务列表
- * @author lukaijie
- * @datetime 16/5/13
- */
-exports.apisOfService = function (req, res) {
-    //查询所有的已上线并且全平台可见的服务
-    var ErrInfo = {
-        method: 'apisOfService',
-        memo: '根据服务id查询所有的服务列表',
-        params: {fd_serviceid: req.params.sid}
-    }
-    utool.sqlExect('SELECT * FROM t_service WHERE fd_visible= ? AND fd_status= ? ORDER BY fd_create_time DESC', [1, 4], ErrInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_user WHERE user_name= ?', [sqlInfo.params.user_name], sqlInfo, function (err, result) {
         if (err) {
-            utool.errView(res, err);
+            logger.info('根据用户名查询失败：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
         }
         else {
-            var ErrInfo = {
-                method: 'apisOfService',
-                memo: '根据服务id查询服务明细',
-                params: {fd_serviceid: req.params.sid}
+            if (result.length > 0) {
+                var user = result[0];
+                if (user.pwd == md5(sqlInfo.params.pwd)) {
+                    req.session['user'] = {
+                        user_name: user.user_name,
+                        user_id: user.user_id,
+                        app_num: user.app_num, //可创建应用数
+                        pwd: user.pwd
+                    }
+                    res.send({
+                        status: '0000',
+                        message: code['0000']
+                    });
+                }
+                else {
+                    res.send({
+                        status: '1002',
+                        message: code['1002']
+                    });
+                }
             }
-            var servicelist = result;
-            utool.sqlExect('SELECT * FROM t_service WHERE fd_serviceid=? AND fd_visible= ? AND fd_status= ? ORDER BY fd_create_time DESC', [req.params.sid, 1, 4], ErrInfo, function (err, result) {
+            else {
+                res.send({
+                    status: '1001',
+                    message: code['1001']
+                });
+            }
+        }
+    });
+}
+
+/**
+ * @method 主页面
+ * @author lkj
+ * @datetime 2016/7/26
+ */
+exports.index = function (req, res, next) {
+    res.render('home/index', {
+        user_name: req.session['user'].user_name,
+        menu: 'myapp'
+    });
+}
+
+/**
+ * @method 校验应用名称
+ * @author lkj
+ * @datetime 2016/7/26
+ */
+exports.checkName = function (req, res) {
+    //同一账号下的应用名称不能重复
+    checkAppName(req.session['user'].user_id, req.body.app_name, function (data) {
+        if (data) {
+            res.send({
+                status: '1003',
+                message: code['1003']
+            });
+        }
+        else {
+            res.send({
+                status: '0000',
+                message: code['0000']
+            });
+        }
+    })
+}
+
+/**
+ * @method 校验可创建应用数
+ * @author lkj
+ * @datetime 2016/7/31
+ */
+exports.checkappNum = function (req, res) {
+    var sqlInfo = {
+        method: 'getAppList',
+        memo: '分页查询所有的应用',
+        params: {
+            user_id: req.session['user'].user_id,
+            app_num: req.session['user'].app_num
+        },
+        desc: '查询应用总数'
+    }
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_app WHERE user_id = ?', req.params.user_id, sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('分页查询所有的应用：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            if (sqlInfo.params.app_num < result[0].counts) {
+                res.send({
+                    status: '0000',
+                    message: code('0000')
+                });
+            }
+            else {
+                res.send({
+                    status: '1004',
+                    message: code('1004')
+                });
+            }
+        }
+    });
+}
+
+/**
+ * @method 新增应用
+ * @author lkj
+ * @datetime 2016/7/26
+ */
+exports.createApp = function (req, res) {
+    var sqlInfo = {
+        method: 'createApp',
+        memo: '新增应用',
+        params: {
+            app_name: req.body.app_name,
+            app_key: utool.randomString(7),
+            app_screct: utool.randomString(20),
+            user_id: req.session['user'].user_id,
+            app_memo: req.body.app_memo
+        },
+        desc: ""
+    }
+    checkAppName(req.session['user'].user_id, req.body.app_name, function (data) {
+        if (data) {
+            res.send({
+                status: '1003',
+                message: code['1003']
+            });
+        }
+        else {
+            utool.sqlExect('INSERT INTO t_app SET ?', sqlInfo.params, sqlInfo, function (err, result) {
                 if (err) {
+                    logger.info('新增应用：' + JSON.stringify(err));
                     utool.errView(res, err);
                 }
                 else {
-                    var service;
-                    try {
-                        service = JSON.parse(result[0].fd_config);
-                    }
-                    catch (e) {
-                        service = {};
-                    }
-                    res.render('home/apilist', {list: servicelist, service: service, serviceid: req.params.sid, uid: req.session['fd_uid']});
+                    res.redirect('/index');
+                }
+            });
+        }
+    })
+
+
+}
+
+/**
+ * @method 新增应用页面
+ * @author lkj
+ * @datetime 2016/7/26
+ */
+exports.newapp = function (req, res) {
+    res.render('app/newapp', {
+        user_name: req.session['user'].user_name,
+        app_num: req.session['user'].app_num,
+        menu: 'myapp'
+    });
+}
+
+/**
+ * @method 分页查询所有的应用
+ * @author lkj
+ * @datetime 2016/7/30
+ */
+exports.getAppList = function (req, res) {
+    //分页查询
+    var sqlInfo = {
+        method: 'getAppList',
+        memo: '分页查询所有的应用',
+        params: {
+            user_id: req.session['user'].user_id,
+            pagesize: req.body.pagesize,
+            pagenum: req.body.pagenum,
+            filters: typeof req.body.filters == 'undefined' ? {} : req.body.filters
+        },
+        desc: '查询应用总数'
+    }
+    var wherestr = '';
+    var filters = sqlInfo.params.filters;
+    if (typeof filters.filter != 'undefined') {
+        u.each(filters.filter, function (m, n) {
+            switch (m.Operator) {
+                case 'like':
+                    wherestr += ' AND ' + m.field + ' ' + m.Operator + " '%" + m.value + "%' ";
+                    break;
+            }
+        })
+    }
+    console.log('SELECT COUNT(*) as counts FROM t_app WHERE user_id = ?' + wherestr);
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_app WHERE user_id = ?' + wherestr, sqlInfo.params.user_id, sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('分页查询所有的应用：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            var count = result[0].counts;
+            console.log(count);
+            var pages = Math.ceil(count / sqlInfo.params.pagesize);
+
+            var sqlInfo1 = {
+                method: 'getAppList',
+                memo: '分页查询所有的应用',
+                params: {
+                    user_id: req.session['user'].user_id,
+                    pagesize: req.body.pagesize,
+                    pagenum: req.body.pagenum,
+                    filters: typeof req.body.filters == 'undefined' ? {} : req.body.filters
+                },
+                desc: '分页查询所有的应用'
+            }
+
+            var pageindex = (sqlInfo1.params.pagenum - 1) * sqlInfo1.params.pagesize;
+            console.log('sql:' + 'SELECT * FROM t_app WHERE user_id = ' + sqlInfo1.params.user_id + wherestr + ' ORDER BY app_createtime DESC LIMIT ' + pageindex + ',' + sqlInfo1.params.pagesize);
+            utool.sqlExect('SELECT app_id,app_name,app_key,app_status,app_creattime,app_memo FROM t_app WHERE user_id = ? ' + wherestr + ' ORDER BY app_creattime DESC LIMIT ?,?', [sqlInfo1.params.user_id, pageindex, sqlInfo1.params.pagesize], sqlInfo1, function (err, result1) {
+                if (err) {
+                    logger.info('分页查询所有的应用：' + JSON.stringify(err));
+                    res.send({
+                        status: '-1000',
+                        message: JSON.stringify(err)
+                    });
+                    return;
+                }
+                else {
+                    res.send({
+                        status: '0000',
+                        data: {
+                            datasource: result1,
+                            pagesize: sqlInfo1.params.pagesize,
+                            pagenum: sqlInfo1.params.pagenum,
+                            pages: pages
+                        },
+                        message: code['0000']
+                    });
                 }
             });
         }
     });
-
 }
 
 /**
- * @method detailOfApi
- * @author lukaijie
- * @datetime 16/5/27
+ * @method 编辑应用页面
+ * @author lkj
+ * @datetime 2016/7/31
  */
-exports.detailOfApi = function (req, res) {
-    var ErrInfo = {
-        method: 'detailOfApi',
-        memo: '根据fd_serviceid查询api明细',
-        params: {fd_serviceid: req.params.sid}
+exports.editapp = function (req, res) {
+    var sqlInfo = {
+        method: 'editapp',
+        memo: '编辑应用页面',
+        params: {
+            user_id: req.session['user'].user_id,
+            app_id: req.params.id //app id
+        },
+        desc: "根据应用id查询应用"
     }
-    utool.sqlExect('SELECT * FROM t_service WHERE fd_serviceid=? AND fd_visible= ? AND fd_status= ? ORDER BY fd_create_time DESC', [req.params.sid, 1, 4], ErrInfo, function (err, result) {
+    console.log(sqlInfo)
+    utool.sqlExect('SELECT app_id,app_name,app_memo FROM t_app WHERE user_id = ? AND app_id = ?', [sqlInfo.params.user_id,
+        sqlInfo.params.app_id], sqlInfo, function (err, result) {
         if (err) {
-            utool.errView(res, err);
+            logger.info('编辑应用页面：' + JSON.stringify(err));
+            //utool.errView(res, err);
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
         }
         else {
-            var service;
-            try {
-                service = JSON.parse(result[0].fd_config);
+            if (result.length == 0) {
+                res.redirect('/index');
             }
-            catch (e) {
-                service = {};
+            else {
+                res.render('app/editapp', {
+                    user_name: req.session['user'].user_name,
+                    app_id: result[0].app_id,
+                    app_name: result[0].app_name,
+                    app_memo: result[0].app_memo,
+                    menu: 'myapp'
+                });
             }
-            res.render('home/apidetail', {service: service,  serviceid: req.params.sid, uid: req.session['fd_uid'], rapi: req.query.api});
         }
     });
 }
 
 /**
- * @method 检查数据库中是否有shopexid,如果没有插入一条新的数据
- * @author lukaijie
- * @datetime 16/5/13
+ * @method 检查应用名称是否存在
+ * @author lkj
+ * @datetime 2016/7/30
  */
-function checkShopexId(shopexid, obj, res) {
-    var ErrInfo = {
-        method: 'checkShopexId',
-        memo: '根据shopexid查询用户信息',
-        params: {fd_shopexid: shopexid}
+function checkAppName(userid, appname, callback) {
+    var sqlInfo = {
+        method: 'checkAppName',
+        memo: '检查应用名称是否存在',
+        params: {
+            app_name: appname,
+            user_id: userid
+        },
+        desc: "同一账号下的应用名称不能重复"
     }
-    utool.sqlExect('SELECT * FROM t_user WHERE fd_shopexid= ?', shopexid, ErrInfo, function (err, result) {
+    console.log(sqlInfo)
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_app WHERE user_id = ? AND app_name = ?', [sqlInfo.params.user_id,
+        sqlInfo.params.app_name], sqlInfo, function (err, result) {
         if (err) {
-            utool.errView(res, err);
+            logger.info('校验应用名称：' + JSON.stringify(err));
+            //utool.errView(res, err);
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
         }
         else {
-            if (result.length == 0) {
-                var data = {
-                    fd_uid: obj.shopexid,           //  --  用户id，应通过序号表获得
-                    fd_utype: 2,                    //  --  用户类型，1-普通用户，2-开发者用户， 100-管理员
-                    fd_uname: obj.realName,         //  --  用户名字
-                    fd_account: obj.username,       //  --  用户账号
-                    fd_shopexid: obj.shopexid,      //  --  商派shopexid，商派统一登录时用
-                    fd_account_type: 1,             //  --  账户类型 1-为shopexid， 2-为平台注册用户
-                    fd_last_time: new Date()        //  --  最后登录时间
-                }
-                var ErrInfo = {
-                    method: 'checkShopexId',
-                    memo: '检查数据库中是否有shopexid,如果没有插入一条新的数据',
-                    params: data
-                }
-                utool.sqlExect('INSERT INTO t_user SET ?', data, ErrInfo, function (err, result) {
-                    if (err) {
-                        utool.errView(res, err);
-                    }
-                });
+            console.log(result[0].counts)
+            if (result[0].counts == 0) {
+                callback(false)
+            }
+            else {
+                callback(true);
             }
         }
     });

@@ -4,7 +4,8 @@
 var pool = require('../libs/mysql'),
     request = require('request'),
     utool = require('../libs/utool'),
-    redis = require('../libs/redis');
+    md5 = require('MD5');
+redis = require('../libs/redis');
 logger = require('../libs/logger');
 
 /**
@@ -136,7 +137,7 @@ exports.updateMyApp = function (req, res) {
  * @author lukaijie
  * @datetime 16/6/2
  */
-exports.refreshMyApp = function(req,res){
+exports.refreshMyApp = function (req, res) {
     redis.pub({
         "type": "service_update",
         "from": "website",
@@ -450,5 +451,58 @@ exports.saveMyAppAPI = function (req, res) {
             });
             res.json({status: 0, message: '保存成功!'});
         }
+    });
+}
+
+
+function gettimestamp() {
+    var datetime = new Date();
+    return datetime.getFullYear() + formate(datetime.getMonth() + 1) + formate(datetime.getDate()) +
+        formate(datetime.getHours()) + formate(datetime.getMinutes()) + formate(datetime.getSeconds());
+}
+function formate(num) {
+    if (num < 10) {
+        return '0' + num;
+    }
+    else {
+        return num;
+    }
+}
+exports.requesting = function (req, res) {
+    var url1 = 'https://api.miaodiyun.com/20150822/query/accountInfo?'
+    var sid = 'd63daeae6dc44cfca5431c62f0085e3c';
+    var token = 'f9e3016c5bfa405aa96fe1de902ab133';
+    var timestamp = gettimestamp();
+    console.log('timestamp:' + timestamp);
+
+    var sig = md5(sid + token + timestamp);
+    console.log('md5:' + sig);
+
+    var url2 = url1 + 'accountSid=' + sid + '&timestamp=' + timestamp + '&sig=' + sig + '&respDataType=JSON';
+    console.log('url2:' + url2);
+
+    request.post(url2, function (error, response, result) {
+        console.log('result:' + result);
+    });
+}
+
+exports.send = function (req, res) {
+    var url1 = 'https://api.miaodiyun.com/20150822/affMarkSMS/sendSMS?'
+    var sid = 'd63daeae6dc44cfca5431c62f0085e3c';
+    var smsContent = '机床报警，请维修';
+    var to = '13917609856';
+    var token = 'f9e3016c5bfa405aa96fe1de902ab133';
+    var timestamp = gettimestamp();
+    console.log('timestamp:' + timestamp);
+
+    var sig = md5(sid + token + timestamp);
+    console.log('md5:' + sig);
+
+    var url2 = url1 + 'accountSid=' + sid + '&smsContent=' + smsContent +
+        '&to=' + to + '&timestamp=' + timestamp + '&sig=' + sig + '&respDataType=JSON';
+    console.log('url2:' + url2);
+
+    request.post(url2, function (error, response, result) {
+        console.log('result:' + result);
     });
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shopex开放平台</title>
+    <title>消息中心</title>
 
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/antd/dist/antd.min.css" />
@@ -16,13 +16,18 @@
     <div class="container">
         <div class="login-container">
             <a>
-                消息中心开放平台
+                消息中心
             </a>
         </div>
+        <ul class="nav navbar-nav navbar-menu pull-left">
+            <li ><a href="/index" class="<%= menu == 'myapp' ? 'active' : ''%>">我的应用</a></li>
+            <li ><a href="#">消息模板</a></li>
+            <li ><a href="/my/app">人员管理</a></li>
+            <li ><a href="/my/app">消息日志</a></li>
+        </ul>
         <ul class="nav navbar-nav navbar-menu pull-right">
-            <li ><a href="/apis">API</a></li>
-            <li ><a href="#">开发者手册</a></li>
-            <li ><a href="/my/app">我的服务</a></li>
+            <li ><a href="/apis">账号：<%= user_name %></a></li>
+            <li ><a href="#">退出</a></li>
         </ul>
 
     </div>
