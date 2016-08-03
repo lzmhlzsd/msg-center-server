@@ -325,6 +325,57 @@ exports.editapp = function (req, res) {
 }
 
 /**
+ * @method 更新app
+ * @author lukaijie
+ * @datetime 16/8/3
+ */
+exports.updateApp = function (req, res) {
+    var sqlInfo = {
+        method: 'updateApp',
+        memo: '更新应用',
+        params: {
+            app_id: req.body.app_id,
+            app_name: req.body.app_name,
+            user_id: req.session['user'].user_id,
+            app_memo: req.body.app_memo
+        },
+        desc: ""
+    }
+    checkAppName(req.session['user'].user_id, req.body.app_name, function (data) {
+        if (data) {
+            res.send({
+                status: '1003',
+                message: code['1003']
+            });
+        }
+        else {
+            utool.sqlExect('UPDATE t_app SET app_name = ?, app_memo = ? WHERE app_id = ?', [sqlInfo.params.app_name, sqlInfo.params.app_memo, sqlInfo.params.app_id], sqlInfo, function (err, result) {
+                if (err) {
+                    logger.info('更新应用：' + JSON.stringify(err));
+                    utool.errView(res, err);
+                }
+                else {
+                    res.redirect('/index');
+                }
+            });
+        }
+    })
+}
+
+/**
+ * @method 应用概览
+ * @author lukaijie
+ * @datetime 16/8/3
+ */
+exports.viewapp = function (req, res) {
+    res.render('app/appdetail', {
+        user_name: req.session['user'].user_name,
+        app_num: req.session['user'].app_num,
+        menu: 'myapp'
+    });
+}
+
+/**
  * @method 检查应用名称是否存在
  * @author lkj
  * @datetime 2016/7/30
