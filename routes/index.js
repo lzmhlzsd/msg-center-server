@@ -26,9 +26,10 @@ module.exports = function (app) {
     app.post('/getAppList', practice.checkSession, indexCtrl.getAppList);
 
     app.get('/app/edit/:id', practice.checkSession, indexCtrl.editapp);
-    app.post('/app/update',indexCtrl.updateApp);
+    app.post('/app/update', indexCtrl.updateApp);
 
     app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
+    app.post('/app/apply', indexCtrl.apply);
     /** end:应用 **/
 
     app.locals.brushRespones = function (data, definitions) {

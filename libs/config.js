@@ -14,6 +14,9 @@ module.exports = {
         client_id: 'osx3aamp',
         client_secret: 'f5mfepfbmti7fkqlkidm'
     },
+    email:{
+
+    },
     redis: {
         port: 6379,          // Redis port
         host: '127.0.0.1',   // Redis host

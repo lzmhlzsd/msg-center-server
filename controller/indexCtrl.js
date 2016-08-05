@@ -368,10 +368,136 @@ exports.updateApp = function (req, res) {
  * @datetime 16/8/3
  */
 exports.viewapp = function (req, res) {
-    res.render('app/appdetail', {
-        user_name: req.session['user'].user_name,
-        app_num: req.session['user'].app_num,
-        menu: 'myapp'
+    var sqlInfo = {
+        method: 'viewapp',
+        memo: '查看应用明细',
+        params: {
+            user_id: req.session['user'].user_id,
+            app_id: req.params.id //app id
+        },
+        desc: "查询已经发布的所有服务"
+    }
+    utool.sqlExect('SELECT * FROM t_service WHERE service_status = ?', [1], sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('查看应用明细：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            //查询t_app_service表
+            var sqlInfo1 = {
+                method: 'viewapp',
+                memo: '查看应用明细',
+                params: {
+                    app_id: req.params.id
+                },
+                desc: "查询t_app_service,是否有app已经申请了服务"
+            }
+            utool.sqlExect('SELECT * FROM t_app_service WHERE app_id = ?', [sqlInfo1.params.app_id], sqlInfo1, function (err, result1) {
+                if (err) {
+                    logger.info('查看应用明细：' + JSON.stringify(err));
+                    res.send({
+                        status: '-1000',
+                        message: JSON.stringify(err)
+                    });
+                    return;
+                }
+                else {
+                    u.each(result, function (m, n) {
+                        u.extend(u, {app_status: 0}); //应用是否拥有服务 0:未申请 1:已获得
+                    })
+
+                    for (var i = 0; i < result.length; i++) {
+                        var data = u.where(result1, {service_id: result[i].service_id});
+                        if (data.length > 0) {
+                            result[i]['app_status'] = data[0].apply_status;
+                        }
+                        else {
+                            result[i]['app_status'] = 0;
+                        }
+                    }
+                    console.log(result)
+                    res.render('app/appdetail', {
+                        service: result,
+                        app_id: sqlInfo.params.app_id,
+                        user_name: req.session['user'].user_name,
+                        app_num: req.session['user'].app_num,
+                        menu: 'myapp'
+                    });
+                }
+            });
+        }
+    });
+}
+
+/**
+ * @method apply
+ * @author lukaijie
+ * @datetime 16/8/4
+ */
+exports.apply = function (req, res) {
+    //申请服务
+    var sqlInfo = {
+        method: 'apply',
+        memo: '申请服务',
+        params: {
+            service_id: req.body.service_id,
+            app_id: req.body.app_id,
+            apply_status: 1,
+            apply_datetime: new Date()
+        },
+        desc: "申请服务"
+    }
+    utool.sqlExect('INSERT INTO t_app_service SET ?', [sqlInfo.params], sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('申请服务：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            //
+            utool.sqlExect('SELECT * FROM t_app where app_id = ?', [sqlInfo.params.app_id], sqlInfo, function (err, result1) {
+                if (err) {
+                    logger.info('申请服务：' + JSON.stringify(err));
+                    res.send({
+                        status: '-1000',
+                        message: JSON.stringify(err)
+                    });
+                    return;
+                }
+                else{
+                    utool.sqlExect('SELECT * FROM t_service where service_id = ?', [sqlInfo.params.service_id], sqlInfo, function (err, result2) {
+                        if (err) {
+                            logger.info('申请服务：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else{
+                            redis.pub({
+                                user_id: req.session['user'].user_name,
+                                app_name: result1[0].app_name,
+                                service_name: result2[0].service_name,
+                                apply_datetime: sqlInfo.params.apply_datetime
+                            })
+                            res.send({
+                                status: '0000',
+                                message: code['0000']
+                            })
+                        }
+                    });
+                }
+            });
+
+        }
     });
 }
 
