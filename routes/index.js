@@ -1,5 +1,6 @@
 var indexCtrl = require('../controller/indexCtrl'),
     appCtrl = require('../controller/appCtrl'),
+    tempCtrl = require('../controller/templateCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -30,8 +31,17 @@ module.exports = function (app) {
 
     app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
     app.post('/app/apply', indexCtrl.apply);
+    app.get('/approval', indexCtrl.approval);
     /** end:应用 **/
 
+    /** start:消息模板 **/
+    app.get('/template', tempCtrl.index);
+    app.get('/template/new',tempCtrl.create);
+    /** end:消息模板 **/
+
+    /** start:api **/
+
+    /** end:api **/
     app.locals.brushRespones = function (data, definitions) {
 
     }

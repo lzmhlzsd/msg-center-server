@@ -8,8 +8,11 @@ var pool = require('../libs/mysql'),
     config = require('../libs/config'),
     code = require('../libs/errors').code,
     md5 = require('MD5'),
-    u = require('underscore');
-logger = require('../libs/logger');
+    u = require('underscore'),
+    redis = require('../libs/redis'),
+    memcached = require('../libs/memcached').memchached,
+    fs = require('fs'),
+    logger = require('../libs/logger');
 
 /**
  * @method 主页面
@@ -152,6 +155,7 @@ exports.createApp = function (req, res) {
         method: 'createApp',
         memo: '新增应用',
         params: {
+            app_id: utool.randomString(8),
             app_name: req.body.app_name,
             app_key: utool.randomString(7),
             app_screct: utool.randomString(20),
@@ -377,7 +381,7 @@ exports.viewapp = function (req, res) {
         },
         desc: "查询已经发布的所有服务"
     }
-    utool.sqlExect('SELECT * FROM t_service WHERE service_status = ?', [1], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_app WHERE app_id = ?', [sqlInfo.params.app_id], sqlInfo, function (err, result) {
         if (err) {
             logger.info('查看应用明细：' + JSON.stringify(err));
             res.send({
@@ -387,16 +391,7 @@ exports.viewapp = function (req, res) {
             return;
         }
         else {
-            //查询t_app_service表
-            var sqlInfo1 = {
-                method: 'viewapp',
-                memo: '查看应用明细',
-                params: {
-                    app_id: req.params.id
-                },
-                desc: "查询t_app_service,是否有app已经申请了服务"
-            }
-            utool.sqlExect('SELECT * FROM t_app_service WHERE app_id = ?', [sqlInfo1.params.app_id], sqlInfo1, function (err, result1) {
+            utool.sqlExect('SELECT * FROM t_service WHERE service_status = ?', [1], sqlInfo, function (err, result1) {
                 if (err) {
                     logger.info('查看应用明细：' + JSON.stringify(err));
                     res.send({
@@ -406,31 +401,60 @@ exports.viewapp = function (req, res) {
                     return;
                 }
                 else {
-                    u.each(result, function (m, n) {
-                        u.extend(u, {app_status: 0}); //应用是否拥有服务 0:未申请 1:已获得
-                    })
-
-                    for (var i = 0; i < result.length; i++) {
-                        var data = u.where(result1, {service_id: result[i].service_id});
-                        if (data.length > 0) {
-                            result[i]['app_status'] = data[0].apply_status;
+                    //查询t_app_service表
+                    var sqlInfo1 = {
+                        method: 'viewapp',
+                        memo: '查看应用明细',
+                        params: {
+                            app_id: req.params.id
+                        },
+                        desc: "查询t_app_service,是否有app已经申请了服务"
+                    }
+                    utool.sqlExect('SELECT * FROM t_app_service WHERE app_id = ?', [sqlInfo1.params.app_id], sqlInfo1, function (err, result2) {
+                        if (err) {
+                            logger.info('查看应用明细：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
                         }
                         else {
-                            result[i]['app_status'] = 0;
+                            //console.log(result1.length)
+                            //if (result1.length == 0) {
+                            //    utool.errView(res, 'not found', 404);
+                            //    return;
+                            //}
+
+                            u.each(result1, function (m, n) {
+                                u.extend(u, {app_status: 0}); //应用是否拥有服务 0:未申请 1:已获得
+                            })
+
+                            for (var i = 0; i < result1.length; i++) {
+                                var data = u.where(result2, {service_id: result1[i].service_id});
+                                if (data.length > 0) {
+                                    result1[i]['app_status'] = data[0].apply_status;
+                                }
+                                else {
+                                    result1[i]['app_status'] = 0;
+                                }
+                            }
+                            //console.log(result)
+                            res.render('app/appdetail', {
+                                app: result[0],
+                                service: result1,
+                                app_id: sqlInfo.params.app_id,
+                                user_name: req.session['user'].user_name,
+                                app_num: req.session['user'].app_num,
+                                menu: 'myapp'
+                            });
                         }
-                    }
-                    console.log(result)
-                    res.render('app/appdetail', {
-                        service: result,
-                        app_id: sqlInfo.params.app_id,
-                        user_name: req.session['user'].user_name,
-                        app_num: req.session['user'].app_num,
-                        menu: 'myapp'
                     });
                 }
             });
         }
     });
+
 }
 
 /**
@@ -471,7 +495,7 @@ exports.apply = function (req, res) {
                     });
                     return;
                 }
-                else{
+                else {
                     utool.sqlExect('SELECT * FROM t_service where service_id = ?', [sqlInfo.params.service_id], sqlInfo, function (err, result2) {
                         if (err) {
                             logger.info('申请服务：' + JSON.stringify(err));
@@ -481,12 +505,26 @@ exports.apply = function (req, res) {
                             });
                             return;
                         }
-                        else{
+                        else {
+                            var code = utool.randomString(32);
+                            //存入memcached
+                            memcached.set(code, {
+                                app_id: sqlInfo.params.app_id,
+                                service_id: sqlInfo.params.service_id,
+                                status: 0
+                            }, 300, function (err) {
+                                if (err) {
+                                    logger.info(err);
+                                }
+                            });
+                            //fs.writeFileSync('message.txt', code);
+                            logger.info('code: ' + code);
                             redis.pub({
                                 user_id: req.session['user'].user_name,
                                 app_name: result1[0].app_name,
                                 service_name: result2[0].service_name,
-                                apply_datetime: sqlInfo.params.apply_datetime
+                                apply_datetime: sqlInfo.params.apply_datetime,
+                                approval_link: config.approval + '/approval?c=' + code
                             })
                             res.send({
                                 status: '0000',
@@ -499,6 +537,43 @@ exports.apply = function (req, res) {
 
         }
     });
+}
+
+/**
+ * @method approval 审批应用
+ * @author lkj
+ * @datetime 2016/8/6
+ */
+exports.approval = function (req, res) {
+    var sqlInfo = {
+        method: 'approval',
+        memo: '审批应用',
+        params: {
+            c: req.query.c
+        },
+        desc: ""
+    }
+    console.log(req.query.c);
+    //memcached查询是否有c
+    memcached.get(sqlInfo.params.c, function (err, data) {
+        if (err) {
+            utool.errView(res, err);
+        }
+        if (data) {
+            utool.sqlExect('UPDATE t_app_service SET apply_status = 2 WHERE app_id = ? AND service_id = ?', [data.app_id, data.service_id], sqlInfo, function (err, result) {
+                if (err) {
+                    logger.info('审批应用申请：' + JSON.stringify(err));
+                    utool.errView(res, err);
+                }
+                else {
+                    res.send('审批成功！')
+                }
+            });
+        }
+        else {
+            res.send('该审批链接已经过时!');
+        }
+    })
 }
 
 /**

@@ -10,6 +10,8 @@
                 </ul>
             </div>
             <div class="col-md-10">
+                <p>appkey: <%= app.app_key%></p>
+                <p>appscrect: <%= app.app_screct%></p>
                 <div class="panel-table ant-table ant-table-body">
                     <table class="">
                         <thead class="ant-table-thead">
@@ -22,7 +24,7 @@
                         </thead>
                         <tbody>
                         <% service.forEach(function(se) { %>
-                        <tr>
+                        <tr id='service_<%= se.service_id %>'>
                             <td><%= se.service_name %></td>
                             <% if(se.app_status == 0){ %>
                             <td>未申请</td>
@@ -59,7 +61,9 @@
         //申请应用绑定的服务
         $.post('/app/apply', {service_id: serviceid, app_id: appid}, function (result) {
             if (result.status == '0000') {
-                window.location.reload();
+                //window.location.reload();
+                $('#service_' + serviceid).find('td').eq(1).html('申请中');
+                $('#service_' + serviceid).find('td').eq(3).html('');
             }
         })
     }

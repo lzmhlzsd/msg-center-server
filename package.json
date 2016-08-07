@@ -32,6 +32,8 @@
     "jshint": "~2.9.2",
     "jsx-loader": "^0.13.2",
     "log4js": "^0.6.37",
+    "memcached": "^2.2.2",
+    "moment": "^2.14.1",
     "mysql": "^2.11.1",
     "nodemailer": "^2.5.0",
     "react": "^15.2.0",

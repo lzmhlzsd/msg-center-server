@@ -24,15 +24,15 @@ module.exports = {
             res.render('common/error', {
                 message: error != null ? error.message : response.statusMessage,
                 error: error,
-                status: 500,
+                status: 500
             });
         }
     },
-    errView: function (res, message) {
+    errView: function (res, message, code) {
         res.render('common/error', {
-            message: "",
+            message: message,
             error: message,
-            status: 500,
+            status: code || 500
         });
     },
     format: function (string, args) {

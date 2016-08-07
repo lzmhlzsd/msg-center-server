@@ -6,7 +6,7 @@ module.exports = {
         ip: '192.168.121.25',
         port: 8008
     },
-    open:{
+    open: {
         ip: '192.168.121.25',
         port: 8082
     },
@@ -14,9 +14,8 @@ module.exports = {
         client_id: 'osx3aamp',
         client_secret: 'f5mfepfbmti7fkqlkidm'
     },
-    email:{
-
-    },
+    email: {},
+    approval: 'http://192.168.0.106:8008',
     redis: {
         port: 6379,          // Redis port
         host: '127.0.0.1',   // Redis host
