@@ -15,7 +15,7 @@ module.exports = {
         client_secret: 'f5mfepfbmti7fkqlkidm'
     },
     email: {},
-    approval: 'http://192.168.0.106:8008',
+    approval: 'http://192.168.0.100:8008',
     redis: {
         port: 6379,          // Redis port
         host: '127.0.0.1',   // Redis host

@@ -88,7 +88,7 @@ exports.login = function (req, res, next) {
  */
 exports.index = function (req, res, next) {
     res.render('home/index', {
-        user_name: req.session['user'].user_name,
+        user_name: req.session['user'].username,
         navs: [
             {
                 name: '管理中心',
@@ -200,12 +200,27 @@ exports.register = function (req, res) {
     utool.sqlExect('INSERT INTO t_user SET ?', sqlInfo.params, sqlInfo, function (err, result) {
         if (err) {
             logger.info('注册账号：' + JSON.stringify(err));
-            res.send({
-                status: '-1000',
-                message: JSON.stringify(err)
-            });
+            if(err.errno == 1062){
+                res.send({
+                    status: '1005',
+                    message: code['1005']
+                });
+            }
+            else {
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+            }
         }
         else {
+            redis.pub_signup({
+                customer: sqlInfo.params.c_customer,
+                username: sqlInfo.params.c_username,
+                phone: sqlInfo.params.c_phone,
+                email: sqlInfo.params.c_email,
+                apply_datetime: new Date()
+            })
             res.send({
                 status: '0000',
                 message: code['0000']

@@ -4,6 +4,7 @@
 var pool = require('../libs/mysql'),
     request = require('request'),
     utool = require('../libs/utool'),
+    config = require('../libs/config'),
     md5 = require('MD5'),
     code = require('../libs/errors').code,
     u = require('underscore'),
@@ -18,7 +19,7 @@ var pool = require('../libs/mysql'),
  */
 exports.index = function (req, res) {
     res.render('service/index', {
-        user_name: req.session['user'].user_name,
+        user_name: req.session['user'].username,
         navs: [
             {
                 name: '管理中心',
@@ -118,7 +119,6 @@ exports.applyservice = function (req, res) {
         params: {
             c_userid: req.session['user'].userid,
             c_serviceid: req.body.serviceid,
-            c_servicename: req.body.servicename,
             c_service_status: 1,
             c_apply_time: applytime
         },
@@ -150,9 +150,9 @@ exports.applyservice = function (req, res) {
             redis.pub({
                 customer: req.session['user'].customer,
                 username: req.session['user'].username,
-                phone: req.session['user'].c_phone,
-                email: req.session['user'].c_email,
-                service_name: sqlInfo.params.c_servicename,
+                phone: req.session['user'].phone,
+                email: req.session['user'].email,
+                service_name: req.body.servicename,
                 apply_datetime: applytime,
                 approval_link: config.approval + '/approval?c=' + code
             })
@@ -185,19 +185,45 @@ exports.approval = function (req, res) {
         if (err) {
             utool.errView(res, err);
         }
+        console.log('memcached: ' + JSON.stringify(data));
         if (data) {
             var approvaltime = new Date();
-            utool.sqlExect('UPDATE t_user_service SET c_service_status = 2, c_approval_time = ? WHERE c_userid = ? AND c_serviceid = ?', [data.useid, data.serviceid, approvaltime], sqlInfo, function (err, result) {
-                if (err) {
-                    logger.info('审批服务申请：' + JSON.stringify(err));
-                    utool.errView(res, err);
-                }
-                else {
-                    //通知申请者审批成功
-
-                    res.send('审批成功！')
-                }
-            });
+            utool.sqlExect('UPDATE t_user_service SET c_service_status = 2, c_approval_time = ? WHERE c_userid = ? AND c_serviceid = ?',
+                [approvaltime, data.useid, data.serviceid], sqlInfo, function (err, result) {
+                    if (err) {
+                        logger.info('审批服务申请：' + JSON.stringify(err));
+                        utool.errView(res, err);
+                    }
+                    else {
+                        //通知申请者审批成功
+                        utool.sqlExect('SELECT c_username,c_email  FROM t_user WHERE c_userid = ?',
+                            [data.useid], sqlInfo, function (err, result1) {
+                                if (err) {
+                                    logger.info('根据用户ID查询用户名：' + JSON.stringify(err));
+                                    utool.errView(res, err);
+                                }
+                                else {
+                                    //通知申请者审批成功
+                                    utool.sqlExect('SELECT c_servicename FROM t_service WHERE c_serviceid = ?',
+                                        [data.serviceid], sqlInfo, function (err, result2) {
+                                            if (err) {
+                                                logger.info('根据服务ID查询服务名：' + JSON.stringify(err));
+                                                utool.errView(res, err);
+                                            }
+                                            else {
+                                                //通知申请者审批成功
+                                                redis.pub_approval({
+                                                    username: result1[0].c_username,
+                                                    service_name: result2[0].c_servicename,
+                                                    email: result1[0].c_email
+                                                })
+                                                res.send('审批成功！')
+                                            }
+                                        });
+                                }
+                            });
+                    }
+                });
         }
         else {
             res.send('该审批链接已经过时!');
