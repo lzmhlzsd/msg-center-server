@@ -40,26 +40,34 @@ exports.login = function (req, res, next) {
         else {
             if (result.length > 0) {
                 var user = result[0];
-                if (user.c_pwd == md5(sqlInfo.params.c_pwd)) {
-                    req.session['user'] = {
-                        customer: user.c_customer,
-                        username: user.c_username,
-                        userid: user.c_userid,
-                        appkey: user.c_appkey,
-                        appscrect: user.c_appscrect,
-                        pwd: user.c_pwd,
-                        phone: user.c_phone,
-                        email: user.c_email
+                if(user.c_is_use == 1) {
+                    if (user.c_pwd == md5(sqlInfo.params.c_pwd)) {
+                        req.session['user'] = {
+                            customer: user.c_customer,
+                            username: user.c_username,
+                            userid: user.c_userid,
+                            appkey: user.c_appkey,
+                            appscrect: user.c_appscrect,
+                            pwd: user.c_pwd,
+                            phone: user.c_phone,
+                            email: user.c_email
+                        }
+                        res.send({
+                            status: '0000',
+                            message: code['0000']
+                        });
                     }
-                    res.send({
-                        status: '0000',
-                        message: code['0000']
-                    });
+                    else {
+                        res.send({
+                            status: '1002',
+                            message: code['1002']
+                        });
+                    }
                 }
-                else {
+                else{
                     res.send({
-                        status: '1002',
-                        message: code['1002']
+                        status: '1006',
+                        message: code['1006']
                     });
                 }
             }
