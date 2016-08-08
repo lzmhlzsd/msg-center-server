@@ -25,8 +25,10 @@ var transporter = nodemailer.createTransport({
 
 exports.send_email = function (msg) {
     var objmsg = JSON.parse(msg);
-    var html = "<b>用户名称：" + objmsg.user_id + "</b><br>" +
-        "<b>应用名称：" + objmsg.app_name + "</b><br>" +
+    var html = "<b>个人/组织：" + objmsg.customer + "</b><br>" +
+        "<b>账号名称：" + objmsg.username + "</b><br>" +
+        "<b>联系电话：" + objmsg.phone + "</b><br>" +
+        "<b>电子邮箱：" + objmsg.email + "</b><br>" +
         "<b>服务名称：" + objmsg.service_name + "</b><br>" +
         "<b>申请日期：" + moment(objmsg.apply_datetime).format("YYYY-MM-DD HH:mm:ss") + "</b><br>" +
         "<b>审批链接：<a href='" + objmsg.approval_link + "' target='_blank'>" + objmsg.approval_link + "</a></b>";

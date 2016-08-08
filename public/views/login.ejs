@@ -1,52 +1,92 @@
-<% include common/login_header.ejs %>
-
-<div class="container" style="width: 400px;padding-top: 50px;" ng-module="myapp" ng-controller="appCtrl">
-    <form class="form-horizontal" method="post" action="/login">
-        <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">账号：</label>
-
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="user_name" placeholder="账号">
-
-            </div>
+<% include common/header_login.ejs %>
+<div class="container-body">
+    <div class="container">
+        <div class="main-page">
+            <form id="loginForm" class="signup-form">
+                <h2>欢迎登录
+                    <!--<a class="text-info hidden-xs" href="/user/reg"-->
+                    <!--style="position: absolute; right: 0;font-size:12px;float:right;line-height: 26px;">没有账号？去注册</a>-->
+                </h2>
+                <div class="type-input">
+                    <div class="form-group">
+                        <label for="username">登录账号:</label>
+                        <input type="tel" class="form-control" id="username" name="username"
+                               placeholder="请输入登录账号">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">登录密码:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd"
+                               placeholder="请输入登录密码">
+                    </div>
+                    <div class="form-group last" style="margin-top: 30px;">
+                        <button type="submit" class="btn btn-success btn-block next">登录</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">密码：</label>
-
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="pwd" placeholder="密码">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <div id="login" class="btn btn-success btn-block">登录</div>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
-</div>
-
 <% include common/footer.ejs %>
-
+<script type="text/javascript" src="/jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
 <script type="text/javascript">
     $(function () {
-        $('#login').on('click', function () {
-            var params = {
-                user_name: $('#user_name').val(),
-                pwd: $('#pwd').val()
+        $('.signup-form').validate({
+            errorElement: 'span',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            rules: {
+                username: {
+                    required: true
+                },
+                pwd: {
+                    required: true
+                }
+            },
+            messages: {
+                username: {
+                    required: "账号不能为空!"
+                },
+                pwd: {
+                    required: "密码不能为空!",
+                }
+            },
+
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+
+            errorPlacement: function (error, element) {
+                element.parent('div').append(error);
+            },
+
+            submitHandler: function (form) {
+                $.post('/login', {
+                    username: $('#username').val(),
+                    pwd: $('#pwd').val()
+                }, function (result) {
+                    if (result.status == '0000') {
+                        location.href = '/index';
+                    }
+                    else {
+                        BootstrapDialog.show({
+                            title: '提示',
+                            message: '<i class="icon-model anticon anticon-cross-circle"></i>' +
+                            '<span class="ant-confirm-title">' + result.message + '</span>',
+                            type: BootstrapDialog.TYPE_DEFAULT,
+                            onshow: function (dialogRef) {
+                                setTimeout(function () {
+                                    dialogRef.close();
+                                }, 2000);
+                            }
+                        });
+                    }
+                })
             }
-            $.post('/login', params, function (result) {
-                if (result.status == '0000') {
-                    location.href = '/index';
-                }
-                else {
-                    BootstrapDialog.show({
-                        title: '提示',
-                        message: result.message,
-                        type: BootstrapDialog.TYPE_DANGER
-                    });
-                }
-            })
         });
-    })
+    });
 </script>

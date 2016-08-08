@@ -24,12 +24,12 @@ exports.login = function (req, res, next) {
         method: 'login',
         memo: '登录系统',
         params: {
-            user_name: req.body.user_name,
-            pwd: req.body.pwd
+            c_username: req.body.username,
+            c_pwd: req.body.pwd
         },
         desc: ""
     }
-    utool.sqlExect('SELECT * FROM t_user WHERE user_name= ?', [sqlInfo.params.user_name], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_user WHERE c_username = ?', [sqlInfo.params.c_username], sqlInfo, function (err, result) {
         if (err) {
             logger.info('根据用户名查询失败：' + JSON.stringify(err));
             res.send({
@@ -40,12 +40,16 @@ exports.login = function (req, res, next) {
         else {
             if (result.length > 0) {
                 var user = result[0];
-                if (user.pwd == md5(sqlInfo.params.pwd)) {
+                if (user.c_pwd == md5(sqlInfo.params.c_pwd)) {
                     req.session['user'] = {
-                        user_name: user.user_name,
-                        user_id: user.user_id,
-                        app_num: user.app_num, //可创建应用数
-                        pwd: user.pwd
+                        customer: user.c_customer,
+                        username: user.c_username,
+                        userid: user.c_userid,
+                        appkey: user.c_appkey,
+                        appscrect: user.c_appscrect,
+                        pwd: user.c_pwd,
+                        phone: user.c_phone,
+                        email: user.c_email
                     }
                     res.send({
                         status: '0000',
@@ -70,16 +74,151 @@ exports.login = function (req, res, next) {
 }
 
 /**
- * @method 主页面
+ * @method 控制台
  * @author lkj
  * @datetime 2016/7/26
  */
 exports.index = function (req, res, next) {
     res.render('home/index', {
         user_name: req.session['user'].user_name,
-        menu: 'myapp'
+        navs: [
+            {
+                name: '管理中心',
+                url: ''
+            },
+            {
+                name: '控制台',
+                url: '/index'
+            }
+        ],
+        menu: 'admin',
+        submenu: 'admin_controller'
     });
 }
+//exports.index = function (req, res, next) {
+//    res.render('home/index', {
+//        user_name: req.session['user'].user_name,
+//        navs: [
+//            {
+//                name: '管理中心',
+//                url: ''
+//            },
+//            {
+//                name: '服务列表',
+//                url: '/serviceList'
+//            }
+//        ],
+//        menu: 'admin',
+//        submenu: 'admin_serverList'
+//    });
+//}
+
+/**
+ * @method 注册
+ * @author lukaijie
+ * @datetime 16/8/8
+ */
+exports.signup = function (req, res) {
+    res.render('signup');
+}
+
+/**
+ * @method 检查账号是否已经存在
+ * @author lukaijie
+ * @datetime 16/8/8
+ */
+exports.checkUserName = function (req, res) {
+    var sqlInfo = {
+        method: 'checkUserName',
+        memo: '检查账号是否已经存在',
+        params: {
+            appname: req.body.appname
+        },
+        desc: ""
+    }
+    console.log(sqlInfo)
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_user WHERE c_username = ?',
+        [sqlInfo.params.app_name], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('检查账号名称：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                console.log(result[0].counts);
+                if (result[0].counts == 0) {
+                    //注册成功
+                    res.send({
+                        status: '0000',
+                        message: code['0000']
+                    });
+                }
+                else {
+                    res.send({
+                        status: '1003',
+                        message: code['1003']
+                    });
+                }
+            }
+        });
+}
+
+/**
+ * @method 注册提交
+ * @author lukaijie
+ * @datetime 16/8/8
+ */
+exports.register = function (req, res) {
+    var sqlInfo = {
+        method: 'register',
+        memo: '注册提交',
+        params: {
+            c_customer: req.body.customer,
+            c_username: req.body.username,
+            c_type: 1,
+            c_pwd: md5(req.body.pwd),
+            c_is_use: 1,
+            c_phone: req.body.phone,
+            c_email: req.body.email,
+            c_appkey: utool.randomString(10),
+            c_appscrect: utool.randomString(32),
+            c_desc: '普通账号'
+        },
+        desc: ""
+    }
+    utool.sqlExect('INSERT INTO t_user SET ?', sqlInfo.params, sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('注册账号：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+        }
+        else {
+            res.send({
+                status: '0000',
+                message: code['0000']
+            });
+        }
+    });
+}
+
+/**
+ * @method 退出系统
+ * @author lukaijie
+ * @datetime 16/8/8
+ */
+exports.logout = function (req, res) {
+    delete req.session['user'];
+    res.redirect('/');
+}
+
+
+//****************************************************
+
 
 /**
  * @method 校验应用名称

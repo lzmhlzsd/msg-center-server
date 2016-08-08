@@ -1,6 +1,7 @@
 var indexCtrl = require('../controller/indexCtrl'),
     appCtrl = require('../controller/appCtrl'),
     tempCtrl = require('../controller/templateCtrl'),
+    serviceCtrl = require('../controller/serviceCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -17,8 +18,21 @@ module.exports = function (app) {
     });
     app.post('/login', indexCtrl.login);
 
+    app.get('/signup', indexCtrl.signup);
+    app.post('/checkUserName', indexCtrl.checkUserName);
+    app.post('/register', indexCtrl.register);
+
+    app.get('/logout', indexCtrl.logout);
+
     app.get('/index', practice.checkSession, indexCtrl.index);
     /** end:Oauth **/
+
+    /** start:serverList **/
+    app.get('/serverList', practice.checkSession, serviceCtrl.index);
+    app.get('/getServiceList', practice.checkSession, serviceCtrl.getServiceList);
+    app.post('/applyservice', practice.checkSession, serviceCtrl.applyservice);
+    app.get('/approval', serviceCtrl.approval);
+    /** end;serverList **/
 
     /** start:应用 **/
     app.get('/app/new', practice.checkSession, indexCtrl.newapp);
@@ -31,12 +45,12 @@ module.exports = function (app) {
 
     app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
     app.post('/app/apply', indexCtrl.apply);
-    app.get('/approval', indexCtrl.approval);
+
     /** end:应用 **/
 
     /** start:消息模板 **/
     app.get('/template', tempCtrl.index);
-    app.get('/template/new',tempCtrl.create);
+    app.get('/template/new', tempCtrl.create);
     /** end:消息模板 **/
 
     /** start:api **/
