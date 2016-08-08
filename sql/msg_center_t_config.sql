@@ -23,13 +23,14 @@ DROP TABLE IF EXISTS `t_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_config` (
-  `config_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `weixin_gzh` varchar(45) DEFAULT NULL,
-  `weixin_qyh` varchar(45) DEFAULT NULL,
-  `msg_center` varchar(45) DEFAULT NULL,
-  `email_center` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`config_id`)
+  `c_id` int(11) NOT NULL,
+  `c_userid` int(11) DEFAULT NULL,
+  `c_weixin_gzh` varchar(45) DEFAULT NULL,
+  `c_weixin_qyh` varchar(45) DEFAULT NULL,
+  `c_msg_center` varchar(45) DEFAULT NULL,
+  `c_email_center` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`c_id`),
+  UNIQUE KEY `c_userid_UNIQUE` (`c_userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-08 16:50:20
+-- Dump completed on 2016-08-08 17:24:46

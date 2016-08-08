@@ -23,15 +23,16 @@ DROP TABLE IF EXISTS `t_template`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_template` (
-  `temp_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '模板ID',
-  `temp_no` varchar(45) DEFAULT NULL COMMENT '模板编号',
-  `temp_content` varchar(45) DEFAULT NULL,
-  `temp_status` varchar(45) DEFAULT NULL COMMENT '模板状态',
-  `temp_desc` varchar(45) DEFAULT NULL COMMENT '模板描述',
-  `temp_createdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `temp_userid` int(11) DEFAULT NULL COMMENT '用户id',
-  PRIMARY KEY (`temp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `c_temp_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '模板ID',
+  `c_temp_no` varchar(45) DEFAULT NULL COMMENT '模板编号',
+  `c_temp_content` varchar(45) DEFAULT NULL,
+  `c_temp_status` varchar(45) DEFAULT NULL COMMENT '模板状态  短信模板  需要审核',
+  `c_temp_desc` varchar(45) DEFAULT NULL COMMENT '模板描述',
+  `c_temp_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `c_temp_userid` int(11) DEFAULT NULL COMMENT '用户id',
+  PRIMARY KEY (`c_temp_id`),
+  UNIQUE KEY `UNQIUE` (`c_temp_userid`,`c_temp_no`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +41,7 @@ CREATE TABLE `t_template` (
 
 LOCK TABLES `t_template` WRITE;
 /*!40000 ALTER TABLE `t_template` DISABLE KEYS */;
+INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1);
 /*!40000 ALTER TABLE `t_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-08 16:50:20
+-- Dump completed on 2016-08-08 17:24:47

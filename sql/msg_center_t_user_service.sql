@@ -29,7 +29,8 @@ CREATE TABLE `t_user_service` (
   `c_service_status` int(11) DEFAULT NULL COMMENT '0:未申请  1:申请中  2:已获得',
   `c_apply_time` datetime DEFAULT NULL COMMENT '申请日期',
   `c_approval_time` datetime DEFAULT NULL COMMENT '审核日期',
-  PRIMARY KEY (`c_id`)
+  PRIMARY KEY (`c_id`),
+  UNIQUE KEY `UNIQUE` (`c_userid`,`c_serviceid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-08 16:50:20
+-- Dump completed on 2016-08-08 17:24:47
