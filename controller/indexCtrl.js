@@ -99,6 +99,8 @@ exports.index = function (req, res, next) {
                 url: '/index'
             }
         ],
+        appkey: req.session['user'].appkey,
+        appscrect: req.session['user'].appscrect,
         menu: 'admin',
         submenu: 'admin_controller'
     });

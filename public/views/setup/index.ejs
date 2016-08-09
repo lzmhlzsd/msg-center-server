@@ -1,0 +1,203 @@
+<% include ../common/header.ejs %>
+
+<div class="content" ng-app="myApp" ng-controller="appCtrl">
+    <div class="sidle-left">
+        <% include ../common/menu.ejs %>
+    </div>
+    <div class="sidle-right">
+        <div class="title">
+            <h4>设置中心</h4>
+        </div>
+        <a class="btn btn-ant" style="display: inline-block;margin-bottom: 10px;">保存</a>
+        <br>
+        <div class="card-inline">
+            <div class="ant-card ant-card-bordered" style="width: 100%;">
+                <div class="ant-card-head">
+                    <h3 class="ant-card-head-title">邮件设置</h3>
+                </div>
+                <div class="ant-card-body">
+                    <form class="ant-form-horizontal">
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">host</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <select class="ant-input ant-input-lg" ng-model="">
+                                        <option value="smtp.163.com">smtp.163.com</option>
+                                        <option value="smtp.qq.com">smtp.qq.com</option>
+                                        <option value="smtp.sina.com">smtp.sina.com</option>
+                                        <option value="smtp.126.com">smtp.126.com</option>
+                                    </select>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">端口</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="warning" class="ant-input ant-input-lg" value="465">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">用户名</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="validating"
+                                           class="ant-input ant-input-lg"
+                                           autocomplete="off">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">密码</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="success" class="ant-input ant-input-lg" value="" autocomplete="off">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+
+            <div class="ant-card ant-card-bordered" style="width: 100%;">
+                <div class="ant-card-head">
+                    <h3 class="ant-card-head-title">短信设置</h3>
+                </div>
+                <div class="ant-card-body">
+                    <form class="ant-form-horizontal">
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">APIKEY</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="warning" class="ant-input ant-input-lg" value="">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-inline">
+            <div class="ant-card ant-card-bordered" style="width: 100%;">
+                <div class="ant-card-head">
+                    <h3 class="ant-card-head-title">微信企业号设置</h3>
+                </div>
+                <div class="ant-card-body">
+                    <form class="ant-form-horizontal">
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">CorpID</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="warning" class="ant-input ant-input-lg" value="">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">Secret</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="warning" class="ant-input ant-input-lg" value="">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<% include ../common/footer.ejs %>
+
+<script type="text/javascript">
+    angular.module('myApp', ['angular-loading-bar'])
+            .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
+                cfpLoadingBarProvider.includeSpinner = true;
+                cfpLoadingBarProvider.latencyThreshold = 5;
+            }])
+            .run(function (cfpLoadingBar) {
+                cfpLoadingBar.start();
+                cfpLoadingBar.complete();
+
+            })
+            .controller('appCtrl', ['$scope', '$http', 'cfpLoadingBar', function ($scope, $http, cfpLoadingBar) {
+                $scope.table = [];
+
+                //查询所有用户
+                $scope.getServiceList = function () {
+                    $http.get('/getServiceList').success(function (result) {
+                        if (result.status == '0000') {
+                            $scope.table = result.data;
+                        }
+                    });
+                }
+
+                $scope.getServiceList();
+
+                //申请
+                $scope.applyService = function (index) {
+                    var self = this.$parent;
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认申请该服务</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.post('/applyservice', {
+                                    serviceid: self.item.c_serviceid,
+                                    servicename: self.item.c_servicename
+                                }).success(function (result) {
+                                    if (result.status == '0000') {
+                                        self.item.c_apply_status = 1;
+                                        self.item.c_apply_time = result.data;
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
+
+                }
+
+            }])
+</script>

@@ -1,5 +1,5 @@
 /**
- * Created by lkj on 2016/8/7.
+ * Created by lkj on 2016/8/9.
  */
 var pool = require('../libs/mysql'),
     request = require('request'),
@@ -19,7 +19,7 @@ var pool = require('../libs/mysql'),
  * @datetime 16/5/12
  */
 exports.index = function (req, res, next) {
-    res.render('template/index', {
+    res.render('setup/index', {
         user_name: req.session['user'].username,
         navs: [
             {
@@ -27,23 +27,11 @@ exports.index = function (req, res, next) {
                 url: ''
             },
             {
-                name: '消息模板',
-                url: '/template'
+                name: '设置中心',
+                url: '/setup'
             }
         ],
         menu: 'admin',
-        submenu: 'admin_template'
-    });
-}
-
-/**
- * @method 创建新模板
- * @author lkj
- * @datetime 2016/8/7
- */
-exports.create = function (req, res) {
-    res.render('template/newtemplate', {
-        user_name: req.session['user'].user_name,
-        menu: 'template'
+        submenu: 'admin_setup'
     });
 }

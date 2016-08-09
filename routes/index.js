@@ -2,6 +2,7 @@ var indexCtrl = require('../controller/indexCtrl'),
     appCtrl = require('../controller/appCtrl'),
     tempCtrl = require('../controller/templateCtrl'),
     serviceCtrl = require('../controller/serviceCtrl'),
+    setupCtrl = require('../controller/setupCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -34,28 +35,31 @@ module.exports = function (app) {
     app.get('/approval', serviceCtrl.approval);
     /** end;serverList **/
 
-    /** start:应用 **/
-    app.get('/app/new', practice.checkSession, indexCtrl.newapp);
-    app.post('/app/checkname', indexCtrl.checkName);
-    app.post('/app/save', indexCtrl.createApp);
-    app.post('/getAppList', practice.checkSession, indexCtrl.getAppList);
-
-    app.get('/app/edit/:id', practice.checkSession, indexCtrl.editapp);
-    app.post('/app/update', indexCtrl.updateApp);
-
-    app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
-    app.post('/app/apply', indexCtrl.apply);
-
-    /** end:应用 **/
+    ///** start:应用 **/
+    //app.get('/app/new', practice.checkSession, indexCtrl.newapp);
+    //app.post('/app/checkname', indexCtrl.checkName);
+    //app.post('/app/save', indexCtrl.createApp);
+    //app.post('/getAppList', practice.checkSession, indexCtrl.getAppList);
+    //
+    //app.get('/app/edit/:id', practice.checkSession, indexCtrl.editapp);
+    //app.post('/app/update', indexCtrl.updateApp);
+    //
+    //app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
+    //app.post('/app/apply', indexCtrl.apply);
+    //
+    ///** end:应用 **/
 
     /** start:消息模板 **/
-    app.get('/template', tempCtrl.index);
-    app.get('/template/new', tempCtrl.create);
+    app.get('/template', practice.checkSession, tempCtrl.index);
+    app.get('/template/new', practice.checkSession, tempCtrl.create);
     /** end:消息模板 **/
 
-    /** start:api **/
+    /** start:设置中心 **/
+    app.get('/setup', practice.checkSession, setupCtrl.index);
+    /** end:设置中心 **/
 
-    /** end:api **/
+
+
     app.locals.brushRespones = function (data, definitions) {
 
     }
