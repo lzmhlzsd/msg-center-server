@@ -1,0 +1,330 @@
+<% include ../common/header.ejs %>
+
+<div class="content" ng-app="myApp" ng-controller="appCtrl">
+    <div class="sidle-left">
+        <% include ../common/menu.ejs %>
+    </div>
+    <div class="sidle-right">
+        <div class="title">
+            <h4>应用审批</h4>
+        </div>
+        <div class="ant-search-input-wrapper" style="width: 200px;margin-bottom: 10px;">
+            <span class="ant-input-group ant-search-input">
+                <span class="ant-input-wrapper">
+                    <input type="text" placeholder="应用名称" value="" class="ant-input"
+                           ng-model="keyword">
+                </span>
+                <div class="ant-input-group-wrap">
+                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn"><i
+                                class="anticon anticon-search"></i></button>
+                </div>
+            </span>
+        </div>
+
+        <div class="ant-table ant-table-large ant-table-scroll-position-left">
+            <div class="ant-table-content">
+                <div class="ant-table-body">
+                    <table class="">
+                        <thead class="ant-table-thead">
+                        <tr>
+                            <th class="" style="width: 180px"><span>应用名称</span></th>
+                            <th class="">
+
+                                <div class="dropdown ant-dropdown-custom">
+                                    <span data-toggle="dropdown">
+                                        <span>申请状态<i class="anticon anticon-filter"
+                                                     ng-class="{true:'ant-table-filter-selected'}[filtes.utype1 || filtes.utype2]"></i></span>
+                                    </span>
+
+                                    <div class="dropdown-menu">
+                                        <ul class="ant-dropdown-menu ant-dropdown-menu-vertical  ant-dropdown-menu-light ant-dropdown-menu-root"
+                                            aria-labelledby="dLabel">
+
+                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
+                                                ng-click="checkUType2($event)">
+                                                <label class="ant-checkbox-wrapper">
+                                                    <span class="ant-checkbox "
+                                                          ng-class="{true: 'ant-checkbox-checked'}[filtes.utype2]">
+                                                        <span class="ant-checkbox-inner"></span>
+                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
+                                                    </span>
+                                                    已审核
+                                                </label>
+                                            </li>
+                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
+                                                ng-click="checkUType1($event)">
+                                                <label class="ant-checkbox-wrapper">
+                                                    <span class="ant-checkbox "
+                                                          ng-class="{true: 'ant-checkbox-checked'}[filtes.utype1]">
+                                                        <span class="ant-checkbox-inner"></span>
+                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
+                                                    </span>
+                                                    申请中
+                                                </label>
+                                            </li>
+                                            <!--<li class="ant-dropdown-menu-item-divider"></li>-->
+                                            <!--<li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"-->
+                                            <!--ng-click="trggerUser($index)">-->
+
+                                            <!--</li>-->
+                                            <li>
+                                                <div class="ant-table-filter-dropdown-btns">
+                                                    <a class="ant-table-filter-dropdown-link confirm"
+                                                       ng-click="getAppApplyList()">确定</a>
+                                                    <a class="ant-table-filter-dropdown-link clear"
+                                                       ng-click="reset($event)">重置</a>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class=""><span>服务名称</span></th>
+                            <th class=""><span>审核者</span></th>
+                            <th class=""><span>申请日期</span></th>
+                            <th class=""><span>审核日期</span></th>
+                            <th class=""><span>操作</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="ant-table-tbody">
+                        <tr class="ant-table-row  ant-table-row-level-0" ng-repeat="item in table">
+                            <td class="">
+                                <!--<span class="ant-table-row-indent indent-level-0" style="padding-left: 0px;"></span>-->
+                                <!--<a href="#">{{item.fd_shopexid}}</a>-->
+                                {{item.app_name}}
+                            </td>
+                            <td class="">
+                                {{item.app_type | utype}}
+                            </td>
+                            <td class="">
+                                {{item.service_name}}
+                            </td>
+                            <td class="">
+                                {{item.operator_id}}
+                            </td>
+                            <td class="">{{item.apply_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td class="">{{item.approval_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td class="">
+                                <span ng-show="item.app_type == 1" ng-click="approval($index)">
+                                    <a href="#">审核</a>
+                                    <!--<span class="ant-divider"></span>-->
+                                    <!--<a href="#" class="ant-dropdown-link">更多-->
+                                        <!--<i class="anticon anticon-down"></i>-->
+                                    <!--</a>-->
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
+                <li style="display: inline-block;
+                    float: left;
+                    position: relative;
+                    right: 10px;
+                    top: 4px;">
+                    <a>
+                        <span>共{{param.count}}条</span>
+                    </a>
+                </li>
+                <li title="上一页"
+                    class="ant-pagination-prev"
+                    ng-click="prev()"
+                    ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
+                <li title="{{pag.key}}"
+                    class="ant-pagination-item"
+                    ng-class="{true:'ant-pagination-item-active'}[pag.active]"
+                    ng-click="showpage()"
+                    ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
+                <li title="下一页"
+                    class="ant-pagination-next"
+                    ng-click="next()"
+                    ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
+                        ><a></a></li>
+            </ul>
+        </div>
+        <!--<div id="clickme" ng-click="submit()" class="btn btn-success">clickme</div>-->
+    </div>
+</div>
+<% include ../common/footer.ejs %>
+
+<script type="text/javascript">
+    angular.module('myApp', ['angular-loading-bar'])
+            .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
+                cfpLoadingBarProvider.includeSpinner = true;
+                //cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+                cfpLoadingBarProvider.latencyThreshold = 5;
+                //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner" style="color: #fff">Custom Loading Message...</div>';
+            }])
+            .run(function (cfpLoadingBar) {
+                cfpLoadingBar.start();
+                cfpLoadingBar.complete();
+
+            })
+            .controller('appCtrl', ['$scope', '$http', 'cfpLoadingBar', function ($scope, $http, cfpLoadingBar) {
+                $scope.table = [];
+                $scope.keyword = ''; //默认账号名
+                $scope.filtes = {
+                    utype1: false,
+                    utype2: false
+                }
+                //查询参数
+                $scope.param = {
+                    pagenum: 1,    //页码
+                    pagesize: 10,        //页大小
+                    count: 0,
+                    pages: 0,
+                    searchParams: {
+                        filters: [],
+                        logic: 'AND'
+                    }
+                }
+
+                //查询所有用户
+                $scope.getAppApplyList = function () {
+                    $scope.param.searchParams = {
+                        filters: [],
+                        logic: 'AND'
+                    }
+                    if ($scope.keyword != '') {
+                        var array = [];
+                        array.push({
+                            filed: 'app_name', operator: 'like', value: $scope.keyword
+                        });
+                        $scope.param.searchParams['filters'] = array;
+                    }
+                    var fd_utype_filter = {
+                        filters: [],
+                        logic: 'OR'
+                    };
+                    if ($scope.filtes.utype1) {
+                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 1});
+                    }
+                    if ($scope.filtes.utype2) {
+                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 2});
+                    }
+
+                    if (fd_utype_filter.filters.length > 0) {
+                        $scope.param.searchParams['filters'].push(fd_utype_filter);
+                    }
+
+                    $http.post('/getAppApplyList', $scope.param).success(function (result) {
+                        if (result.status == '0000') {
+                            $scope.table = result.data.datasouce;
+                            $scope.param.pagenum = result.data.pagenum;
+                            $scope.param.pages = result.data.pages;
+                            $scope.param.pagesize = result.data.pagesize;
+                            $scope.param['count'] = result.data.count;
+
+                            $scope.pagination = [];
+                            for (var i = 1; i <= $scope.param.pages; i++) {
+                                $scope.pagination.push({
+                                    key: i,
+                                    active: i == $scope.param.pagenum ? true : false
+                                })
+                            }
+                        }
+                    });
+                }
+
+                $scope.getAppApplyList();
+
+                //切换用户
+                $scope.checkUType1 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype1 = !$scope.filtes.utype1;
+                }
+                $scope.checkUType2 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype2 = !$scope.filtes.utype2;
+                }
+
+                $scope.reset = function ($event) {
+                    $event.stopPropagation();
+                    $scope.filtes = {
+                        utype1: false,
+                        utype2: false
+                    }
+                }
+
+                $scope.keywordSearch = function () {
+                    $scope.getAppApplyList();
+                }
+
+                $scope.showpage = function () {
+                    $scope.param.pagenum = this.pag.key;    //页码
+                    $scope.getAppApplyList();
+                }
+
+                $scope.prev = function () {
+                    if($scope.param.pagenum > 1){
+                        $scope.param.pagenum--;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                $scope.next = function(){
+                    if($scope.param.pagenum < $scope.param.pages){
+                        $scope.param.pagenum++;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                //改变用户类型
+                $scope.approval = function (index) {
+                    var self = this;
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认审核该申请</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.post('/approval', {
+                                    id: self.item.id,
+                                    app_id: self.item.app_id,
+                                    serviceid: self.item.service_id
+                                })
+                                        .success(function (result) {
+                                            if (result.status == '0000') {
+                                                self.item.app_type = result.data.fd_type;
+                                                self.item.operator_id = result.data.fd_operator;
+                                                self.item.approval_time = result.data.fd_approval_time;
+                                                UI.success('操作成功', 2000);
+                                                //$scope.$apply();
+                                            }
+                                        })
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
+
+                }
+
+            }]).
+            filter('utype', function () {
+                return function (input) {
+                    switch (input) {
+                        case 2:
+                            return '已审核'
+                            break;
+                        case 1:
+                            return '申请中'
+                            break;
+                    }
+                }
+            })
+</script>
