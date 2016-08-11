@@ -13,17 +13,17 @@
                 <div class="form-group">
                     <label for="template_no">模板编号:</label>
                     <input type="text" class="form-control" id="template_no" name="template_no"
-                           placeholder="模板编号">
+                           placeholder="模板编号" value="<%= data.c_temp_no %>">
                 </div>
                 <div class="form-group">
                     <label for="template_content">模板内容:</label>
                     <textarea rows="6" class="form-control" name="template_content" id="template_content"
-                              placeholder="示例: 您好,{{name}}!"></textarea>
+                              placeholder="示例: 您好,{{name}}!"><%= data.c_temp_content %></textarea>
                 </div>
                 <div class="form-group">
                     <label for="template_desc">模板描述:</label>
                     <textarea rows="3" class="form-control" name="template_desc" id="template_desc"
-                              placeholder="模板描述"></textarea>
+                              placeholder="模板描述"><%= data.c_temp_desc %></textarea>
                 </div>
                 <div class="form-group last" style="margin-top: 30px;">
                     <button type="submit" class="btn btn-ant">保存</button>
@@ -46,7 +46,7 @@
                     required: true,
                     remote: {
                         type: "post",
-                        url: "/template/checkno",
+                        url: "/template/checkno2",
                         data: {
                             template_no: function () {
                                 return $("#template_no").val();
@@ -91,7 +91,7 @@
 
             submitHandler: function (form) {
                 //form.submit();
-                $.post('/template/save', {
+                $.post('/template/update', {
                     template_no: $('#template_no').val(),
                     template_content: $('#template_content').val(),
                     template_desc: $('#template_desc').val()

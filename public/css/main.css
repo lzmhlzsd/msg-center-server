@@ -228,7 +228,15 @@ html, body {
     margin-top: 6px;
     margin-left: 10px;
 }
-
+.has-error .form-control {
+    border-color: #f34844;
+}
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label {
+    color: #f34844;
+}
+.form-control{
+    font-size: 13px;
+}
 /*width: 186px;*/
 /*border-radius: 4px;*/
 /*height: 32px;*/

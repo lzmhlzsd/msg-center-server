@@ -8,6 +8,21 @@
         <div class="title">
             <h4>消息模板</h4>
         </div>
+        <div class="ant-search-input-wrapper" style="width: 200px;margin-bottom: 10px;">
+            <span class="ant-input-group ant-search-input">
+                <span class="ant-input-wrapper">
+                    <input type="text" placeholder="模板编号或名称" value="" class="ant-input"
+                           ng-model="keyword">
+                </span>
+                <div class="ant-input-group-wrap">
+                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn"><i
+                                class="anticon anticon-search"></i></button>
+                </div>
+            </span>
+
+
+        </div>
+        <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/template/new">新建模板</a>
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
             <div class="ant-table-content">
@@ -17,7 +32,7 @@
                         <tr>
                             <th class=""><span>模板编号</span></th>
                             <th class=""><span>模板内容</span></th>
-                            <th class=""><span>模板状态</span></th>
+                            <th class=""><span>模板状态(短信)</span></th>
                             <th class=""><span>创建日期</span></th>
                             <th class=""><span>描述</span></th>
                             <th class=""><span>操作</span></th>
@@ -26,17 +41,26 @@
                         <tbody class="ant-table-tbody">
                         <tr class="ant-table-row  ant-table-row-level-0" ng-repeat="item in table">
                             <td class="">
-                                {{item.c_servicename}}
+                                <!--<span class="ant-table-row-indent indent-level-0" style="padding-left: 0px;"></span>-->
+                                <!--<a href="#">{{item.fd_shopexid}}</a>-->
+                                {{item.c_temp_no}}
                             </td>
                             <td class="">
-                                {{item.c_status | c_status}}
+                                {{item.c_temp_content}}
                             </td>
-                            <td class="">{{item.c_apply_status | c_apply_status}}</td>
-                            <td class="">{{item.c_apply_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
-                            <td class="">{{item.c_approval_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td class="">
-                                <span ng-if="item.c_status == 1 && item.c_apply_status == 0" ng-click="applyService($index)">
-                                    <a href="#">申请</a>
+                                {{item.c_temp_status}}
+                            </td>
+                            <td class="">{{item.c_temp_create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td class="">{{item.c_temp_desc}}</td>
+                            <td class="">
+                                <span ng-click="approval($index)">
+                                    <a ng-href="/template/edit/{{item.c_temp_no}}">编辑</a>
+                                    <span class="ant-divider"></span>
+                                    <a href="#" title="同步到短信服务器">同步</a>
+                                    <!--<a href="#" class="ant-dropdown-link">更多-->
+                                        <!--<i class="anticon anticon-down"></i>-->
+                                    <!--</a>-->
                                 </span>
                             </td>
                         </tr>
@@ -44,7 +68,34 @@
                     </table>
                 </div>
             </div>
+
+            <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
+                <li style="display: inline-block;
+                    float: left;
+                    position: relative;
+                    right: 10px;
+                    top: 4px;">
+                    <a>
+                        <span>共{{param.count}}条</span>
+                    </a>
+                </li>
+                <li title="上一页"
+                    class="ant-pagination-prev"
+                    ng-click="prev()"
+                    ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
+                <li title="{{pag.key}}"
+                    class="ant-pagination-item"
+                    ng-class="{true:'ant-pagination-item-active'}[pag.active]"
+                    ng-click="showpage()"
+                    ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
+                <li title="下一页"
+                    class="ant-pagination-next"
+                    ng-click="next()"
+                    ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
+                        ><a></a></li>
+            </ul>
         </div>
+        <!--<div id="clickme" ng-click="submit()" class="btn btn-success">clickme</div>-->
     </div>
 </div>
 <% include ../common/footer.ejs %>
@@ -53,7 +104,9 @@
     angular.module('myApp', ['angular-loading-bar'])
             .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
                 cfpLoadingBarProvider.includeSpinner = true;
+                //cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
                 cfpLoadingBarProvider.latencyThreshold = 5;
+                //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner" style="color: #fff">Custom Loading Message...</div>';
             }])
             .run(function (cfpLoadingBar) {
                 cfpLoadingBar.start();
@@ -62,25 +115,125 @@
             })
             .controller('appCtrl', ['$scope', '$http', 'cfpLoadingBar', function ($scope, $http, cfpLoadingBar) {
                 $scope.table = [];
+                $scope.keyword = ''; //默认账号名
+                $scope.filtes = {
+                    utype1: false,
+                    utype2: false
+                }
+                //查询参数
+                $scope.param = {
+                    pagenum: 1,    //页码
+                    pagesize: 10,        //页大小
+                    count: 0,
+                    pages: 0,
+                    searchParams: {
+                        filters: [],
+                        logic: 'OR'
+                    }
+                }
 
                 //查询所有用户
-                $scope.getServiceList = function () {
-                    $http.get('/getServiceList').success(function (result) {
+                $scope.getAppApplyList = function () {
+                    $scope.param.searchParams = {
+                        filters: [],
+                        logic: 'OR'
+                    }
+                    if ($scope.keyword != '') {
+                        var array = [];
+                        array.push(
+                                {
+                                    filed: 'c_temp_no', operator: 'like', value: $scope.keyword
+                                }, {
+                                    filed: 'c_temp_content', operator: 'like', value: $scope.keyword
+                                });
+                        $scope.param.searchParams['filters'] = array;
+                    }
+                    var fd_utype_filter = {
+                        filters: [],
+                        logic: 'OR'
+                    };
+                    if ($scope.filtes.utype1) {
+                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 1});
+                    }
+                    if ($scope.filtes.utype2) {
+                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 2});
+                    }
+
+                    if (fd_utype_filter.filters.length > 0) {
+                        $scope.param.searchParams['filters'].push(fd_utype_filter);
+                    }
+
+                    $http.post('/getTemplateByUser', $scope.param).success(function (result) {
                         if (result.status == '0000') {
-                            $scope.table = result.data;
+                            $scope.table = result.data.datasouce;
+                            $scope.param.pagenum = result.data.pagenum;
+                            $scope.param.pages = result.data.pages;
+                            $scope.param.pagesize = result.data.pagesize;
+                            $scope.param['count'] = result.data.count;
+
+                            $scope.pagination = [];
+                            for (var i = 1; i <= $scope.param.pages; i++) {
+                                $scope.pagination.push({
+                                    key: i,
+                                    active: i == $scope.param.pagenum ? true : false
+                                })
+                            }
                         }
                     });
                 }
 
-                $scope.getServiceList();
+                $scope.getAppApplyList();
 
-                //申请
-                $scope.applyService = function (index) {
-                    var self = this.$parent;
+                //切换用户
+                $scope.checkUType1 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype1 = !$scope.filtes.utype1;
+                }
+                $scope.checkUType2 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype2 = !$scope.filtes.utype2;
+                }
+
+                $scope.reset = function ($event) {
+                    $event.stopPropagation();
+                    $scope.filtes = {
+                        utype1: false,
+                        utype2: false
+                    }
+                }
+
+                $scope.keywordSearch = function () {
+                    $scope.getAppApplyList();
+                }
+
+                $scope.showpage = function () {
+                    $scope.param.pagenum = this.pag.key;    //页码
+                    $scope.getAppApplyList();
+                }
+
+                $scope.prev = function () {
+                    if ($scope.param.pagenum > 1) {
+                        $scope.param.pagenum--;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                $scope.next = function () {
+                    if ($scope.param.pagenum < $scope.param.pages) {
+                        $scope.param.pagenum++;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                //改变用户类型
+                $scope.approval = function (index) {
+                    var self = this;
                     BootstrapDialog.show({
                         title: '提示',
                         message: '<i class="icon-model anticon anticon-question-circle"></i>' +
-                        '<span class="ant-confirm-title">确认申请该服务</span>',
+                        '<span class="ant-confirm-title">确认审核该申请</span>',
                         buttons: [{
                             label: '取消',
                             cssClass: 'btn-model btn-default',
@@ -91,15 +244,20 @@
                             label: '确认',
                             cssClass: 'btn-model btn-ant',
                             action: function (dialogItself) {
-                                $http.post('/applyservice', {
-                                    serviceid: self.item.c_serviceid,
-                                    servicename: self.item.c_servicename
-                                }).success(function (result) {
-                                    if (result.status == '0000') {
-                                        self.item.c_apply_status = 1;
-                                        self.item.c_apply_time = result.data;
-                                    }
-                                });
+                                $http.post('/approval', {
+                                    id: self.item.id,
+                                    app_id: self.item.app_id,
+                                    serviceid: self.item.service_id
+                                })
+                                        .success(function (result) {
+                                            if (result.status == '0000') {
+                                                self.item.app_type = result.data.fd_type;
+                                                self.item.operator_id = result.data.fd_operator;
+                                                self.item.approval_time = result.data.fd_approval_time;
+                                                UI.success('操作成功', 2000);
+                                                //$scope.$apply();
+                                            }
+                                        })
                                 dialogItself.close();
                             }
                         }],
@@ -108,30 +266,15 @@
 
                 }
 
-            }])
-            .filter('c_status', function () {
+            }]).
+            filter('utype', function () {
                 return function (input) {
                     switch (input) {
-                        case 0:
-                            return '未上线'
-                            break;
-                        case 1:
-                            return '已上线'
-                            break;
-                    }
-                }
-            })
-            .filter('c_apply_status', function () {
-                return function (input) {
-                    switch (input) {
-                        case 0:
-                            return '未申请'
+                        case 2:
+                            return '已审核'
                             break;
                         case 1:
                             return '申请中'
-                            break;
-                        case 2:
-                            return '已获得'
                             break;
                     }
                 }

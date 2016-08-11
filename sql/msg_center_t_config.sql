@@ -23,15 +23,19 @@ DROP TABLE IF EXISTS `t_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_config` (
-  `c_id` int(11) NOT NULL,
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
   `c_userid` int(11) DEFAULT NULL,
-  `c_weixin_gzh` varchar(45) DEFAULT NULL,
-  `c_weixin_qyh` varchar(45) DEFAULT NULL,
-  `c_msg_center` varchar(45) DEFAULT NULL,
-  `c_email_center` varchar(45) DEFAULT NULL,
+  `c_email_host` varchar(45) DEFAULT NULL,
+  `c_email_port` varchar(45) DEFAULT NULL,
+  `c_email_username` varchar(45) DEFAULT NULL,
+  `c_email_password` varchar(45) DEFAULT NULL,
+  `c_msg_apikey` varchar(128) DEFAULT NULL,
+  `c_weixin_qyh_cropid` varchar(64) DEFAULT NULL,
+  `c_weixin_qyh_screct` varchar(128) DEFAULT NULL,
+  `c_weixin_gzh` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `c_userid_UNIQUE` (`c_userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +44,7 @@ CREATE TABLE `t_config` (
 
 LOCK TABLES `t_config` WRITE;
 /*!40000 ALTER TABLE `t_config` DISABLE KEYS */;
+INSERT INTO `t_config` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,4,'smtp.sina.com','465','1','2','3','rwqeqqe','333333',NULL);
 /*!40000 ALTER TABLE `t_config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-08 17:24:46
+-- Dump completed on 2016-08-11 18:14:22

@@ -51,11 +51,19 @@ module.exports = function (app) {
 
     /** start:消息模板 **/
     app.get('/template', practice.checkSession, tempCtrl.index);
+    app.post('/getTemplateByUser', practice.checkSession, tempCtrl.getTemplateByUser);
     app.get('/template/new', practice.checkSession, tempCtrl.create);
+    app.get('/template/edit/:tempno', practice.checkSession, tempCtrl.edit);
+    app.post('/template/save', practice.checkSession, tempCtrl.savetemplate);
+    app.post('/template/update', practice.checkSession, tempCtrl.updatetemplate);
+    app.post('/template/checkno', practice.checkSession, tempCtrl.checktemplateno);
+    app.post('/template/checkno2', practice.checkSession, tempCtrl.checktemplateno2);
     /** end:消息模板 **/
 
     /** start:设置中心 **/
     app.get('/setup', practice.checkSession, setupCtrl.index);
+    app.post('/saveConfig', practice.checkSession, setupCtrl.saveConfig);
+    app.get('/getConfig', practice.checkSession, setupCtrl.getConfig);
     /** end:设置中心 **/
 
 

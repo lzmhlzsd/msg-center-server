@@ -27,64 +27,70 @@
                     <table class="">
                         <thead class="ant-table-thead">
                         <tr>
-                            <th class="" style="width: 180px"><span>应用名称</span></th>
-                            <th class="">
-
-                                <div class="dropdown ant-dropdown-custom">
-                                    <span data-toggle="dropdown">
-                                        <span>申请状态<i class="anticon anticon-filter"
-                                                     ng-class="{true:'ant-table-filter-selected'}[filtes.utype1 || filtes.utype2]"></i></span>
-                                    </span>
-
-                                    <div class="dropdown-menu">
-                                        <ul class="ant-dropdown-menu ant-dropdown-menu-vertical  ant-dropdown-menu-light ant-dropdown-menu-root"
-                                            aria-labelledby="dLabel">
-
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="checkUType2($event)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox "
-                                                          ng-class="{true: 'ant-checkbox-checked'}[filtes.utype2]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    已审核
-                                                </label>
-                                            </li>
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="checkUType1($event)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox "
-                                                          ng-class="{true: 'ant-checkbox-checked'}[filtes.utype1]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    申请中
-                                                </label>
-                                            </li>
-                                            <!--<li class="ant-dropdown-menu-item-divider"></li>-->
-                                            <!--<li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"-->
-                                            <!--ng-click="trggerUser($index)">-->
-
-                                            <!--</li>-->
-                                            <li>
-                                                <div class="ant-table-filter-dropdown-btns">
-                                                    <a class="ant-table-filter-dropdown-link confirm"
-                                                       ng-click="getAppApplyList()">确定</a>
-                                                    <a class="ant-table-filter-dropdown-link clear"
-                                                       ng-click="reset($event)">重置</a>
-                                                </div>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                            </th>
-                            <th class=""><span>服务名称</span></th>
-                            <th class=""><span>审核者</span></th>
-                            <th class=""><span>申请日期</span></th>
-                            <th class=""><span>审核日期</span></th>
+                            <th class=""><span>模板编号</span></th>
+                            <th class=""><span>模板内容</span></th>
+                            <th class=""><span>模板状态</span></th>
+                            <th class=""><span>创建日期</span></th>
+                            <th class=""><span>描述</span></th>
                             <th class=""><span>操作</span></th>
+                            <!--<th class="" style="width: 180px"><span>应用名称</span></th>-->
+                            <!--<th class="">-->
+
+                                <!--<div class="dropdown ant-dropdown-custom">-->
+                                    <!--<span data-toggle="dropdown">-->
+                                        <!--<span>申请状态<i class="anticon anticon-filter"-->
+                                                     <!--ng-class="{true:'ant-table-filter-selected'}[filtes.utype1 || filtes.utype2]"></i></span>-->
+                                    <!--</span>-->
+
+                                    <!--<div class="dropdown-menu">-->
+                                        <!--<ul class="ant-dropdown-menu ant-dropdown-menu-vertical  ant-dropdown-menu-light ant-dropdown-menu-root"-->
+                                            <!--aria-labelledby="dLabel">-->
+
+                                            <!--<li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"-->
+                                                <!--ng-click="checkUType2($event)">-->
+                                                <!--<label class="ant-checkbox-wrapper">-->
+                                                    <!--<span class="ant-checkbox "-->
+                                                          <!--ng-class="{true: 'ant-checkbox-checked'}[filtes.utype2]">-->
+                                                        <!--<span class="ant-checkbox-inner"></span>-->
+                                                        <!--<input type="checkbox" class="ant-checkbox-input" value="on">-->
+                                                    <!--</span>-->
+                                                    <!--已审核-->
+                                                <!--</label>-->
+                                            <!--</li>-->
+                                            <!--<li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"-->
+                                                <!--ng-click="checkUType1($event)">-->
+                                                <!--<label class="ant-checkbox-wrapper">-->
+                                                    <!--<span class="ant-checkbox "-->
+                                                          <!--ng-class="{true: 'ant-checkbox-checked'}[filtes.utype1]">-->
+                                                        <!--<span class="ant-checkbox-inner"></span>-->
+                                                        <!--<input type="checkbox" class="ant-checkbox-input" value="on">-->
+                                                    <!--</span>-->
+                                                    <!--申请中-->
+                                                <!--</label>-->
+                                            <!--</li>-->
+                                            <!--&lt;!&ndash;<li class="ant-dropdown-menu-item-divider"></li>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;ng-click="trggerUser($index)">&ndash;&gt;-->
+
+                                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                                            <!--<li>-->
+                                                <!--<div class="ant-table-filter-dropdown-btns">-->
+                                                    <!--<a class="ant-table-filter-dropdown-link confirm"-->
+                                                       <!--ng-click="getAppApplyList()">确定</a>-->
+                                                    <!--<a class="ant-table-filter-dropdown-link clear"-->
+                                                       <!--ng-click="reset($event)">重置</a>-->
+                                                <!--</div>-->
+                                            <!--</li>-->
+
+                                        <!--</ul>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</th>-->
+                            <!--<th class=""><span>服务名称</span></th>-->
+                            <!--<th class=""><span>审核者</span></th>-->
+                            <!--<th class=""><span>申请日期</span></th>-->
+                            <!--<th class=""><span>审核日期</span></th>-->
+                            <!--<th class=""><span>操作</span></th>-->
                         </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
