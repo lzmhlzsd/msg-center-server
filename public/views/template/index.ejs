@@ -54,7 +54,7 @@
                             <td class="">{{item.c_temp_create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td class="">{{item.c_temp_desc}}</td>
                             <td class="">
-                                <span ng-click="approval($index)">
+                                <span>
                                     <a ng-href="/template/edit/{{item.c_temp_no}}">编辑</a>
                                     <span class="ant-divider"></span>
                                     <a href="#" title="同步到短信服务器">同步</a>
@@ -227,56 +227,5 @@
                     }
                 }
 
-                //改变用户类型
-                $scope.approval = function (index) {
-                    var self = this;
-                    BootstrapDialog.show({
-                        title: '提示',
-                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
-                        '<span class="ant-confirm-title">确认审核该申请</span>',
-                        buttons: [{
-                            label: '取消',
-                            cssClass: 'btn-model btn-default',
-                            action: function (dialogItself) {
-                                dialogItself.close();
-                            }
-                        }, {
-                            label: '确认',
-                            cssClass: 'btn-model btn-ant',
-                            action: function (dialogItself) {
-                                $http.post('/approval', {
-                                    id: self.item.id,
-                                    app_id: self.item.app_id,
-                                    serviceid: self.item.service_id
-                                })
-                                        .success(function (result) {
-                                            if (result.status == '0000') {
-                                                self.item.app_type = result.data.fd_type;
-                                                self.item.operator_id = result.data.fd_operator;
-                                                self.item.approval_time = result.data.fd_approval_time;
-                                                UI.success('操作成功', 2000);
-                                                //$scope.$apply();
-                                            }
-                                        })
-                                dialogItself.close();
-                            }
-                        }],
-                        type: BootstrapDialog.TYPE_DEFAULT
-                    });
-
-                }
-
-            }]).
-            filter('utype', function () {
-                return function (input) {
-                    switch (input) {
-                        case 2:
-                            return '已审核'
-                            break;
-                        case 1:
-                            return '申请中'
-                            break;
-                    }
-                }
-            })
+            }])
 </script>

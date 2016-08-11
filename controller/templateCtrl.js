@@ -204,7 +204,7 @@ exports.edit = function (req, res) {
             return;
         }
         else {
-            if(result.length == 0){
+            if (result.length == 0) {
                 utool.errView(res, 'not found', 404);
                 return;
             }
@@ -289,7 +289,7 @@ exports.checktemplateno2 = function (req, res) {
         },
         desc: '校验模板编号唯一性(同一用户下不能相同)'
     }
-    utool.sqlExect('SELECT COUNT(*) as counts FROM t_template WHERE c_temp_userid = ? AND c_temp_no = ?', [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_template WHERE c_temp_userid = ? AND c_temp_no != ?', [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
         if (err) {
             logger.info('校验模板编号唯一性(同一用户下不能相同)：' + JSON.stringify(err));
             res.send({
@@ -351,7 +351,7 @@ exports.savetemplate = function (req, res) {
 }
 
 /**
- * @method savetemplate
+ * @method updatetemplate
  * @author lukaijie
  * @datetime 16/8/11
  */
@@ -367,20 +367,21 @@ exports.updatetemplate = function (req, res) {
         },
         desc: '更新模板'
     }
-    utool.sqlExect('UPDATE t_template SET fd_name = ? , fd_description= ? , fd_remark= ? WHERE fd_serviceid= ? AND fd_uid= ?', [sqlInfo.params], sqlInfo, function (err, result) {
-        if (err) {
-            logger.info('更新模板：' + JSON.stringify(err));
-            res.send({
-                status: '-1000',
-                message: JSON.stringify(err)
-            });
-            return;
-        }
-        else {
-            res.send({
-                status: '0000',
-                message: code['0000']
-            });
-        }
-    })
+    utool.sqlExect('UPDATE t_template SET c_temp_content = ? , c_temp_desc= ? WHERE c_temp_userid= ? AND c_temp_no= ?',
+        [sqlInfo.params.c_temp_content, sqlInfo.params.c_temp_desc, sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('更新模板：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                res.send({
+                    status: '0000',
+                    message: code['0000']
+                });
+            }
+        })
 }
