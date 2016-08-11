@@ -46,7 +46,11 @@
                                 {{item.c_temp_no}}
                             </td>
                             <td class="">
-                                {{item.c_temp_content}}
+                                <span style="white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 200px;">{{item.c_temp_content}}</span>
                             </td>
                             <td class="">
                                 {{item.c_temp_status}}
