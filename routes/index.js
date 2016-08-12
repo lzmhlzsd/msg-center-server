@@ -3,6 +3,7 @@ var indexCtrl = require('../controller/indexCtrl'),
     tempCtrl = require('../controller/templateCtrl'),
     serviceCtrl = require('../controller/serviceCtrl'),
     setupCtrl = require('../controller/setupCtrl'),
+    memCtrl = require('../controller/memCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -59,6 +60,16 @@ module.exports = function (app) {
     app.post('/template/checkno', practice.checkSession, tempCtrl.checktemplateno);
     app.post('/template/checkno2', practice.checkSession, tempCtrl.checktemplateno2);
     /** end:消息模板 **/
+
+    /** start:人员管理 **/
+    app.get('/member', practice.checkSession, memCtrl.index);
+    app.post('/getMemberByUser', practice.checkSession, memCtrl.getMemberByUser);
+    app.get('/getDepartmentUsers', practice.checkSession, memCtrl.getDepartmentUsers);
+    app.get('/member/new', practice.checkSession, memCtrl.create);
+    app.get('/member/edit/:memno', practice.checkSession, memCtrl.edit);
+    app.post('/member/save', practice.checkSession, memCtrl.savemember);
+    app.post('/member/sync', practice.checkSession, memCtrl.sync)
+    /** end:人员管理 **/
 
     /** start:设置中心 **/
     app.get('/setup', practice.checkSession, setupCtrl.index);

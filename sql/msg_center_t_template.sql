@@ -41,7 +41,7 @@ CREATE TABLE `t_template` (
 
 LOCK TABLES `t_template` WRITE;
 /*!40000 ALTER TABLE `t_template` DISABLE KEYS */;
-INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','你好，报警码{{code}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','AFEFEFE',NULL,'','2016-08-11 09:50:23',4);
+INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','Aafefefef',NULL,'111111','2016-08-11 09:50:23',4);
 /*!40000 ALTER TABLE `t_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-11 18:14:24
+-- Dump completed on 2016-08-12 18:06:00

@@ -29,7 +29,7 @@ exports.login = function (req, res, next) {
         },
         desc: ""
     }
-    utool.sqlExect('SELECT * FROM t_user WHERE c_username = ?', [sqlInfo.params.c_username], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_user t1 LEFT JOIN t_config t2 on t1.c_userid = t2.c_userid WHERE c_username = ?', [sqlInfo.params.c_username], sqlInfo, function (err, result) {
         if (err) {
             logger.info('根据用户名查询失败：' + JSON.stringify(err));
             res.send({
@@ -40,7 +40,7 @@ exports.login = function (req, res, next) {
         else {
             if (result.length > 0) {
                 var user = result[0];
-                if(user.c_is_use == 1) {
+                if (user.c_is_use == 1) {
                     if (user.c_pwd == md5(sqlInfo.params.c_pwd)) {
                         req.session['user'] = {
                             customer: user.c_customer,
@@ -50,7 +50,9 @@ exports.login = function (req, res, next) {
                             appscrect: user.c_appscrect,
                             pwd: user.c_pwd,
                             phone: user.c_phone,
-                            email: user.c_email
+                            email: user.c_email,
+                            qyh_cropid: user.c_weixin_qyh_cropid,
+                            qyh_screct: user.c_weixin_qyh_screct
                         }
                         res.send({
                             status: '0000',
@@ -64,7 +66,7 @@ exports.login = function (req, res, next) {
                         });
                     }
                 }
-                else{
+                else {
                     res.send({
                         status: '1006',
                         message: code['1006']
@@ -202,7 +204,7 @@ exports.register = function (req, res) {
     utool.sqlExect('INSERT INTO t_user SET ?', sqlInfo.params, sqlInfo, function (err, result) {
         if (err) {
             logger.info('注册账号：' + JSON.stringify(err));
-            if(err.errno == 1062){
+            if (err.errno == 1062) {
                 res.send({
                     status: '1005',
                     message: code['1005']

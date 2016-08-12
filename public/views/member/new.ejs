@@ -6,24 +6,29 @@
     </div>
     <div class="sidle-right">
         <div class="title">
-            <h4>编辑模板</h4>
+            <h4>新建人员</h4>
         </div>
         <form id="loginForm" class="new-form" style="width: 500px;margin-left: 10px;">
             <div class="type-input">
                 <div class="form-group">
-                    <label for="template_no">模板编号:</label>
-                    <input type="text" class="form-control" id="template_no" name="template_no" disabled
-                           placeholder="模板编号" value="<%= data.c_temp_no %>">
+                    <label for="template_no">人员编号:</label>
+                    <input type="text" class="form-control" id="userno" name="userno"
+                           placeholder="人员编号">
                 </div>
                 <div class="form-group">
-                    <label for="template_content">模板内容:</label>
-                    <textarea rows="6" class="form-control" name="template_content" id="template_content"
-                              placeholder="示例: 您好,{{name}}!"><%= data.c_temp_content %></textarea>
+                    <label for="template_content">姓名:</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           placeholder="姓名">
                 </div>
                 <div class="form-group">
-                    <label for="template_desc">模板描述:</label>
-                    <textarea rows="3" class="form-control" name="template_desc" id="template_desc"
-                              placeholder="模板描述"><%= data.c_temp_desc %></textarea>
+                    <label for="template_desc">手机:</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile"
+                           placeholder="手机">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">邮箱:</label>
+                    <input type="text" class="form-control" id="email" name="email"
+                           placeholder="邮箱">
                 </div>
                 <div class="form-group last" style="margin-top: 30px;">
                     <button type="submit" class="btn btn-ant">保存</button>
@@ -42,14 +47,14 @@
             errorClass: 'help-block',
             focusInvalid: false,
             rules: {
-                template_no: {
+                userno: {
                     required: true,
                     remote: {
                         type: "post",
-                        url: "/template/checkno2",
+                        url: "/member/checkno",
                         data: {
-                            template_no: function () {
-                                return $("#template_no").val();
+                            userno: function () {
+                                return $("#userno").val();
                             }
                         },
                         dataType: "json",
@@ -62,17 +67,29 @@
                         }
                     }
                 },
-                template_content: {
+                name: {
+                    required: true
+                },
+                mobile: {
+                    required: true
+                },
+                email: {
                     required: true
                 }
             },
             messages: {
-                template_no: {
-                    required: "模板编号不能为空!",
+                userno: {
+                    required: "人员编号不能为空!",
                     remote: '模板编号已经存在!'
                 },
-                template_content: {
-                    required: "模板内容不能为空!"
+                name: {
+                    required: "姓名不能为空!"
+                },
+                mobile: {
+                    required: "手机号不能为空!",
+                },
+                email: {
+                    required: "邮箱不能为空!"
                 }
             },
 
@@ -91,13 +108,14 @@
 
             submitHandler: function (form) {
                 //form.submit();
-                $.post('/template/update', {
-                    template_no: $('#template_no').val(),
-                    template_content: $('#template_content').val(),
-                    template_desc: $('#template_desc').val()
+                $.post('/member/save', {
+                    userno: $('#userno').val(),
+                    name: $('#name').val(),
+                    mobile: $('#mobile').val(),
+                    email: $('#email').val()
                 }, function (result) {
                     if (result.status == '0000') {
-                        location.href = '/template';
+                        location.href = '/member';
                     }
                     else {
                         BootstrapDialog.show({

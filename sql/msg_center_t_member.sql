@@ -24,16 +24,20 @@ DROP TABLE IF EXISTS `t_member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_member` (
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
-  `c_mem_name` varchar(45) DEFAULT NULL,
-  `c_mem_no` varchar(45) DEFAULT NULL,
-  `c_depart` varchar(45) DEFAULT NULL COMMENT '部门',
-  `c_phone` varchar(45) DEFAULT NULL,
-  `c_email` varchar(45) DEFAULT NULL,
-  `c_useid` int(11) DEFAULT NULL,
+  `c_avatar` varchar(256) DEFAULT NULL,
+  `c_name` varchar(45) NOT NULL,
+  `c_userno` varchar(45) NOT NULL,
+  `c_department` varchar(45) DEFAULT NULL COMMENT '部门',
+  `c_mobile` varchar(45) NOT NULL,
+  `c_email` varchar(45) NOT NULL,
+  `c_weixinid` varchar(45) DEFAULT NULL,
+  `c_userid` int(11) NOT NULL,
+  `c_sync` int(11) DEFAULT '0' COMMENT '0: 未同步  1：已同步',
+  `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `c_status` int(11) DEFAULT NULL COMMENT '是否关注',
   PRIMARY KEY (`c_id`),
-  UNIQUE KEY `UNIQUE` (`c_useid`,`c_mem_no`),
-  UNIQUE KEY `c_phone_UNIQUE` (`c_phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `UNIQUE` (`c_userid`,`c_userno`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +46,7 @@ CREATE TABLE `t_member` (
 
 LOCK TABLES `t_member` WRITE;
 /*!40000 ALTER TABLE `t_member` DISABLE KEYS */;
+INSERT INTO `t_member` VALUES (1,NULL,'A','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL);
 /*!40000 ALTER TABLE `t_member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-11 18:14:23
+-- Dump completed on 2016-08-12 18:06:00
