@@ -320,14 +320,14 @@ exports.sync = function (req, res) {
     //查询人员
     var sqlInfo = {
         method: 'sync',
-        memo: '根据用户编号查询',
+        memo: '根据用户编号查询需要同步的用户',
         params: {
             c_userid: req.session['user'].userid,
             c_userno: req.params.userno
         },
         desc: '更新人员'
     }
-    utool.sqlExect('SELECT * FROM t_template WHERE c_temp_userid = ? AND c_temp_no = ?', [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_member WHERE c_userid = ? AND c_userno = ?', [sqlInfo.params.c_userid, sqlInfo.params.c_userno], sqlInfo, function (err, result) {
         if (err) {
             logger.info('更新人员：' + JSON.stringify(err));
             utool.errView(res, err);
