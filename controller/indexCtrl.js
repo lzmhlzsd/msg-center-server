@@ -63,6 +63,7 @@ exports.login = function (req, res, next) {
                                     phone: user.c_phone,
                                     email: user.c_email,
                                     userdesc: user.c_desc,
+                                    deadtime: user.c_type == 100 ? '永久' : moment(user.c_dead_time).format('YYYY-MM-DD HH:mm:ss'),
                                     qyh_cropid: user.c_weixin_qyh_cropid,
                                     qyh_screct: user.c_weixin_qyh_screct,
                                     serviceList: result1
