@@ -22,7 +22,7 @@ var API = require('wechat-enterprise').API;
  */
 exports.index = function (req, res, next) {
     res.render('member/index', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',
@@ -34,6 +34,7 @@ exports.index = function (req, res, next) {
             }
         ],
         menu: 'admin',
+        weixinserver: u.where(req.session['user'].serviceList, {c_serviceid: 3}).length > 0 ? true : false,
         submenu: 'admin_member'
     });
 }
@@ -86,7 +87,7 @@ exports.getDepartmentUsers = function (req, res) {
  */
 exports.create = function (req, res) {
     res.render('member/new', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',
@@ -117,11 +118,11 @@ exports.edit = function (req, res) {
         memo: '更新人员',
         params: {
             c_userid: req.session['user'].userid,
-            c_userno: req.params.userno
+            c_userno: req.params.memno
         },
         desc: '更新人员'
     }
-    utool.sqlExect('SELECT * FROM t_template WHERE c_temp_userid = ? AND c_temp_no = ?', [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT * FROM t_member WHERE c_userid = ? AND c_userno = ?', [sqlInfo.params.c_userid, sqlInfo.params.c_userno], sqlInfo, function (err, result) {
         if (err) {
             logger.info('更新人员：' + JSON.stringify(err));
             utool.errView(res, err);
@@ -132,8 +133,8 @@ exports.edit = function (req, res) {
                 utool.errView(res, 'not found', 404);
                 return;
             }
-            res.render('template/edittemplate', {
-                user_name: req.session['user'].username,
+            res.render('member/edit', {
+                session: req.session['user'],
                 navs: [
                     {
                         name: '管理中心',
@@ -145,7 +146,7 @@ exports.edit = function (req, res) {
                     },
                     {
                         name: '编辑人员',
-                        url: '/template/edit/' + req.params.c_userno
+                        url: '/member/edit/' + req.params.c_userno
                     }
                 ],
                 data: result[0],
@@ -154,6 +155,90 @@ exports.edit = function (req, res) {
             });
         }
     })
+}
+
+/**
+ * @method 检查人员编号是否已经存在
+ * @author lukaijie
+ * @datetime 16/8/15
+ */
+exports.checkno = function (req, res) {
+    var sqlInfo = {
+        method: 'checkno',
+        memo: '检查人员编号是否已经存在',
+        params: {
+            c_userid: req.session['user'].userid,
+            c_userno: req.body.userno
+        },
+        desc: '检查人员编号是否已经存在'
+    }
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_member WHERE c_userid = ? AND c_userno = ?', [sqlInfo.params.c_userid, sqlInfo.params.c_userno], sqlInfo, function (err, result) {
+        if (err) {
+            logger.info('检查人员编号是否已经存在：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            if (result[0].counts == 0) {
+                res.send({
+                    status: '0000',
+                    message: code['0000']
+                });
+            }
+            else {
+                res.send({
+                    status: '1008',
+                    message: code['1008']
+                });
+            }
+        }
+    })
+}
+
+/**
+ * @method 检查人员编号是否已经存在
+ * @author lukaijie
+ * @datetime 16/8/15
+ */
+exports.checkno2 = function (req, res) {
+    var sqlInfo = {
+        method: 'checkno',
+        memo: '检查人员编号是否已经存在',
+        params: {
+            c_id: req.body.userid,
+            c_userid: req.session['user'].userid,
+            c_userno: req.body.userno
+        },
+        desc: '检查人员编号是否已经存在'
+    }
+    utool.sqlExect('SELECT COUNT(*) as counts FROM t_member WHERE c_userid = ? AND c_userno = ? AND c_id != ?',
+        [sqlInfo.params.c_userid, sqlInfo.params.c_userno, sqlInfo.params.c_id], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('检查人员编号是否已经存在：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                if (result[0].counts == 0) {
+                    res.send({
+                        status: '0000',
+                        message: code['0000']
+                    });
+                }
+                else {
+                    res.send({
+                        status: '1008',
+                        message: code['1008']
+                    });
+                }
+            }
+        })
 }
 
 /**
@@ -193,6 +278,43 @@ exports.savemember = function (req, res) {
 }
 
 /**
+ * @method 更新人员
+ * @author lukaijie
+ * @datetime 16/8/15
+ */
+exports.updatemember = function (req, res) {
+    var sqlInfo = {
+        method: 'updatemember',
+        memo: '更新人员',
+        params: {
+            c_userid: req.session['user'].userid,
+            c_userno: req.body.userno,
+            c_name: req.body.name,
+            c_mobile: req.body.mobile,
+            c_email: req.body.email
+        },
+        desc: '更新人员'
+    }
+    utool.sqlExect('UPDATE t_member SET c_name = ? , c_mobile = ?, c_email = ? WHERE c_userid= ? AND c_userno= ?',
+        [sqlInfo.params.c_name, sqlInfo.params.c_mobile, sqlInfo.params.c_email, sqlInfo.params.c_userid, sqlInfo.params.c_userno], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('更新人员：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                res.send({
+                    status: '0000',
+                    message: code['0000']
+                });
+            }
+        })
+}
+
+/**
  * @method 根据用户查询人员
  * @author lukaijie
  * @datetime 16/8/12
@@ -224,6 +346,9 @@ exports.getMemberByUser = function (req, res) {
             switch (m.operator) {
                 case 'like':
                     array.push(m.filed + " like '%" + m.value + "%'");
+                    break;
+                case 'eq':
+                    array.push(m.filed + " = '" + m.value + "'");
                     break;
             }
         }
@@ -339,7 +464,7 @@ exports.sync = function (req, res) {
                 return;
             }
             res.render('template/edittemplate', {
-                user_name: req.session['user'].username,
+                session: req.session['user'],
                 navs: [
                     {
                         name: '管理中心',

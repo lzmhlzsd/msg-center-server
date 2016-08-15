@@ -19,7 +19,7 @@ var pool = require('../libs/mysql'),
  */
 exports.index = function (req, res) {
     res.render('service/index', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',

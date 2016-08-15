@@ -4,6 +4,7 @@ var indexCtrl = require('../controller/indexCtrl'),
     serviceCtrl = require('../controller/serviceCtrl'),
     setupCtrl = require('../controller/setupCtrl'),
     memCtrl = require('../controller/memCtrl'),
+    systemCtrl = require('../controller/systemCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -68,7 +69,10 @@ module.exports = function (app) {
     app.get('/member/new', practice.checkSession, memCtrl.create);
     app.get('/member/edit/:memno', practice.checkSession, memCtrl.edit);
     app.post('/member/save', practice.checkSession, memCtrl.savemember);
-    app.post('/member/sync', practice.checkSession, memCtrl.sync)
+    app.post('/member/update', practice.checkSession, memCtrl.updatemember);
+    app.post('/member/sync', practice.checkSession, memCtrl.sync);
+    app.post('/member/checkno', practice.checkSession, memCtrl.checkno);
+    app.post('/member/checkno2', practice.checkSession, memCtrl.checkno2);
     /** end:人员管理 **/
 
     /** start:设置中心 **/
@@ -77,6 +81,8 @@ module.exports = function (app) {
     app.get('/getConfig', practice.checkSession, setupCtrl.getConfig);
     /** end:设置中心 **/
 
+    app.get('/account', practice.checkSession, practice.checkRole, systemCtrl.account);
+    app.post('/getAllAccount', practice.checkSession, practice.checkRole, systemCtrl.getAllAccount);
 
 
     app.locals.brushRespones = function (data, definitions) {

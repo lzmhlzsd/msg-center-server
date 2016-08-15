@@ -1,6 +1,6 @@
 <div class="" style="height: 100%;">
     <ul class="ant-menu ant-menu-inline ant-menu-light ant-menu-root" style="height: 100%;">
-        <li class="ant-menu-submenu-inline ant-menu-submenu <%= menu == 'admin' ? 'ant-menu-submenu-selected ant-menu-submenu-open' : ''%>">
+        <li class="ant-menu-submenu-inline ant-menu-submenu <%= menu == 'admin' ? 'ant-menu-submenu-selected ant-menu-submenu-open' : '' %>">
             <div class="ant-menu-submenu-title">
                 <span>
                     <i class="anticon anticon-appstore"></i>
@@ -8,38 +8,44 @@
                 </span>
             </div>
             <ul class="ant-menu ant-menu-inline ant-menu-sub">
-                <li class="ant-menu-item <%= submenu == 'admin_controller' ? 'ant-menu-item-selected' : ''%>">
+                <li class="ant-menu-item <%= submenu == 'admin_controller' ? 'ant-menu-item-selected' : '' %>">
                     <a href="/index">控制台</a>
                 </li>
-                <li class="ant-menu-item <%= submenu == 'admin_serverlist' ? 'ant-menu-item-selected' : ''%>">
+                <li class="ant-menu-item <%= submenu == 'admin_serverlist' ? 'ant-menu-item-selected' : '' %>">
                     <a href="/serverList">服务列表</a>
                 </li>
-                <li class="ant-menu-item <%= submenu == 'admin_template' ? 'ant-menu-item-selected' : ''%>">
+                <li class="ant-menu-item <%= submenu == 'admin_template' ? 'ant-menu-item-selected' : '' %>">
                     <a href="/template">消息模板</a>
                 </li>
-                <li class="ant-menu-item <%= submenu == 'admin_member' ? 'ant-menu-item-selected' : ''%>">
+                <li class="ant-menu-item <%= submenu == 'admin_member' ? 'ant-menu-item-selected' : '' %>">
                     <a href="/member">通讯管理</a>
                 </li>
-                <li class="ant-menu-item <%= submenu == 'admin_setup' ? 'ant-menu-item-selected' : ''%>">
+                <li class="ant-menu-item <%= submenu == 'admin_setup' ? 'ant-menu-item-selected' : '' %>">
                     <a href="/setup">设置中心</a>
                 </li>
-                <li class="ant-menu-item <%= submenu == 'admin_app' ? 'ant-menu-item-selected' : ''%>">
-                    <a href="/app">消息日志</a>
+                <li class="ant-menu-item <%= submenu == 'admin_log' ? 'ant-menu-item-selected' : '' %>">
+                    <a href="/log">消息日志</a>
                 </li>
             </ul>
         </li>
 
-        <li class="ant-menu-submenu-inline ant-menu-submenu <%= menu == 'admin1' ? 'ant-menu-submenu-selected ant-menu-submenu-open' : ''%>">
+        <% if( session.usertype == 100) { %>
+        <li class="ant-menu-submenu-inline ant-menu-submenu <%= menu == 'system' ? 'ant-menu-submenu-selected ant-menu-submenu-open' : '' %>">
             <div class="ant-menu-submenu-title">
                 <span>
                     <i class="anticon anticon-appstore"></i>
-                    <span>导航二</span>
+                    <span>系统管理</span>
                 </span>
             </div>
             <ul class="ant-menu ant-menu-inline ant-menu-sub">
-                <li class="ant-menu-item">选项5</li>
-                <li class="ant-menu-item">选项6</li>
+                <li class="ant-menu-item <%= submenu == 'system_account' ? 'ant-menu-item-selected' : '' %>">
+                    <a href="/account">账号管理</a>
+                </li>
+                <li class="ant-menu-item <%= submenu == 'system_apply' ? 'ant-menu-item-selected' : '' %>">
+                    <a href="/apply">服务申请</a>
+                </li>
             </ul>
         </li>
+        <% } %>
     </ul>
 </div>

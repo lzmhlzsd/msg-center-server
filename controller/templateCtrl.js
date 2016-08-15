@@ -20,7 +20,7 @@ var pool = require('../libs/mysql'),
  */
 exports.index = function (req, res, next) {
     res.render('template/index', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',
@@ -68,6 +68,9 @@ exports.getTemplateByUser = function (req, res) {
             switch (m.operator) {
                 case 'like':
                     array.push(m.filed + " like '%" + m.value + "%'");
+                    break;
+                case 'eq':
+                    array.push(m.filed + " = '" + m.value + "'");
                     break;
             }
         }
@@ -162,7 +165,7 @@ exports.getTemplateByUser = function (req, res) {
  */
 exports.create = function (req, res) {
     res.render('template/newtemplate', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',
@@ -209,7 +212,7 @@ exports.edit = function (req, res) {
                 return;
             }
             res.render('template/edittemplate', {
-                user_name: req.session['user'].username,
+                session: req.session['user'],
                 navs: [
                     {
                         name: '管理中心',
@@ -284,35 +287,37 @@ exports.checktemplateno2 = function (req, res) {
         method: 'checktemplateno2',
         memo: '校验模板编号唯一性(同一用户下不能相同)',
         params: {
+            c_temp_id: req.body.template_id,
             c_temp_userid: req.session['user'].userid,
             c_temp_no: req.body.template_no
         },
         desc: '校验模板编号唯一性(同一用户下不能相同)'
     }
-    utool.sqlExect('SELECT COUNT(*) as counts FROM t_template WHERE c_temp_userid = ? AND c_temp_no != ?', [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no], sqlInfo, function (err, result) {
-        if (err) {
-            logger.info('校验模板编号唯一性(同一用户下不能相同)：' + JSON.stringify(err));
-            res.send({
-                status: '-1000',
-                message: JSON.stringify(err)
-            });
-            return;
-        }
-        else {
-            if (result[0].counts > 0) {
+    utool.sqlExect('SELECT * FROM t_template WHERE c_temp_userid = ? AND c_temp_no == ? AND c_temp_id != ?',
+        [sqlInfo.params.c_temp_userid, sqlInfo.params.c_temp_no, sqlInfo.params.c_temp_id], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('校验模板编号唯一性(同一用户下不能相同)：' + JSON.stringify(err));
                 res.send({
-                    status: '1007',
-                    message: code['1007']
+                    status: '-1000',
+                    message: JSON.stringify(err)
                 });
+                return;
             }
             else {
-                res.send({
-                    status: '0000',
-                    message: code['0000']
-                });
+                if (result[0].counts > 0) {
+                    res.send({
+                        status: '1007',
+                        message: code['1007']
+                    });
+                }
+                else {
+                    res.send({
+                        status: '0000',
+                        message: code['0000']
+                    });
+                }
             }
-        }
-    })
+        })
 }
 
 /**

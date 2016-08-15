@@ -20,7 +20,7 @@ var pool = require('../libs/mysql'),
  */
 exports.index = function (req, res, next) {
     res.render('setup/index', {
-        user_name: req.session['user'].username,
+        session: req.session['user'],
         navs: [
             {
                 name: '管理中心',
@@ -105,7 +105,7 @@ exports.saveConfig = function (req, res) {
             req.session['user'].qyh_screct = user.c_weixin_qyh_screct;
 
             if (result[0].counts == 0) {
-                sqlInfo.desc = '插入数据'
+                sqlInfo.desc = '插入数据';
                 utool.sqlExect('INSERT INTO t_config SET ?', sqlInfo.params, sqlInfo, function (err, result) {
                     if (err) {
                         res.send({
@@ -122,7 +122,7 @@ exports.saveConfig = function (req, res) {
                 });
             }
             else {
-                sqlInfo.desc = '更新数据'
+                sqlInfo.desc = '更新数据';
                 utool.sqlExect('UPDATE t_config SET c_email_host = ?, c_email_port = ?, \
                     c_email_username = ?,c_email_password = ?,c_msg_apikey = ?,c_weixin_qyh_cropid = ?,c_weixin_qyh_screct = ?\
                     WHERE c_userid = ?',

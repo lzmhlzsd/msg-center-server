@@ -10,3 +10,13 @@ exports.checkSession = function (req, res, next) {
         res.redirect('/');
     }
 }
+
+exports.checkRole = function (req, res, next) {
+    console.log('校验权限');
+    if (req.session['user'].usertype == 100) {
+        next();
+    }
+    else {
+        res.redirect('/');
+    }
+}

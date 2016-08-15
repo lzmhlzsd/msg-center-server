@@ -32,15 +32,19 @@
                            ng-model="keyword">
                 </span>
                 <div class="ant-input-group-wrap">
-                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn"><i
-                                class="anticon anticon-search"></i></button>
+                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn">
+                        <i class="anticon anticon-search"></i></button>
                 </div>
             </span>
 
 
         </div>
+        <% if(weixinserver) { %>
+        <a class="btn btn-ant" style="float: right;position: relative;top: -5px; margin-left: 5px;" ng-click="sync()">同步到微信</a>
+        <% } %>
+
         <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/member/new">新建人员</a>
-        <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-click="sync()">同步到微信</a>
+
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
             <div class="ant-table-content">
@@ -50,7 +54,7 @@
                         <tr>
                             <th class=""><span>姓名</span></th>
                             <th class=""><span>人员编号</span></th>
-                            <th class=""><span>状态</span></th>
+                            <th class=""><span>状态(微信)</span></th>
                             <th class=""><span>手机</span></th>
                             <th class=""><span>邮箱</span></th>
                             <th class=""><span>操作</span></th>
@@ -70,15 +74,22 @@
                                 {{item.c_userno}}
                             </td>
                             <td class="">
-                                {{item.c_status}}
+                                {{item.c_status == 0 ? '未同步': '已同步'}}
                             </td>
                             <td class="">{{item.c_mobile}}</td>
                             <td class="">{{item.c_email}}</td>
                             <td class="">
                                 <span>
                                     <a ng-href="/member/edit/{{item.c_userno}}">编辑</a>
-                                    <!--<span class="ant-divider"></span>-->
-                                    <!--<a href="#" title="同步到微信">同步</a>-->
+                                    <span class="ant-divider"></span>
+                                    <a>删除</a>
+                                    <% if(weixinserver) { %>
+                                    <span class="ant-divider"></span>
+
+                                    <a href="#" title="同步到微信" ng-click="sycn()">
+                                        <i class="anticon anticon-loading"></i>同步中...
+                                    </a>
+                                    <% } %>
                                     <!--<a href="#" class="ant-dropdown-link">更多-->
                                         <!--<i class="anticon anticon-down"></i>-->
                                     <!--</a>-->
@@ -248,6 +259,34 @@
                 }
 
                 $scope.sync = function () {
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认同步到微信</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.post('/applyservice', {
+                                    serviceid: self.item.c_serviceid,
+                                    servicename: self.item.c_servicename
+                                }).success(function (result) {
+                                    if (result.status == '0000') {
+                                        self.item.c_apply_status = 1;
+                                        self.item.c_apply_time = result.data;
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
                     var params = [];
                     _.each($scope.table, function (value, key) {
                         params.push(value.c_userno);
@@ -262,27 +301,5 @@
                                 }
                             })
                 }
-
-
-//                    $http.get('/getDepartmentUsers')
-//                            .success(function (result) {
-//                                if (result.status == '0000') {
-//
-//                                }
-//                                else {
-////                                    BootstrapDialog.show({
-////                                        title: '提示',
-////                                        message: '<i class="icon-model anticon anticon-cross-circle"></i>' +
-////                                        '<span class="ant-confirm-title">' + result.message + '</span>',
-////                                        type: BootstrapDialog.TYPE_DEFAULT,
-////                                        onshow: function (dialogRef) {
-////                                            setTimeout(function () {
-////                                                dialogRef.close();
-////                                            }, 2000);
-////                                        }
-////                                    });
-//                                }
-//                            })
-
             }])
 </script>

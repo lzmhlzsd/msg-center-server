@@ -3,12 +3,12 @@
 <head>
     <title>Shopex开放平台</title>
 
-    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/bootstrap-dialog/dist/css/bootstrap-dialog.min.css" />
-    <link rel="stylesheet" href="/antd/dist/antd.min.css" />
-    <link rel="stylesheet" href="/angular-loading-bar/build/loading-bar.min.css" />
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/bootstrap-dialog/dist/css/bootstrap-dialog.min.css"/>
+    <link rel="stylesheet" href="/antd/dist/antd.min.css"/>
+    <link rel="stylesheet" href="/angular-loading-bar/build/loading-bar.min.css"/>
     <!--build:css stylesheets/wapmain.min.css -->
-    <link rel='stylesheet' href='/css/main.css' />
+    <link rel='stylesheet' href='/css/main.css'/>
     <!--/build-->
 
 </head>
@@ -24,10 +24,19 @@
                 </a>
             </div>
             <ul class="nav navbar-nav navbar-menu pull-right">
-                <li ><a href="/apis">账号: <%= user_name %></a></li>
-                <li >
-                    <a href="javascript:void(0);" id="logout">退出</a>
+                <li>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false" style="background-color: transparent !important;"><%= session.userdesc %>: <%= session.username %></a>
+                    <ul class="dropdown-menu dropdown-ant custom-center">
+                        <li class="ant-dropdown-menu-item"><a href="#">系统设置</a></li>
+                        <li class="ant-dropdown-menu-item"><a href="#">密码更改</a></li>
+                        <li class=" ant-dropdown-menu-item-divider"></li>
+                        <li class="ant-dropdown-menu-item"><a href="javascript:void(0);" id="logout">退出系统</a></li>
+                    </ul>
                 </li>
+                <!--<li>-->
+                    <!--<a href="javascript:void(0);" id="logout">退出</a>-->
+                <!--</li>-->
             </ul>
         </div>
     </div>
@@ -36,15 +45,14 @@
         <div class="ant-breadcrumb">
             <% navs.forEach(function(nav){ %>
             <% if(nav.url != null) { %>
-            <span><a class="ant-breadcrumb-link" href="<%= nav.url %>"><%= nav.name %></a><span class="ant-breadcrumb-separator">&gt;</span></span>
+            <span><a class="ant-breadcrumb-link" href="<%= nav.url %>"><%= nav.name %></a><span
+                        class="ant-breadcrumb-separator">&gt;</span></span>
             <% } else { %>
 
-            <span><span class="ant-breadcrumb-link"><%= nav.name %></span><span class="ant-breadcrumb-separator">&gt;</span></span>
+            <span><span class="ant-breadcrumb-link"><%= nav.name %></span><span
+                        class="ant-breadcrumb-separator">&gt;</span></span>
             <% } %>
             <% }) %>
-
-            <!--<span><span class="ant-breadcrumb-link">管理中心</span><span class="ant-breadcrumb-separator">&gt;</span></span>-->
-            <!--<span><a class="ant-breadcrumb-link" href="">账号管理</a><span class="ant-breadcrumb-separator">&gt;</span></span>-->
         </div>
     </div>
 

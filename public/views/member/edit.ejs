@@ -10,25 +10,30 @@
         </div>
         <form id="loginForm" class="new-form" style="width: 500px;margin-left: 10px;">
             <div class="type-input">
+                <div class="form-group" style="display: none;">
+                    <label for="userid">人员ID:</label>
+                    <input type="text" class="form-control" id="userid" name="userid" disabled
+                           placeholder="人员ID" value="<%= data.c_id %>">
+                </div>
                 <div class="form-group">
-                    <label for="template_no">人员编号:</label>
+                    <label for="userno">人员编号:</label>
                     <input type="text" class="form-control" id="userno" name="userno" disabled
-                           placeholder="人员编号">
+                           placeholder="人员编号" value="<%= data.c_userno %>">
                 </div>
                 <div class="form-group">
-                    <label for="template_content">姓名:</label>
+                    <label for="name">姓名:</label>
                     <input type="text" class="form-control" id="name" name="name"
-                           placeholder="姓名">
+                           placeholder="姓名" value="<%= data.c_name %>">
                 </div>
                 <div class="form-group">
-                    <label for="template_desc">手机:</label>
+                    <label for="mobile">手机:</label>
                     <input type="text" class="form-control" id="mobile" name="mobile"
-                           placeholder="手机">
+                           placeholder="手机" value="<%= data.c_mobile %>">
                 </div>
                 <div class="form-group">
-                    <label for="template_desc">邮箱:</label>
+                    <label for="email">邮箱:</label>
                     <input type="text" class="form-control" id="email" name="email"
-                           placeholder="邮箱">
+                           placeholder="邮箱" value="<%= data.c_email %>">
                 </div>
                 <div class="form-group last" style="margin-top: 30px;">
                     <button type="submit" class="btn btn-ant">保存</button>
@@ -51,7 +56,7 @@
                     required: true,
                     remote: {
                         type: "post",
-                        url: "/member/checkno",
+                        url: "/member/checkno2",
                         data: {
                             userno: function () {
                                 return $("#userno").val();
@@ -80,7 +85,7 @@
             messages: {
                 userno: {
                     required: "人员编号不能为空!",
-                    remote: '模板编号已经存在!'
+                    remote: '人员编号已经存在!'
                 },
                 name: {
                     required: "姓名不能为空!"
@@ -108,7 +113,8 @@
 
             submitHandler: function (form) {
                 //form.submit();
-                $.post('/member/save', {
+                $.post('/member/update', {
+                    userid: $('#userid').val(),
                     userno: $('#userno').val(),
                     name: $('#name').val(),
                     mobile: $('#mobile').val(),

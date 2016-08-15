@@ -241,3 +241,34 @@ html, body {
 /*border-radius: 4px;*/
 /*height: 32px;*/
 /*border: 1px solid #d9d9d9;*/
+.dropdown-ant{
+    right: 11px !important;
+    border-radius: 5px !important;
+}
+.dropdown-ant li a{
+    color: #666 !important;
+}
+.dropdown-menu{
+    left: inherit;
+}
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+    background-color: #eaf8fe;
+}
+
+.custom-center:before {
+    top: -22px;
+    left: 129px;
+    border: 11px solid transparent;
+    border-bottom-color: #ccc;
+}
+
+.custom-center:before, .custom-center:after {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -20px;
+    left: 130px;
+    border: 10px solid transparent;
+    border-bottom-color: #ffffff;
+}
