@@ -67,10 +67,10 @@ CREATE TABLE `t_member` (
   `c_userid` int(11) NOT NULL,
   `c_sync` int(11) DEFAULT '0' COMMENT '0: 未同步  1：已同步',
   `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `c_status` int(11) DEFAULT NULL COMMENT '是否关注',
+  `c_status` int(11) DEFAULT '0' COMMENT '是否关注',
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `UNIQUE` (`c_userid`,`c_userno`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `t_member` (
 
 LOCK TABLES `t_member` WRITE;
 /*!40000 ALTER TABLE `t_member` DISABLE KEYS */;
-INSERT INTO `t_member` VALUES (1,NULL,'A','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',NULL);
+INSERT INTO `t_member` VALUES (1,NULL,'A1','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0);
 /*!40000 ALTER TABLE `t_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +135,7 @@ CREATE TABLE `t_service` (
 
 LOCK TABLES `t_service` WRITE;
 /*!40000 ALTER TABLE `t_service` DISABLE KEYS */;
-INSERT INTO `t_service` VALUES (1,'邮件',1,1,'邮件'),(2,'短信',2,1,'短信'),(3,'微信企业号',3,0,'微信企业号');
+INSERT INTO `t_service` VALUES (1,'邮件',1,1,'邮件'),(2,'短信',2,1,'短信'),(3,'微信企业号',3,1,'微信企业号');
 /*!40000 ALTER TABLE `t_service` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +165,7 @@ CREATE TABLE `t_template` (
 
 LOCK TABLES `t_template` WRITE;
 /*!40000 ALTER TABLE `t_template` DISABLE KEYS */;
-INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','Aafefefef',NULL,'111111','2016-08-11 09:50:23',4);
+INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','AafefefefWFE131',NULL,'111111','2016-08-11 09:50:23',4);
 /*!40000 ALTER TABLE `t_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,7 +184,7 @@ CREATE TABLE `t_user` (
   `c_role` int(11) DEFAULT '2',
   `c_pwd` varchar(45) DEFAULT NULL,
   `c_is_use` int(11) DEFAULT NULL COMMENT '是否可用',
-  `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `c_create_time` datetime DEFAULT NULL,
   `c_dead_time` datetime DEFAULT NULL COMMENT '有效时间',
   `c_phone` varchar(11) DEFAULT NULL COMMENT '手机号码',
   `c_email` varchar(45) DEFAULT NULL COMMENT '邮箱',
@@ -193,7 +193,7 @@ CREATE TABLE `t_user` (
   `c_desc` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`c_userid`),
   UNIQUE KEY `c_username_UNIQUE` (`c_username`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +202,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES (1,NULL,'lkj',100,2,'202cb962ac59075b964b07152d234b70',1,'2016-06-23 14:54:05',NULL,NULL,NULL,NULL,NULL,'高级管理员'),(4,'LX','lzmhlzsd',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 05:51:39',NULL,'13917609856','','yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA','普通账号'),(7,'BZ','abc',1,2,'202cb962ac59075b964b07152d234b70',0,'2016-08-08 10:01:03',NULL,'13917609856',NULL,'yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA',NULL);
+INSERT INTO `t_user` VALUES (1,NULL,'lkj',100,2,'202cb962ac59075b964b07152d234b70',1,'2016-06-23 22:54:05',NULL,NULL,NULL,NULL,NULL,'高级管理员'),(4,'LX','lzmhlzsd',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 13:51:39',NULL,'13917609856','','yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(7,'BZ','abc',1,2,'202cb962ac59075b964b07152d234b70',0,'2016-08-08 18:01:03',NULL,'13917609856',NULL,'yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(9,'BBZZ','lzmhlzsd12',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 10:41:34',NULL,'','','cxGNwXJSsB','Cxnpe2K6HzQxDbhEzxth8PdHzhrGK5YC','账号'),(10,'a','a',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 16:54:51','2017-08-15 16:54:51','13917609856','332847979@qq.com','aHXRpnnRJf','CsQNsb6TCTPXSS7B2sZtT7Zyx6dswKPf','账号');
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -222,7 +222,7 @@ CREATE TABLE `t_user_service` (
   `c_approval_time` datetime DEFAULT NULL COMMENT '审核日期',
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `UNIQUE` (`c_userid`,`c_serviceid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -231,7 +231,7 @@ CREATE TABLE `t_user_service` (
 
 LOCK TABLES `t_user_service` WRITE;
 /*!40000 ALTER TABLE `t_user_service` DISABLE KEYS */;
-INSERT INTO `t_user_service` VALUES (2,4,1,1,'2016-08-08 16:01:12',NULL),(3,4,2,1,'2016-08-08 16:02:36',NULL);
+INSERT INTO `t_user_service` VALUES (2,4,1,1,'2016-08-08 16:01:12',NULL),(3,4,2,1,'2016-08-08 16:02:36',NULL),(4,4,3,2,'2016-08-15 12:02:36','2016-08-15 12:30:36');
 /*!40000 ALTER TABLE `t_user_service` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -244,4 +244,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-12 18:05:49
+-- Dump completed on 2016-08-15 17:52:09
