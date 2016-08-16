@@ -81,9 +81,15 @@ module.exports = function (app) {
     app.get('/getConfig', practice.checkSession, setupCtrl.getConfig);
     /** end:设置中心 **/
 
+    /** start:系统管理 **/
     app.get('/account', practice.checkSession, practice.checkRole, systemCtrl.account);
     app.post('/getAllAccount', practice.checkSession, practice.checkRole, systemCtrl.getAllAccount);
+    app.post('/trggerUser', practice.checkSession, practice.checkRole, systemCtrl.trggerUser);
+    app.post('/isUse', practice.checkSession, practice.checkRole, systemCtrl.isUse);
 
+    app.get('/approvalList', practice.checkSession, practice.checkRole, systemCtrl.approvalList);
+    app.post('/getAllServiceList', practice.checkSession, practice.checkRole, systemCtrl.getAllServiceList);
+    /** end:系统管理 **/
 
     app.locals.brushRespones = function (data, definitions) {
 

@@ -82,7 +82,8 @@ exports.getServiceList = function (req, res) {
                         u.extend(m, {
                             c_apply_status: 0,    //应用是否拥有服务 0:未申请 1:申请中; 2:已获得
                             c_apply_time: '',     //申请日期
-                            c_approval_time: ''   //审核日期
+                            c_approval_time: '',   //审核日期
+                            c_dead_time: ''        //到期日期
                         });
                     })
 
@@ -92,6 +93,7 @@ exports.getServiceList = function (req, res) {
                             result1[i]['c_apply_status'] = data[0].c_service_status;
                             result1[i]['c_apply_time'] = data[0].c_apply_time;
                             result1[i]['c_approval_time'] = data[0].c_approval_time;
+                            result1[i]['c_dead_time'] = data[0].c_dead_time;
                         }
                     }
                     console.log(result1);
@@ -188,8 +190,8 @@ exports.approval = function (req, res) {
         console.log('memcached: ' + JSON.stringify(data));
         if (data) {
             var approvaltime = new Date();
-            utool.sqlExect('UPDATE t_user_service SET c_service_status = 2, c_approval_time = ? WHERE c_userid = ? AND c_serviceid = ?',
-                [approvaltime, data.useid, data.serviceid], sqlInfo, function (err, result) {
+            utool.sqlExect('UPDATE t_user_service SET c_service_status = 2, c_approval_time = ?, c_dead_time = ? WHERE c_userid = ? AND c_serviceid = ?',
+                [approvaltime, moment(approvaltime).add(1, 'years'), data.useid, data.serviceid], sqlInfo, function (err, result) {
                     if (err) {
                         logger.info('审批服务申请：' + JSON.stringify(err));
                         utool.errView(res, err);

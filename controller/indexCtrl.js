@@ -63,7 +63,7 @@ exports.login = function (req, res, next) {
                                     phone: user.c_phone,
                                     email: user.c_email,
                                     userdesc: user.c_desc,
-                                    deadtime: user.c_type == 100 ? '永久' : moment(user.c_dead_time).format('YYYY-MM-DD HH:mm:ss'),
+                                    //deadtime: user.c_type == 100 ? '永久' : moment(user.c_dead_time).format('YYYY-MM-DD HH:mm:ss'),
                                     qyh_cropid: user.c_weixin_qyh_cropid,
                                     qyh_screct: user.c_weixin_qyh_screct,
                                     serviceList: result1
@@ -196,7 +196,7 @@ exports.register = function (req, res) {
             c_appkey: utool.randomString(10),
             c_appscrect: utool.randomString(32),
             c_create_time: moment(registdate).format('YYYY-MM-DD HH:mm:ss'),
-            c_dead_time: moment(registdate).add(1, 'years').format('YYYY-MM-DD HH:mm:ss'),
+            //c_dead_time: moment(registdate).add(1, 'years').format('YYYY-MM-DD HH:mm:ss'),
             c_desc: '账号'
         },
         desc: ""
