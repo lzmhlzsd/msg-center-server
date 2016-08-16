@@ -1,4 +1,5 @@
 <% include ../common/header.ejs %>
+<link rel="stylesheet" href="/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css"/>
 <style type="text/css">
     .user-img {
         display: inline-block;
@@ -40,8 +41,6 @@
 
         </div>
 
-        <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/member/new">新建人员</a>
-
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
             <div class="ant-table-content">
@@ -52,6 +51,7 @@
                             <th class=""><span>客户名称</span></th>
                             <th class=""><span>账号</span></th>
                             <th class=""><span>服务名称</span></th>
+                            <th class=""><span>状态</span></th>
                             <th class=""><span>申请日期</span></th>
                             <th class=""><span>审批日期</span></th>
                             <th class=""><span>到期日期</span></th>
@@ -67,87 +67,17 @@
                                 {{item.c_username}}
                             </td>
                             <td class="">
-                                <!--{{item.c_type | utype}}-->
-                                <div class="dropdown ant-dropdown-custom">
-                                    <a id="dLabel" class="ant-dropdown-link" data-target="#" href="javascript:void(0);"
-                                       data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        {{item.c_type | utype}}
-                                        <i class="anticon anticon-down"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu">
-                                        <ul class="ant-dropdown-menu ant-dropdown-menu-vertical  ant-dropdown-menu-light ant-dropdown-menu-root"
-                                            aria-labelledby="dLabel">
-
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="trggerUser(2)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox ant-checkbox-checked-1"
-                                                          ng-class="{2: 'ant-checkbox-checked'}[item.c_type]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    管理员
-                                                </label>
-                                            </li>
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="trggerUser(1)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox ant-checkbox-checked-1"
-                                                          ng-class="{1: 'ant-checkbox-checked'}[item.c_type]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    普通用户
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                {{item.c_servicename}}
                             </td>
                             <td class="">
-                                <div class="dropdown ant-dropdown-custom">
-                                    <a id="dLabel" class="ant-dropdown-link" data-target="#" href="javascript:void(0);"
-                                       data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        {{item.c_is_use | isuse}}
-                                        <i class="anticon anticon-down"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu">
-                                        <ul class="ant-dropdown-menu ant-dropdown-menu-vertical  ant-dropdown-menu-light ant-dropdown-menu-root"
-                                            aria-labelledby="dLabel">
-
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="is_use(1)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox ant-checkbox-checked-1"
-                                                          ng-class="{1: 'ant-checkbox-checked'}[item.c_is_use]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    可用
-                                                </label>
-                                            </li>
-                                            <li class="ant-dropdown-menu-item" role="menuitem" aria-selected="false"
-                                                ng-click="is_use(0)">
-                                                <label class="ant-checkbox-wrapper">
-                                                    <span class="ant-checkbox ant-checkbox-checked-1"
-                                                          ng-class="{0: 'ant-checkbox-checked'}[item.c_is_use]">
-                                                        <span class="ant-checkbox-inner"></span>
-                                                        <input type="checkbox" class="ant-checkbox-input" value="on">
-                                                    </span>
-                                                    禁用
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                {{item.c_service_status | servicestatus}}
                             </td>
-                            <td class="">{{item.c_create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
-                            <!--<td class="">{{item.c_dead_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>-->
+                            <td class="">{{item.c_apply_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td class="">{{item.c_approval_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td class="">{{item.c_dead_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td class="">
                                 <span>
-                                    <a href="javascript:void(0);" ng-click="view()">查看明细</a>
+                                    <a href="javascript:void(0);" ng-click="view()">审核</a>
                                     <!--<span class="ant-divider"></span>-->
                                     <!--<a>删除</a>-->
                                     <!--<a href="#" class="ant-dropdown-link">更多-->
@@ -193,6 +123,8 @@
 </div>
 <% include ../common/footer.ejs %>
 
+<script type="text/javascript" src="/bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript">
     angular.module('myApp', ['angular-loading-bar'])
             .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
@@ -315,40 +247,20 @@
                     }
                 }
 
-                $scope.trggerUser = function (value) {
-                    var self = this;
-                    $http.post('/trggerUser', {
-                        userid: self.item.c_userid,
-                        type: value
-                    }).success(function (result) {
-                        if (result.status == '0000') {
-                            self.item.c_type = value;
-                        }
-                    })
-                }
-
-                $scope.is_use = function (value) {
-                    var self = this;
-                    $http.post('/isUse', {
-                        userid: self.item.c_userid,
-                        isuse: value
-                    }).success(function (result) {
-                        if (result.status == '0000') {
-                            self.item.c_is_use = value;
-                        }
-                    })
-                }
-
                 $scope.view = function () {
-                    var message = '<ul>' +
-                            '<li>手机号码：' + this.item.c_phone + '</li>' +
-                            '<li>电子邮箱：' + this.item.c_email + '</li>' +
-                            '<li>appKey：' + this.item.c_appkey + '</li>' +
-                            '<li>Screct：' + this.item.c_appscrect + '</li>' +
-                            '</ul>'
+                    var message = '<div id="datetimepicker" class="input-append date form_datetime">' +
+                            '<input size="16" type="text" value="" style="width: 200px;">' +
+                            '<span class="add-on"><i class="icon-th"></i></span>' +
+                            '</div>';
+
                     BootstrapDialog.show({
                         title: '提示',
                         message: message,
+                        onshown: function (dialog) {
+                            $('#datetimepicker').datetimepicker({
+                                format: 'yyyy-mm-dd hh:ii:ss'
+                            });
+                        },
                         buttons: [{
                             label: '取消',
                             cssClass: 'btn-model btn-default',
@@ -358,31 +270,20 @@
                         }],
                         type: BootstrapDialog.TYPE_DEFAULT
                     });
+
                 }
             }])
-            .filter('utype', function () {
-                return function (input) {
-                    switch (input) {
-                        case 100:
-                            return '高级管理员'
-                            break;
-                        case 2:
-                            return '管理员'
-                            break;
-                        case 1:
-                            return '普通用户'
-                            break;
-                    }
-                }
-            })
-            .filter('isuse', function () {
+            .filter('servicestatus', function () {
                 return function (input) {
                     switch (input) {
                         case 0:
-                            return '禁用'
+                            return '未申请'
                             break;
                         case 1:
-                            return '可用'
+                            return '申请中'
+                            break;
+                        case 2:
+                            return '已审批'
                             break;
                     }
                 }

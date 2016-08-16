@@ -312,7 +312,8 @@ exports.getAllServiceList = function (req, res) {
         wherestr = ' WHERE ' + array.toString();
     }
 
-    var sql1 = 'SELECT COUNT(*) AS counts FROM(SELECT t1.c_id,t2.c_customer,t1.c_userid,t2.c_username,c_servicename,c_apply_time,c_approval_time FROM t_user_service t1\
+    var sql1 = 'SELECT COUNT(*) AS counts FROM(\
+    SELECT t1.c_id,t2.c_customer,t1.c_userid,t2.c_username,t3.c_servicename,t1.c_service_status,t1.c_apply_time,t1.c_approval_time,t1.c_dead_time FROM t_user_service t1\
     LEFT JOIN t_user t2 on t1.c_userid = t2.c_userid\
     LEFT JOIN t_service t3 on t1.c_serviceid = t3.c_serviceid) AS db';
 
@@ -329,7 +330,7 @@ exports.getAllServiceList = function (req, res) {
             console.log('counts:' + result[0].counts);
             var count = result[0].counts;
             if (result[0].counts > 0) {
-                var sql2 = 'SELECT * FROM (SELECT t1.c_id,t2.c_customer,t1.c_userid,t2.c_username,c_servicename,c_apply_time,c_approval_time FROM t_user_service t1\
+                var sql2 = 'SELECT * FROM (SELECT t1.c_id,t2.c_customer,t1.c_userid,t2.c_username,t3.c_servicename,t1.c_service_status,t1.c_apply_time,t1.c_approval_time,t1.c_dead_time FROM t_user_service t1\
                 LEFT JOIN t_user t2 on t1.c_userid = t2.c_userid\
                 LEFT JOIN t_service t3 on t1.c_serviceid = t3.c_serviceid) AS db';
 
