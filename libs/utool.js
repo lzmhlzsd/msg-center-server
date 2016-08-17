@@ -57,7 +57,7 @@ module.exports = {
         pool.acquire(function (err, client) {
             if (err) {
                 einfo = u.extend(errinfo, {err: err});
-                logger.error(einfo.method, einfo.memo, einfo.params, JSON.stringify(einfo.err), einfo.desc);
+                logger.error(einfo.method, einfo.memo, einfo.params, einfo.err, einfo.desc);
                 callback(err);
             }
             else {
@@ -65,7 +65,7 @@ module.exports = {
                     pool.release(client);
                     if (err) {
                         einfo = u.extend(errinfo, {err: err});
-                        logger.error(einfo.method, einfo.memo, einfo.params, JSON.stringify(einfo.err), einfo.desc);
+                        logger.error(einfo.method, einfo.memo, einfo.params, einfo.err, einfo.desc);
                         callback(err);
                     }
                     else {

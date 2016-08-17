@@ -35,6 +35,7 @@ module.exports = function (app) {
     app.get('/getServiceList', practice.checkSession, serviceCtrl.getServiceList);
     app.post('/applyservice', practice.checkSession, serviceCtrl.applyservice);
     app.get('/approval', serviceCtrl.approval);
+    app.post('/approvalpc', practice.checkSession, serviceCtrl.approvalpc);
     /** end;serverList **/
 
     ///** start:应用 **/

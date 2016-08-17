@@ -10,6 +10,7 @@ var pool = require('../libs/mysql'),
     u = require('underscore'),
     redis = require('../libs/redis'),
     memcached = require('../libs/memcached').memchached,
+    moment = require('moment'),
     logger = require('../libs/logger');
 
 /**
@@ -231,4 +232,78 @@ exports.approval = function (req, res) {
             res.send('该审批链接已经过时!');
         }
     })
+}
+
+/**
+ * @method 审批服务
+ * @author lukaijie
+ * @datetime 16/8/17
+ */
+exports.approvalpc = function (req, res) {
+    var sqlInfo = {
+        method: 'approvalpc',
+        memo: '审批服务申请',
+        params: {
+            c_userid: req.body.userid,
+            c_serviceid: req.body.serviceid
+        },
+        desc: ""
+    }
+
+    var approvaltime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+    var deadtime = moment(approvaltime).add(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+    utool.sqlExect('UPDATE t_user_service SET c_service_status = 2, c_approval_time = ?, c_dead_time = ? WHERE c_userid = ? AND c_serviceid = ?',
+        [approvaltime, deadtime, sqlInfo.params.c_userid, sqlInfo.params.c_serviceid], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('审批服务申请：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: err
+                })
+            }
+            else {
+                //通知申请者审批成功
+                utool.sqlExect('SELECT c_username,c_email  FROM t_user WHERE c_userid = ?',
+                    [sqlInfo.params.c_userid], sqlInfo, function (err, result1) {
+                        if (err) {
+                            logger.info('根据用户ID查询用户名：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: err
+                            })
+                        }
+                        else {
+                            //通知申请者审批成功
+                            utool.sqlExect('SELECT c_servicename FROM t_service WHERE c_serviceid = ?',
+                                [sqlInfo.params.c_serviceid], sqlInfo, function (err, result2) {
+                                    if (err) {
+                                        logger.info('根据服务ID查询服务名：' + JSON.stringify(err));
+                                        res.send({
+                                            status: '-1000',
+                                            message: err
+                                        })
+                                    }
+                                    else {
+                                        //通知申请者审批成功
+                                        redis.pub_approval({
+                                            username: result1[0].c_username,
+                                            service_name: result2[0].c_servicename,
+                                            email: result1[0].c_email
+                                        })
+                                        res.send({
+                                            status: '0000',
+                                            data: {
+                                                c_service_status: 2,
+                                                c_approval_time: approvaltime,
+                                                c_dead_time: deadtime
+                                            },
+                                            message: code['0000']
+                                        })
+                                    }
+                                });
+                        }
+                    });
+            }
+        });
+
 }
