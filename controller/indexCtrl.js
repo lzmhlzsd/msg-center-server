@@ -66,6 +66,7 @@ exports.login = function (req, res, next) {
                                     //deadtime: user.c_type == 100 ? '永久' : moment(user.c_dead_time).format('YYYY-MM-DD HH:mm:ss'),
                                     qyh_cropid: user.c_weixin_qyh_cropid,
                                     qyh_screct: user.c_weixin_qyh_screct,
+                                    qyh_agentid: user.c_weixin_qyh_agentid,   //企业应用ID
                                     serviceList: result1
                                 }
                                 res.send({

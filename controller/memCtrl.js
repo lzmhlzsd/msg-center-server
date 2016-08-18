@@ -47,7 +47,8 @@ exports.index = function (req, res, next) {
 exports.getDepartmentUsers = function (req, res) {
     console.log(req.session['user'].qyh_cropid);
     console.log(req.session['user'].qyh_screct);
-    var api = new API(req.session['user'].qyh_cropid, req.session['user'].qyh_screct, 1, function (callback) {
+    console.log(req.session['user'].qyh_agentid);
+    var api = new API(req.session['user'].qyh_cropid, req.session['user'].qyh_screct, req.session['user'].qyh_agentid, function (callback) {
         memcached.get(req.session['user'].qyh_cropid, function (err, data) {
             if (err) {
                 logger.info(err);
@@ -432,6 +433,128 @@ exports.getMemberByUser = function (req, res) {
                     message: code['0000']
                 })
             }
+        }
+    });
+}
+
+/**
+ * @method 获取微信通讯录
+ * @author lukaijie
+ * @datetime 16/8/18
+ */
+exports.getweixinUsers = function (req, res) {
+    console.log(req.session['user'].qyh_cropid);
+    console.log(req.session['user'].qyh_screct);
+    console.log(req.session['user'].qyh_agentid);
+    //var api = new API(req.session['user'].qyh_cropid, req.session['user'].qyh_screct, req.session['user'].qyh_agentid, function (callback) {
+    //    memcached.get(req.session['user'].qyh_cropid, function (err, data) {
+    //        if (err) {
+    //            logger.info(err);
+    //        }
+    //        console.log('memcached:' + JSON.stringify(data));
+    //        callback(null, data);
+    //    });
+    //}, function (token, callback) {
+    //    memcached.set(req.session['user'].qyh_cropid, token, 7200, function (err) {
+    //        if (err) {
+    //            logger.info(err);
+    //        }
+    //    });
+    //});
+    var api = new API(req.session['user'].qyh_cropid, req.session['user'].qyh_screct, req.session['user'].qyh_agentid);
+
+    //* @param {Number} departmentId 部门ID
+    //* @param {Number} fetchChild 值：1/0，是否递归获取子部门下面的成员
+    //* @param {Number} status 0获取全部员工，1获取已关注成员列表，2获取禁用成员列表，4获取未关注成员列表。status可叠加
+    //* @param {Function} callback 回调函数
+
+    api.getDepartmentUsersDetail(1, 1, 0, function (err, result) {
+        if (err) {
+            logger.info('获取微信企业号所有人员：' + JSON.stringify(err));
+            res.send({
+                status: '-1000',
+                message: JSON.stringify(err)
+            });
+            return;
+        }
+        else {
+            var userno = '';
+            u.each(result.userlist, function (value, key) {
+                userno = userno + '"' + value.userid + '"';
+                if (key < result.userlist.length - 1) {
+                    userno = userno + ',';
+                }
+            })
+            //删除表中已经存在的编号人员
+            var sqlInfo = {
+                method: 'getweixinUsers',
+                memo: '删除表中已经存在的编号人员',
+                params: {
+                    userno: userno.toString()
+                },
+                desc: '删除表中已经存在的编号人员'
+            }
+            console.log('DELETE FROM t_member WHERE c_userno IN (' + sqlInfo.params.userno + ')')
+            utool.sqlExect('DELETE FROM t_member WHERE c_userno IN (' + sqlInfo.params.userno + ')', null, sqlInfo, function (err, result1) {
+                if (err) {
+                    logger.info('删除表中已经存在的编号人员：' + JSON.stringify(err));
+                    res.send({
+                        status: '-1000',
+                        message: JSON.stringify(err)
+                    });
+                    return;
+                }
+                else {
+                    console.log('删除成功')
+                    //插入新的数据
+                    var insertdata = '';
+
+                    u.each(result.userlist, function (value, key) {
+                        insertdata = insertdata + '("' + (typeof value.avatar != 'undefined' ? value.avatar : '') + '","' +
+                            (typeof value.name != 'undefined' ? value.name : '') + '","' +
+                            (typeof value.userid != 'undefined' ? value.userid : '') + '","' +
+                            (typeof value.mobile != 'undefined' ? value.mobile : '') + '","' +
+                            (typeof value.email != 'undefined' ? value.email : '') + '","' +
+                            (typeof value.weixinid != 'undefined' ? value.weixinid : '') + '",' +
+                            req.session['user'].userid + ',' +
+                            1 + ',' +
+                            (typeof value.status != 'undefined' ? value.status : '') +
+                            ')';
+                        if (key < result.userlist.length - 1) {
+                            insertdata = insertdata + ',';
+                        }
+                    })
+
+
+                    var sqlInfo = {
+                        method: 'getweixinUsers',
+                        memo: '插入新的数据',
+                        params: {
+                            insertdata: insertdata
+                        },
+                        desc: '插入新的数据'
+                    }
+                    console.log('INSERT INTO t_member (c_avatar, c_name, c_userno, c_mobile, c_email, c_weixinid, c_userid, c_sync,c_status) VALUES ' + sqlInfo.params.insertdata);
+                    utool.sqlExect('INSERT INTO t_member (c_avatar, c_name, c_userno, c_mobile, c_email, c_weixinid, c_userid, c_sync,c_status) VALUES ' + sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
+                        if (err) {
+                            logger.info('插入新的数据：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            res.send({
+                                status: '0000',
+                                message: code['0000']
+                            })
+                        }
+
+                    });
+                }
+            });
+
         }
     });
 }

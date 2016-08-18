@@ -307,3 +307,71 @@ exports.approvalpc = function (req, res) {
         });
 
 }
+
+/**
+ * @method 修改服务到期日期
+ * @author lukaijie
+ * @datetime 16/8/18
+ */
+exports.updateapprovalpc = function (req, res) {
+    var sqlInfo = {
+        method: 'updateapprovalpc',
+        memo: '修改服务到期日期',
+        params: {
+            c_userid: req.body.userid,
+            c_serviceid: req.body.serviceid,
+            c_dead_time: req.body.dead_time
+        },
+        desc: ""
+    }
+
+    utool.sqlExect('UPDATE t_user_service SET c_dead_time = ? WHERE c_userid = ? AND c_serviceid = ?',
+        [sqlInfo.params.c_dead_time, sqlInfo.params.c_userid, sqlInfo.params.c_serviceid], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('修改服务到期日期：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: err
+                })
+            }
+            else {
+                //通知申请者审批成功
+                utool.sqlExect('SELECT c_username,c_email  FROM t_user WHERE c_userid = ?',
+                    [sqlInfo.params.c_userid], sqlInfo, function (err, result1) {
+                        if (err) {
+                            logger.info('根据用户ID查询用户名：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: err
+                            })
+                        }
+                        else {
+                            //通知申请者审批成功
+                            utool.sqlExect('SELECT c_servicename FROM t_service WHERE c_serviceid = ?',
+                                [sqlInfo.params.c_serviceid], sqlInfo, function (err, result2) {
+                                    if (err) {
+                                        logger.info('根据服务ID查询服务名：' + JSON.stringify(err));
+                                        res.send({
+                                            status: '-1000',
+                                            message: err
+                                        })
+                                    }
+                                    else {
+                                        //通知申请者审批成功
+                                        redis.pub_approval({
+                                            username: result1[0].c_username,
+                                            service_name: result2[0].c_servicename,
+                                            email: result1[0].c_email
+                                        })
+                                        res.send({
+                                            status: '0000',
+                                            data: sqlInfo.params.c_dead_time,
+                                            message: code['0000']
+                                        })
+                                    }
+                                });
+                        }
+                    });
+            }
+        });
+}

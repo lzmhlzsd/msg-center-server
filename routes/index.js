@@ -36,6 +36,7 @@ module.exports = function (app) {
     app.post('/applyservice', practice.checkSession, serviceCtrl.applyservice);
     app.get('/approval', serviceCtrl.approval);
     app.post('/approvalpc', practice.checkSession, serviceCtrl.approvalpc);
+    app.post('/updateapprovalpc', practice.checkSession, serviceCtrl.updateapprovalpc);
     /** end;serverList **/
 
     ///** start:应用 **/
@@ -74,6 +75,9 @@ module.exports = function (app) {
     app.post('/member/sync', practice.checkSession, memCtrl.sync);
     app.post('/member/checkno', practice.checkSession, memCtrl.checkno);
     app.post('/member/checkno2', practice.checkSession, memCtrl.checkno2);
+
+    //微信
+    app.get('/getweixinUsers', practice.checkSession, memCtrl.getweixinUsers);
     /** end:人员管理 **/
 
     /** start:设置中心 **/

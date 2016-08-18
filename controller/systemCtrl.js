@@ -357,7 +357,6 @@ exports.getAllServiceList = function (req, res) {
                         })
                     }
                 });
-
             }
             else {
                 res.send({

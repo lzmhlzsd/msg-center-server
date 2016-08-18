@@ -40,7 +40,7 @@
 
         </div>
         <% if(weixinserver) { %>
-        <a class="btn btn-ant" style="float: right;position: relative;top: -5px; margin-left: 5px;" ng-click="sync()">同步到微信</a>
+        <a class="btn btn-ant" style="float: right;position: relative;top: -5px; margin-left: 5px;" ng-click="getwx()">获取微信通讯录</a>
         <% } %>
 
         <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/member/new">新建人员</a>
@@ -65,7 +65,8 @@
                             <td class="">
                                 <!--<span class="ant-table-row-indent indent-level-0" style="padding-left: 0px;"></span>-->
                                 <!--<a href="#">{{item.fd_shopexid}}</a>-->
-                                <span class="user-img">
+                                <img class="user-img" ng-src="{{item.c_avatar}}" ng-if="item.c_avatar != ''">
+                                <span class="user-img" ng-if="item.c_avatar == ''">
                                     <i class="anticon anticon-user"></i>
                                 </span>
                                 {{item.c_name}}
@@ -86,8 +87,9 @@
                                     <% if(weixinserver) { %>
                                     <span class="ant-divider"></span>
 
-                                    <a href="#" title="同步到微信" ng-click="sycn()">
-                                        <i class="anticon anticon-loading"></i>同步中...
+                                    <a href="#" title="同步到微信" ng-click="sync()">
+                                        同步
+                                        <!--<i class="anticon anticon-loading"></i>同步中...-->
                                     </a>
                                     <% } %>
                                     <!--<a href="#" class="ant-dropdown-link">更多-->
@@ -256,6 +258,33 @@
                         $scope.param.pagenum++;
                         $scope.getAppApplyList();
                     }
+                }
+
+                $scope.getwx = function () {
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认将微信通讯录覆盖到本地</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.get('/getweixinUsers').success(function (result) {
+                                    if (result.status == '0000') {
+                                        $scope.getAppApplyList();
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
                 }
 
                 $scope.sync = function () {
