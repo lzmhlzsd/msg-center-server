@@ -94,14 +94,14 @@ CREATE TABLE `t_notice_log` (
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
   `c_appkey` varchar(45) DEFAULT NULL COMMENT '对应的appkey ',
   `c_type` varchar(64) DEFAULT NULL COMMENT '消息类型  [邮件、短信、微信]',
-  `c_content` varchar(255) DEFAULT NULL,
+  `c_content` text,
   `c_notice_to` varchar(255) DEFAULT NULL,
   `c_status` int(11) DEFAULT NULL COMMENT '发送成功标志   1： 成功   0 ： 失败',
   `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
   `c_desc` text,
   PRIMARY KEY (`c_id`),
   KEY `INDEX` (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,8 +110,39 @@ CREATE TABLE `t_notice_log` (
 
 LOCK TABLES `t_notice_log` WRITE;
 /*!40000 ALTER TABLE `t_notice_log` DISABLE KEYS */;
-INSERT INTO `t_notice_log` VALUES (3,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:28',''),(4,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:29','');
+INSERT INTO `t_notice_log` VALUES (3,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:28',''),(4,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:29',''),(5,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:21:50',''),(6,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:22:49',''),(7,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:22:50',''),(8,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:24:08',''),(9,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:24:08',''),(10,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:30:09',''),(11,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:30:09','');
 /*!40000 ALTER TABLE `t_notice_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_notice_total`
+--
+
+DROP TABLE IF EXISTS `t_notice_total`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_notice_total` (
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  `c_appkey` varchar(45) DEFAULT NULL,
+  `c_date` datetime DEFAULT NULL,
+  `c_email_success` int(11) DEFAULT NULL,
+  `c_email_fail` int(11) DEFAULT NULL,
+  `c_msg_success` int(11) DEFAULT NULL,
+  `c_msg_fail` int(11) DEFAULT NULL,
+  `c_weixin_success` int(11) DEFAULT NULL,
+  `c_weixin_fail` int(11) DEFAULT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_notice_total`
+--
+
+LOCK TABLES `t_notice_total` WRITE;
+/*!40000 ALTER TABLE `t_notice_total` DISABLE KEYS */;
+INSERT INTO `t_notice_total` VALUES (1,'yjMnmfzRQy','2016-08-22 00:00:00',1,0,0,0,0,0);
+/*!40000 ALTER TABLE `t_notice_total` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -247,4 +278,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-22 17:26:21
+-- Dump completed on 2016-08-22 18:33:18
