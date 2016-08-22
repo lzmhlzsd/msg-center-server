@@ -26,12 +26,13 @@ CREATE TABLE `t_config` (
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
   `c_userid` int(11) DEFAULT NULL,
   `c_email_host` varchar(45) DEFAULT NULL,
-  `c_email_port` varchar(45) DEFAULT NULL,
+  `c_email_port` int(11) DEFAULT NULL,
   `c_email_username` varchar(45) DEFAULT NULL,
   `c_email_password` varchar(45) DEFAULT NULL,
   `c_msg_apikey` varchar(128) DEFAULT NULL,
   `c_weixin_qyh_cropid` varchar(64) DEFAULT NULL,
   `c_weixin_qyh_screct` varchar(128) DEFAULT NULL,
+  `c_weixin_qyh_agentid` int(11) DEFAULT NULL COMMENT '企业应用ID',
   `c_weixin_gzh` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`c_id`),
   UNIQUE KEY `c_userid_UNIQUE` (`c_userid`)
@@ -44,7 +45,7 @@ CREATE TABLE `t_config` (
 
 LOCK TABLES `t_config` WRITE;
 /*!40000 ALTER TABLE `t_config` DISABLE KEYS */;
-INSERT INTO `t_config` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,4,'smtp.sina.com','465','1','2','3','wx53f7880bd8c78f62','3Wzro5lNaBqdiW8ZLtl7W0DFI0rww4ZR4_7yfwrEWyINsJgjcTtoBdoVCAZWBG4c',NULL);
+INSERT INTO `t_config` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,4,'smtp.qq.com',465,'332847979@qq.com','cyokedaiptaicacf','3','wx53f7880bd8c78f62','3Wzro5lNaBqdiW8ZLtl7W0DFI0rww4ZR4_7yfwrEWyINsJgjcTtoBdoVCAZWBG4c',1,NULL);
 /*!40000 ALTER TABLE `t_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,12 +66,11 @@ CREATE TABLE `t_member` (
   `c_email` varchar(45) NOT NULL,
   `c_weixinid` varchar(45) DEFAULT NULL,
   `c_userid` int(11) NOT NULL,
-  `c_sync` int(11) DEFAULT '0' COMMENT '0: 未同步  1：已同步',
+  `c_sync` int(11) DEFAULT '0' COMMENT '0: 未同步  1：已同步  2: 已编辑，未同步',
   `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `c_status` int(11) DEFAULT '0' COMMENT '是否关注',
-  PRIMARY KEY (`c_id`),
-  UNIQUE KEY `UNIQUE` (`c_userid`,`c_userno`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `t_member` (
 
 LOCK TABLES `t_member` WRITE;
 /*!40000 ALTER TABLE `t_member` DISABLE KEYS */;
-INSERT INTO `t_member` VALUES (1,NULL,'A1','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0);
+INSERT INTO `t_member` VALUES (1,NULL,'A1','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(97,'http://shp.qpic.cn/bizmp/vaqaZGfVVGiaRp392bCQ3nf2yp99MJFuex2MXpIzh9YqJycf5zSDSXA/','陆凯杰','003',NULL,'13917609856','lukaijie2006@sina.com','lukaijielzmhlzsd',4,1,'2016-08-22 07:15:57',1),(98,'','刘坚','0100',NULL,'18521599459','','',4,1,'2016-08-22 07:15:57',4),(99,'','邬峰','lisi',NULL,'15062431973','498387646@qq.com','',4,1,'2016-08-22 07:15:57',4),(100,'','张三','zhangsan',NULL,'15913112120','zhangsan@gzmailteam.com','zhangsan',4,1,'2016-08-22 07:15:57',4);
 /*!40000 ALTER TABLE `t_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,16 +91,17 @@ DROP TABLE IF EXISTS `t_notice_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `t_notice_log` (
-  `c_id` int(11) NOT NULL,
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
   `c_appkey` varchar(45) DEFAULT NULL COMMENT '对应的appkey ',
   `c_type` varchar(64) DEFAULT NULL COMMENT '消息类型  [邮件、短信、微信]',
   `c_content` varchar(255) DEFAULT NULL,
   `c_notice_to` varchar(255) DEFAULT NULL,
   `c_status` int(11) DEFAULT NULL COMMENT '发送成功标志   1： 成功   0 ： 失败',
-  `c_create_time` timestamp NULL DEFAULT NULL COMMENT '发送时间',
+  `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
+  `c_desc` text,
   PRIMARY KEY (`c_id`),
   KEY `INDEX` (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,6 +110,7 @@ CREATE TABLE `t_notice_log` (
 
 LOCK TABLES `t_notice_log` WRITE;
 /*!40000 ALTER TABLE `t_notice_log` DISABLE KEYS */;
+INSERT INTO `t_notice_log` VALUES (3,'yjMnmfzRQy','weixin','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:28',''),(4,'yjMnmfzRQy','email','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:29','');
 /*!40000 ALTER TABLE `t_notice_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +167,7 @@ CREATE TABLE `t_template` (
 
 LOCK TABLES `t_template` WRITE;
 /*!40000 ALTER TABLE `t_template` DISABLE KEYS */;
-INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}你好，报警码{{code}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','AafefefefWFE131',NULL,'111111','2016-08-11 09:50:23',4);
+INSERT INTO `t_template` VALUES (3,'122',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(4,'123',NULL,NULL,NULL,'2016-08-08 09:08:17',1),(5,'B001','设备报警，报警码{{code}}! 当日生产产量{{yiled}}，生产效率{{ratio}}',NULL,'示例模板','2016-08-11 05:45:01',4),(6,'B002','AafefefefWFE131',NULL,'111111','2016-08-11 09:50:23',4);
 /*!40000 ALTER TABLE `t_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,7 +204,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES (1,NULL,'lkj',100,2,'202cb962ac59075b964b07152d234b70',1,'2016-06-23 22:54:05',NULL,NULL,NULL,'yjMAmfzRQy','AAmPQMX7HbsxMNSPsstByHEskXjfSTDA','高级管理员'),(4,'LX','lzmhlzsd',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 13:51:39','2017-08-08 13:51:39','13917609856','','yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(7,'BZ','abc',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 18:01:03','2017-08-08 18:01:03','13917609856',NULL,'yjMnmfzRQy','BAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(9,'BBZZ','lzmhlzsd12',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 10:41:34','2017-08-15 10:41:34','','','cxGNwXJSsB','Cxnpe2K6HzQxDbhEzxth8PdHzhrGK5YC','账号'),(10,'a','a',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 16:54:51','2017-08-15 16:54:51','13917609856','332847979@qq.com','aHXRpnnRJf','CsQNsb6TCTPXSS7B2sZtT7Zyx6dswKPf','账号');
+INSERT INTO `t_user` VALUES (1,NULL,'lkj',100,2,'202cb962ac59075b964b07152d234b70',1,'2016-06-23 22:54:05',NULL,NULL,NULL,'yjMAmfzRQy','AAmPQMX7HbsxMNSPsstByHEskXjfSTDA','高级管理员'),(4,'LX','lzmhlzsd',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 13:51:39','2017-08-08 13:51:39','13917609856','','yjMnmfzRQy','CAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(7,'BZ','abc',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-08 18:01:03','2017-08-08 18:01:03','13917609856',NULL,'yjMnmfzRsy','BAmPQMX7HbsxMNSPsstByHEskXjfSTDA','账号'),(9,'BBZZ','lzmhlzsd12',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 10:41:34','2017-08-15 10:41:34','','','cxGNwXJSsB','Cxnpe2K6HzQxDbhEzxth8PdHzhrGK5YC','账号'),(10,'a','a',1,2,'202cb962ac59075b964b07152d234b70',1,'2016-08-15 16:54:51','2017-08-15 16:54:51','13917609856','332847979@qq.com','aHXRpnnRJf','CsQNsb6TCTPXSS7B2sZtT7Zyx6dswKPf','账号');
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +234,7 @@ CREATE TABLE `t_user_service` (
 
 LOCK TABLES `t_user_service` WRITE;
 /*!40000 ALTER TABLE `t_user_service` DISABLE KEYS */;
-INSERT INTO `t_user_service` VALUES (2,4,1,1,'2016-08-08 16:01:12',NULL,NULL),(3,4,2,1,'2016-08-08 16:02:36',NULL,NULL),(4,4,3,2,'2016-08-15 12:02:36','2016-08-15 12:30:36','2017-08-15 12:30:36');
+INSERT INTO `t_user_service` VALUES (2,4,1,2,'2016-08-08 16:01:12','2016-08-18 10:31:47','2017-08-18 10:31:47'),(3,4,2,2,'2016-08-08 16:02:36','2016-08-18 10:31:44','2017-08-18 10:31:44'),(4,4,3,2,'2016-08-15 12:02:36','2016-08-18 10:30:38','2018-08-18 10:30:38');
 /*!40000 ALTER TABLE `t_user_service` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -245,4 +247,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-16 18:15:59
+-- Dump completed on 2016-08-22 17:26:21
