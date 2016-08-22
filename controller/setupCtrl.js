@@ -101,8 +101,8 @@ exports.saveConfig = function (req, res) {
         }
         else {
             //存储新的cropid和screct
-            req.session['user'].qyh_cropid = user.c_weixin_qyh_cropid;
-            req.session['user'].qyh_screct = user.c_weixin_qyh_screct;
+            req.session['user'].qyh_cropid = sqlInfo.params.c_weixin_qyh_cropid;
+            req.session['user'].qyh_screct = sqlInfo.params.c_weixin_qyh_screct;
 
             if (result[0].counts == 0) {
                 sqlInfo.desc = '插入数据';
