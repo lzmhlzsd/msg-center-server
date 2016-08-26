@@ -166,7 +166,8 @@
                 }
 
                 //查询所有用户
-                $scope.getAppApplyList = function () {
+                $scope.getAppApplyList = function (index) {
+                    $scope.param.pagenum = index || $scope.param.pagenum;
                     $scope.param.searchParams = {
                         filters: [],
                         logic: 'OR'
@@ -238,7 +239,7 @@
                 }
 
                 $scope.keywordSearch = function () {
-                    $scope.getAppApplyList();
+                    $scope.getAppApplyList(1);
                 }
 
                 $scope.showpage = function () {

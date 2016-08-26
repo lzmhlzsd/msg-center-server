@@ -5,6 +5,7 @@ var indexCtrl = require('../controller/indexCtrl'),
     setupCtrl = require('../controller/setupCtrl'),
     memCtrl = require('../controller/memCtrl'),
     systemCtrl = require('../controller/systemCtrl'),
+    noticeCtrl = require('../controller/noticeCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -85,6 +86,10 @@ module.exports = function (app) {
     app.post('/saveConfig', practice.checkSession, setupCtrl.saveConfig);
     app.get('/getConfig', practice.checkSession, setupCtrl.getConfig);
     /** end:设置中心 **/
+
+    /** start:消息日志 **/
+    app.get('/noticelog', practice.checkSession, noticeCtrl.index);
+    /** end:消息日志 **/
 
     /** start:系统管理 **/
     app.get('/account', practice.checkSession, practice.checkRole, systemCtrl.account);
