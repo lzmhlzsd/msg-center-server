@@ -89,6 +89,7 @@ module.exports = function (app) {
 
     /** start:消息日志 **/
     app.get('/noticelog', practice.checkSession, noticeCtrl.index);
+    app.post('/getLog', practice.checkSession, noticeCtrl.getLog);
     /** end:消息日志 **/
 
     /** start:系统管理 **/

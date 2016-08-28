@@ -1,5 +1,20 @@
 <% include ../common/header.ejs %>
-
+<style type="text/css">
+    .ant-form-item-label{
+        text-align: right;
+        vertical-align: middle;
+        padding: 7px 0;
+        display: inline-block;
+    }
+    .ant-col-10 {
+        display: block;
+        width: 100px;
+    }
+    .ant-col-14 {
+        display: block;
+        width: 150px;
+    }
+</style>
 <div class="content" ng-app="myApp" ng-controller="appCtrl">
     <div class="sidle-left">
         <% include ../common/menu.ejs %>
@@ -19,9 +34,110 @@
                                 class="anticon anticon-search"></i></button>
                 </div>
             </span>
-
-
         </div>
+        <form class="ant-form ant-form-horizontal ant-advanced-search-form">
+            <div class="ant-row" style="margin-left: -8px; margin-right: -8px;">
+                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
+                                                readonly="" value="" placeholder="请选择日期"
+                                                class="ant-calendar-range-picker ant-input"><span
+                                                class="ant-calendar-picker-icon"></span></span></span></div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
+                                                readonly="" value="" placeholder="请选择日期"
+                                                class="ant-calendar-range-picker ant-input"><span
+                                                class="ant-calendar-picker-icon"></span></span></span></div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
+                                                readonly="" value="" placeholder="请选择日期"
+                                                class="ant-calendar-range-picker ant-input"><span
+                                                class="ant-calendar-picker-icon"></span></span></span></div>
+                        </div>
+                    </div>
+                    <div class="ant-row ant-form-item">
+                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
+                        <div class="ant-col-14">
+                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
+                                                                                                       placeholder="请输入搜索名称"
+                                                                                                       class="ant-input"
+                                                                                                       value=""></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ant-row">
+                <div class="ant-col-12 ant-col-offset-12" style="text-align: right;">
+                    <button type="submit" class="ant-btn ant-btn-primary"><span>搜 索</span></button>
+                    <button type="button" class="ant-btn"><span>清除条件</span></button>
+                </div>
+            </div>
+        </form>
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
             <div class="ant-table-content">
@@ -29,12 +145,14 @@
                     <table class="">
                         <thead class="ant-table-thead">
                         <tr>
-                            <th class=""><span>模板编号</span></th>
-                            <th class=""><span>模板内容</span></th>
-                            <th class=""><span>模板状态(短信)</span></th>
-                            <th class=""><span>创建日期</span></th>
+                            <th class=""><span>appkey</span></th>
+                            <th class=""><span>发送时间</span></th>
+                            <th class=""><span>类型</span></th>
+                            <th class=""><span>消息来源</span></th>
+                            <th class=""><span>发送到</span></th>
+                            <th class=""><span>内容</span></th>
+                            <th class=""><span>状态</span></th>
                             <th class=""><span>描述</span></th>
-                            <th class=""><span>操作</span></th>
                         </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
@@ -146,28 +264,22 @@
                         var array = [];
                         array.push(
                                 {
-                                    filed: 'c_temp_no', operator: 'like', value: $scope.keyword
-                                }, {
-                                    filed: 'c_temp_content', operator: 'like', value: $scope.keyword
+                                    filed: 'c_content', operator: 'like', value: $scope.keyword
                                 });
                         $scope.param.searchParams['filters'] = array;
                     }
-                    var fd_utype_filter = {
+                    var fd_date_filter = {
                         filters: [],
-                        logic: 'OR'
+                        logic: 'AND'
                     };
-                    if ($scope.filtes.utype1) {
-                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 1});
-                    }
-                    if ($scope.filtes.utype2) {
-                        fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 2});
+                    fd_date_filter.filters.push({filed: 'c_create_time', operator: 'gte', value: 1});
+                    fd_date_filter.filters.push({filed: 'c_create_time', operator: 'lt', value: 2});
+
+                    if (fd_date_filter.filters.length > 0) {
+                        $scope.param.searchParams['filters'].push(fd_date_filter);
                     }
 
-                    if (fd_utype_filter.filters.length > 0) {
-                        $scope.param.searchParams['filters'].push(fd_utype_filter);
-                    }
-
-                    $http.post('/getTemplateByUser', $scope.param).success(function (result) {
+                    $http.post('/getLog', $scope.param).success(function (result) {
                         if (result.status == '0000') {
                             $scope.table = result.data.datasouce;
                             $scope.param.pagenum = result.data.pagenum;
@@ -187,26 +299,6 @@
                 }
 
                 $scope.getAppApplyList();
-
-                //切换用户
-                $scope.checkUType1 = function ($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.filtes.utype1 = !$scope.filtes.utype1;
-                }
-                $scope.checkUType2 = function ($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.filtes.utype2 = !$scope.filtes.utype2;
-                }
-
-                $scope.reset = function ($event) {
-                    $event.stopPropagation();
-                    $scope.filtes = {
-                        utype1: false,
-                        utype2: false
-                    }
-                }
 
                 $scope.keywordSearch = function () {
                     $scope.getAppApplyList(1);
