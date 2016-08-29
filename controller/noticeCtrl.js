@@ -81,6 +81,12 @@ exports.getLog = function (req, res) {
                     case 'eq':
                         sub_array.push(a.filed + " = " + a.value)
                         break;
+                    case 'gte':
+                        sub_array.push(a.filed + " >= '" + a.value + "'")
+                        break;
+                    case 'lt':
+                        sub_array.push(a.filed + " < '" + a.value + "'")
+                        break;
                 }
             })
             //sub_array.join(' ' + m.logic + ' ');
@@ -99,7 +105,6 @@ exports.getLog = function (req, res) {
         wherestr = ' WHERE ' + array.toString();
     }
 
-    var between = 'c_create_time between "' +  +'"'
     var sql1 = 'SELECT COUNT(*) AS counts FROM t_notice_log';
 
     console.log('SQL1:----' + sql1 + wherestr);
@@ -117,8 +122,8 @@ exports.getLog = function (req, res) {
             if (result[0].counts > 0) {
                 var sql2 = 'SELECT * FROM t_notice_log';
 
-                console.log('SQL2:----' + sql2 + wherestr + ' ORDER BY c_create_time DESC LIMIT ' + pageindex + ',' + pagesize);
-                utool.sqlExect(sql2 + wherestr + ' ORDER BY c_create_time DESC LIMIT ?,?', [pageindex, pagesize], SqlInfo, function (err, result1) {
+                console.log('SQL2:----' + sql2 + wherestr + ' ORDER BY c_create_time ASC LIMIT ' + pageindex + ',' + pagesize);
+                utool.sqlExect(sql2 + wherestr + ' ORDER BY c_create_time ASC LIMIT ?,?', [pageindex, pagesize], SqlInfo, function (err, result1) {
                     if (err) {
                         res.send({
                             status: '-1000',

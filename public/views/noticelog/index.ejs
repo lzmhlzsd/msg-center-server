@@ -1,18 +1,42 @@
 <% include ../common/header.ejs %>
+<link rel="stylesheet" href="/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"/>
 <style type="text/css">
-    .ant-form-item-label{
+    .ant-form-item-label {
         text-align: right;
         vertical-align: middle;
         padding: 7px 0;
         display: inline-block;
     }
+
     .ant-col-10 {
         display: block;
         width: 100px;
     }
+
     .ant-col-14 {
         display: block;
         width: 150px;
+    }
+
+    .input-group {
+        display: inline-block;
+    }
+
+    .input-group > label {
+        width: 100px;
+        text-align: right;
+    }
+
+    .input-group > div {
+        display: inline-block;
+    }
+
+    .msg-status.success {
+        background-color: #19ff71;
+    }
+
+    .msg-status.fail {
+        background-color: #ff0000;
     }
 </style>
 <div class="content" ng-app="myApp" ng-controller="appCtrl">
@@ -23,121 +47,44 @@
         <div class="title">
             <h4>消息日志</h4>
         </div>
-        <div class="ant-search-input-wrapper" style="width: 200px;margin-bottom: 10px;">
-            <span class="ant-input-group ant-search-input">
-                <span class="ant-input-wrapper">
-                    <input type="text" placeholder="模板编号或名称" value="" class="ant-input"
-                           ng-model="keyword">
-                </span>
-                <div class="ant-input-group-wrap">
-                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn"><i
-                                class="anticon anticon-search"></i></button>
+        <div class="ant-search-input-wrapper" style="margin-bottom: 10px;">
+            <div class="input-group">
+                <label class="" style="width: inherit;">消息内容</label>
+
+                <div>
+                    <span class="ant-input-wrapper">
+                        <input type="text" placeholder="消息内容" class="ant-input" ng-model="keyword">
+                    </span>
                 </div>
-            </span>
+            </div>
+            <div class="input-group">
+                <label class="">开始日期</label>
+
+                <div>
+                    <span class="ant-calendar-picker"><span>
+                    <input id="startdate"
+                           readonly="" value="" placeholder="开始日期"
+                           class="ant-calendar-range-picker ant-input"><span
+                                    class="ant-calendar-picker-icon"></span></span></span></div>
+            </div>
+            <div class="input-group">
+                <label class="">结束日期</label>
+
+                <div>
+                    <span class="ant-calendar-picker"><span>
+                    <input id="enddate"
+                           readonly="" value="" placeholder="结束日期"
+                           class="ant-calendar-range-picker ant-input"><span
+                                    class="ant-calendar-picker-icon"></span></span></span></div>
+            </div>
+            <div class="input-group">
+                <label class="">
+                    <button type="button" class="ant-btn ant-btn-primary" style="position: relative;top: -3px;"
+                            ng-click="search()"><span>搜 索</span></button>
+                </label>
+            </div>
         </div>
-        <form class="ant-form ant-form-horizontal ant-advanced-search-form">
-            <div class="ant-row" style="margin-left: -8px; margin-right: -8px;">
-                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
-                                                readonly="" value="" placeholder="请选择日期"
-                                                class="ant-calendar-range-picker ant-input"><span
-                                                class="ant-calendar-picker-icon"></span></span></span></div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
-                                                readonly="" value="" placeholder="请选择日期"
-                                                class="ant-calendar-range-picker ant-input"><span
-                                                class="ant-calendar-picker-icon"></span></span></span></div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ant-col-sm-8" style="padding-left: 8px; padding-right: 8px;">
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">较长搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-calendar-picker"><span><input
-                                                readonly="" value="" placeholder="请选择日期"
-                                                class="ant-calendar-range-picker ant-input"><span
-                                                class="ant-calendar-picker-icon"></span></span></span></div>
-                        </div>
-                    </div>
-                    <div class="ant-row ant-form-item">
-                        <div class="ant-col-10 ant-form-item-label"><label class="">搜索名称</label></div>
-                        <div class="ant-col-14">
-                            <div class="ant-form-item-control "><span class="ant-input-wrapper"><input type="text"
-                                                                                                       placeholder="请输入搜索名称"
-                                                                                                       class="ant-input"
-                                                                                                       value=""></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ant-row">
-                <div class="ant-col-12 ant-col-offset-12" style="text-align: right;">
-                    <button type="submit" class="ant-btn ant-btn-primary"><span>搜 索</span></button>
-                    <button type="button" class="ant-btn"><span>清除条件</span></button>
-                </div>
-            </div>
-        </form>
+
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
             <div class="ant-table-content">
@@ -145,44 +92,60 @@
                     <table class="">
                         <thead class="ant-table-thead">
                         <tr>
-                            <th class=""><span>appkey</span></th>
+                            <!--<th class=""><span>appkey</span></th>-->
                             <th class=""><span>发送时间</span></th>
                             <th class=""><span>类型</span></th>
                             <th class=""><span>消息来源</span></th>
                             <th class=""><span>发送到</span></th>
                             <th class=""><span>内容</span></th>
-                            <th class=""><span>状态</span></th>
-                            <th class=""><span>描述</span></th>
+                            <!--<th class=""><span>状态</span></th>-->
+                            <th class=""><span>失败原因</span></th>
                         </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                        <tr class="ant-table-row  ant-table-row-level-0" ng-repeat="item in table">
+                        <tr class="ant-table-row  ant-table-row-level-0" ng-repeat="item in table" repeat-finish>
                             <td class="">
-                                <!--<span class="ant-table-row-indent indent-level-0" style="padding-left: 0px;"></span>-->
-                                <!--<a href="#">{{item.fd_shopexid}}</a>-->
-                                {{item.c_temp_no}}
+                                <span class="msg-status"
+                                      style="display: inline-block; width: 14px;height: 14px;border-radius: 7px;position: relative;top:1px;"
+                                      ng-class="{1:'success',0:'fail'}[item.c_status]"></span>
+                                {{item.c_create_time | date: 'yyyy-MM-dd HH:mm:ss'}}
                             </td>
+                            <td class="">
+                                {{item.c_type}}
+                            </td>
+                            <td class="">{{item.c_from}}</td>
                             <td class="">
                                 <span style="white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    max-width: 200px;">{{item.c_temp_content}}</span>
-                            </td>
-                            <td class="">
-                                {{item.c_temp_status}}
-                            </td>
-                            <td class="">{{item.c_temp_create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
-                            <td class="">{{item.c_temp_desc}}</td>
-                            <td class="">
-                                <span>
-                                    <a ng-href="/template/edit/{{item.c_temp_no}}">编辑</a>
-                                    <span class="ant-divider"></span>
-                                    <a href="#" title="同步到短信服务器">同步</a>
-                                    <!--<a href="#" class="ant-dropdown-link">更多-->
-                                        <!--<i class="anticon anticon-down"></i>-->
-                                    <!--</a>-->
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: inline-block;
+                                max-width: 200px;">{{item.c_notice_to}}
+
                                 </span>
+                                <i class="icon-model anticon anticon-exclamation-circle"
+                                   style="font-size: 14px;cursor: pointer;position: relative;top:-4px;"
+                                   data-toggle="tooltip" data-placement="top" data-original-title="{{item.c_notice_to}}"></i>
+
+                            </td>
+                            <td class="">
+
+                                <span style="white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: inline-block;
+                                max-width: 200px;">
+                                    {{item.c_content}}
+
+                                </span>
+                                <i class="icon-model anticon anticon-exclamation-circle"
+                                   style="font-size: 14px;cursor: pointer;position: relative;top:-4px;"
+                                   data-toggle="tooltip" data-placement="top" data-original-title="{{item.c_content}}"></i>
+                            </td>
+                            <!--<td class="">-->
+                            <!--{{item.c_status}}-->
+                            <!--</td>-->
+                            <td class="">
+                                {{item.c_desc}}
                             </td>
                         </tr>
                         </tbody>
@@ -220,7 +183,8 @@
     </div>
 </div>
 <% include ../common/footer.ejs %>
-
+<script type="text/javascript" src="/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js"></script>
 <script type="text/javascript">
     angular.module('myApp', ['angular-loading-bar'])
             .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
@@ -258,7 +222,7 @@
                     $scope.param.pagenum = index || $scope.param.pagenum;
                     $scope.param.searchParams = {
                         filters: [],
-                        logic: 'OR'
+                        logic: 'AND'
                     }
                     if ($scope.keyword != '') {
                         var array = [];
@@ -272,8 +236,16 @@
                         filters: [],
                         logic: 'AND'
                     };
-                    fd_date_filter.filters.push({filed: 'c_create_time', operator: 'gte', value: 1});
-                    fd_date_filter.filters.push({filed: 'c_create_time', operator: 'lt', value: 2});
+                    fd_date_filter.filters.push({
+                        filed: 'c_create_time',
+                        operator: 'gte',
+                        value: $('#startdate').val()
+                    });
+                    fd_date_filter.filters.push({
+                        filed: 'c_create_time',
+                        operator: 'lt',
+                        value: moment($('#enddate').val()).add(1, 'days').format('YYYY-MM-DD')
+                    });
 
                     if (fd_date_filter.filters.length > 0) {
                         $scope.param.searchParams['filters'].push(fd_date_filter);
@@ -294,11 +266,12 @@
                                     active: i == $scope.param.pagenum ? true : false
                                 })
                             }
+
+
                         }
                     });
                 }
 
-                $scope.getAppApplyList();
 
                 $scope.keywordSearch = function () {
                     $scope.getAppApplyList(1);
@@ -323,5 +296,55 @@
                     }
                 }
 
+                $scope.search = function () {
+                    //判断选择的日期时间
+                    //$scope.getAppApplyList();
+                    if (moment($('#startdate').data('datepicker').getDate()).isBefore($('#enddate').data('datepicker').getDate())) {
+                        $scope.getAppApplyList();
+
+
+                    }
+                    else {
+                        BootstrapDialog.show({
+                            title: '提示',
+                            message: '开始日期不能大于结束日期',
+                            type: BootstrapDialog.TYPE_DANGER,
+                            onshow: function (dialogRef) {
+                                setTimeout(function () {
+                                    dialogRef.close();
+                                }, 1000);
+                            }
+                        });
+                    }
+                }
+
+                $('#startdate').val(moment().subtract(1, 'days').format('YYYY-MM-DD'));
+                $('#startdate').datepicker({
+                    language: 'zh-CN',
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                });
+
+                $('#enddate').val(moment().format('YYYY-MM-DD'));
+                $('#enddate').datepicker({
+                    language: 'zh-CN',
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                });
+
             }])
+            .directive('repeatFinish', function () {
+                return {
+                    link: function (scope, element, attr) {
+                        console.log(scope.$index)
+                        if (scope.$last == true) {
+                            //console.log('ng-repeat执行完毕')
+                            $('[data-toggle="tooltip"]').tooltip();
+//                            $('[data-toggle="tooltip"]').on('show.bs.tooltip', function () {
+//                                $(this).attr('data-original-title', $(this).attr('title'));
+//                            })
+                        }
+                    }
+                }
+            })
 </script>

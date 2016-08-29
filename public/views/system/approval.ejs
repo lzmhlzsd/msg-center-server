@@ -1,5 +1,5 @@
 <% include ../common/header.ejs %>
-<link rel="stylesheet" href="/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css"/>
+
 <style type="text/css">
     .user-img {
         display: inline-block;
@@ -131,9 +131,7 @@
 </div>
 <% include ../common/footer.ejs %>
 
-<script type="text/javascript" src="/moment/min/moment.min.js"></script>
-<script type="text/javascript" src="/bootstrap-datetime-picker/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="/bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+
 <script type="text/javascript">
     angular.module('myApp', ['angular-loading-bar'])
             .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
