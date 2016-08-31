@@ -14,48 +14,49 @@
 
 </head>
 <body>
-<div class="fc-body">
-    <div class="header" style="margin-bottom: 0px;">
-        <div class="container" style="margin-left: 10px;
+<div class="header" style="margin-bottom: 0px;">
+    <div class="container" style="margin-left: 10px;
     margin-right: 10px;
     width: 98%;">
-            <div class="login-container">
-                <a>
-                    天工开放平台后台管理系统
-                    <!--云服务平台-->
-                </a>
-            </div>
-            <ul class="nav navbar-nav navbar-menu pull-right">
-                <li>
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false" style="background-color: transparent !important;"><%= session.userdesc %>: <%= session.username %></a>
-                    <ul class="dropdown-menu dropdown-ant custom-center">
-                        <li class="ant-dropdown-menu-item"><a href="#">系统设置</a></li>
-                        <li class="ant-dropdown-menu-item"><a href="#">密码更改</a></li>
-                        <li class=" ant-dropdown-menu-item-divider"></li>
-                        <li class="ant-dropdown-menu-item"><a href="javascript:void(0);" id="logout">退出系统</a></li>
-                    </ul>
-                </li>
-                <!--<li>-->
-                    <!--<a href="javascript:void(0);" id="logout">退出</a>-->
-                <!--</li>-->
-            </ul>
+        <div class="login-container">
+            <a>
+                天工开放平台后台管理系统
+                <!--云服务平台-->
+            </a>
         </div>
+        <ul class="nav navbar-nav navbar-menu pull-right">
+            <li>
+                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false" style="background-color: transparent !important;"><%= session.userdesc %>: <%= session.username %></a>
+                <ul class="dropdown-menu dropdown-ant custom-center">
+                    <li class="ant-dropdown-menu-item"><a href="#">系统设置</a></li>
+                    <li class="ant-dropdown-menu-item"><a href="#">密码更改</a></li>
+                    <li class=" ant-dropdown-menu-item-divider"></li>
+                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);" id="logout">退出系统</a></li>
+                </ul>
+            </li>
+            <!--<li>-->
+            <!--<a href="javascript:void(0);" id="logout">退出</a>-->
+            <!--</li>-->
+        </ul>
     </div>
-    <div id="loading-bar-container" style="position: absolute;top:60px"></div>
-    <div id="nav-list" class="nav-list">
-        <div class="ant-breadcrumb">
-            <% navs.forEach(function(nav){ %>
-            <% if(nav.url != null) { %>
-            <span><a class="ant-breadcrumb-link" href="<%= nav.url %>"><%= nav.name %></a><span
-                        class="ant-breadcrumb-separator">&gt;</span></span>
-            <% } else { %>
+</div>
+<div id="loading-bar-container" style="position: absolute;top:60px"></div>
+<div id="nav-list" class="nav-list">
+    <div class="ant-breadcrumb">
+        <% navs.forEach(function(nav){ %>
+        <% if(nav.url != null) { %>
+        <span><a class="ant-breadcrumb-link" href="<%= nav.url %>"><%= nav.name %></a><span
+                    class="ant-breadcrumb-separator">&gt;</span></span>
+        <% } else { %>
 
-            <span><span class="ant-breadcrumb-link"><%= nav.name %></span><span
-                        class="ant-breadcrumb-separator">&gt;</span></span>
-            <% } %>
-            <% }) %>
-        </div>
+        <span><span class="ant-breadcrumb-link"><%= nav.name %></span><span
+                    class="ant-breadcrumb-separator">&gt;</span></span>
+        <% } %>
+        <% }) %>
     </div>
+</div>
+<div class="fc-body">
+
 
 
