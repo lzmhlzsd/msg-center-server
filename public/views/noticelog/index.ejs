@@ -31,13 +31,7 @@
         display: inline-block;
     }
 
-    .msg-status.success {
-        background-color: #19ff71;
-    }
 
-    .msg-status.fail {
-        background-color: #ff0000;
-    }
 </style>
 <div class="content" ng-app="myApp" ng-controller="appCtrl">
     <div class="sidle-left">
@@ -152,32 +146,33 @@
                     </table>
                 </div>
             </div>
-
-            <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
-                <li style="display: inline-block;
-                    float: left;
-                    position: relative;
-                    right: 10px;
-                    top: 4px;">
-                    <a>
-                        <span>共{{param.count}}条</span>
-                    </a>
-                </li>
-                <li title="上一页"
-                    class="ant-pagination-prev"
-                    ng-click="prev()"
-                    ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
-                <li title="{{pag.key}}"
-                    class="ant-pagination-item"
-                    ng-class="{true:'ant-pagination-item-active'}[pag.active]"
-                    ng-click="showpage()"
-                    ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
-                <li title="下一页"
-                    class="ant-pagination-next"
-                    ng-click="next()"
-                    ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
-                        ><a></a></li>
-            </ul>
+            <div style="text-align: right">
+                <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
+                    <li style="display: inline-block;
+                        float: left;
+                        position: relative;
+                        right: 10px;
+                        top: 4px;">
+                        <a>
+                            <span>共{{param.count}}条</span>
+                        </a>
+                    </li>
+                    <li title="上一页"
+                        class="ant-pagination-prev"
+                        ng-click="prev()"
+                        ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
+                    <li title="{{pag.key}}"
+                        class="ant-pagination-item"
+                        ng-class="{true:'ant-pagination-item-active'}[pag.active]"
+                        ng-click="showpage()"
+                        ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
+                    <li title="下一页"
+                        class="ant-pagination-next"
+                        ng-click="next()"
+                        ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
+                            ><a></a></li>
+                </ul>
+            </div>
         </div>
         <!--<div id="clickme" ng-click="submit()" class="btn btn-success">clickme</div>-->
     </div>
@@ -300,7 +295,7 @@
                     //判断选择的日期时间
                     //$scope.getAppApplyList();
                     if (moment($('#startdate').data('datepicker').getDate()).isBefore($('#enddate').data('datepicker').getDate())) {
-                        $scope.getAppApplyList();
+                        $scope.getAppApplyList(1);
 
 
                     }
@@ -322,14 +317,14 @@
                 $('#startdate').datepicker({
                     language: 'zh-CN',
                     format: 'yyyy-mm-dd',
-                    autoclose: true,
+                    autoclose: true
                 });
 
                 $('#enddate').val(moment().format('YYYY-MM-DD'));
                 $('#enddate').datepicker({
                     language: 'zh-CN',
                     format: 'yyyy-mm-dd',
-                    autoclose: true,
+                    autoclose: true
                 });
 
             }])

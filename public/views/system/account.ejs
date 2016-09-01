@@ -40,7 +40,7 @@
 
         </div>
 
-        <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/member/new">新建人员</a>
+        <!--<a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/member/new">新建人员</a>-->
 
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
@@ -160,32 +160,33 @@
                     </table>
                 </div>
             </div>
-
-            <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
-                <li style="display: inline-block;
-                    float: left;
-                    position: relative;
-                    right: 10px;
-                    top: 4px;">
-                    <a>
-                        <span>共{{param.count}}条</span>
-                    </a>
-                </li>
-                <li title="上一页"
-                    class="ant-pagination-prev"
-                    ng-click="prev()"
-                    ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
-                <li title="{{pag.key}}"
-                    class="ant-pagination-item"
-                    ng-class="{true:'ant-pagination-item-active'}[pag.active]"
-                    ng-click="showpage()"
-                    ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
-                <li title="下一页"
-                    class="ant-pagination-next"
-                    ng-click="next()"
-                    ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
-                        ><a></a></li>
-            </ul>
+            <div style="text-align: right">
+                <ul class="ant-pagination ant-table-pagination" unselectable="unselectable">
+                    <li style="display: inline-block;
+                        float: left;
+                        position: relative;
+                        right: 10px;
+                        top: 4px;">
+                        <a>
+                            <span>共{{param.count}}条</span>
+                        </a>
+                    </li>
+                    <li title="上一页"
+                        class="ant-pagination-prev"
+                        ng-click="prev()"
+                        ng-class="{1:'ant-pagination-disabled'}[param.pagenum]"><a></a></li>
+                    <li title="{{pag.key}}"
+                        class="ant-pagination-item"
+                        ng-class="{true:'ant-pagination-item-active'}[pag.active]"
+                        ng-click="showpage()"
+                        ng-repeat="pag in pagination"><a>{{pag.key}}</a></li>
+                    <li title="下一页"
+                        class="ant-pagination-next"
+                        ng-click="next()"
+                        ng-class="{true:'ant-pagination-disabled'}[param.pagenum == param.pages]"
+                            ><a></a></li>
+                </ul>
+            </div>
         </div>
 
 

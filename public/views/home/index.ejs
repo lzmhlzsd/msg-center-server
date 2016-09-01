@@ -6,28 +6,70 @@
     </div>
     <div class="sidle-right">
         <div class="title">
-            <h4>管理控制台</h4>
+            <h4>控制台</h4>
         </div>
         <div class="row">
-            <div class="col-md-4" style="padding-right: 0px;margin-bottom: 15px;">
+            <div class="col-md-5" style="padding-right: 0px;margin-bottom: 15px;">
                 <div class="ant-card ant-card-bordered" style="width: 100%;">
                     <div class="ant-card-head">
                         <h3 class="ant-card-head-title">账户信息</h3>
                     </div>
-                    <div class="ant-card-body">
-                        <p>appKey：<%= session.appkey %></p>
-                        <p>appScrect：<%= session.appscrect %></p>
+                    <div class="ant-card-body account-info">
+                        <p>
+                            <label>名称：</label>
+                            <span><%= session.customer %></span>
+                        </p>
+                        <p>
+                            <label>账号状态：</label>
+                            <span>正常</span>
+                        </p>
+                        <p>
+                            <label>appKey：</label>
+                            <span><%= session.appkey %></span>
+                        </p>
+                        <p>
+                            <label>appScrect：</label>
+                            <span><%= session.appscrect %></span>
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4" style="padding-right: 0px;margin-bottom: 15px;">
+            <div class="col-md-3" style="padding-right: 0px;margin-bottom: 15px;">
                 <div class="ant-card ant-card-bordered" style="width: 100%;">
                     <div class="ant-card-head">
-                        <h3 class="ant-card-head-title">账户信息</h3>
+                        <h3 class="ant-card-head-title">今日数据</h3>
                     </div>
-                    <div class="ant-card-body">
-                        <p>appKey：<%= session.appkey %></p>
-                        <p>appScrect：<%= session.appscrect %></p>
+                    <div class="ant-card-body diaoyong-info">
+                        <p>
+                            <label>调用次数：</label>
+                            <span></span>
+
+
+                        </p>
+
+                        <p>
+                            <label>微信：</label>
+                            <span class="msg-status success"></span>
+                            <span class="diaoyong-value">30</span>
+                            <span class="msg-status fail"></span>
+                            <span class="diaoyong-value">20</span>
+                        </p>
+
+                        <p>
+                            <label>邮件：</label>
+                            <span class="msg-status success"></span>
+                            <span class="diaoyong-value">30</span>
+                            <span class="msg-status fail"></span>
+                            <span class="diaoyong-value">20</span>
+                        </p>
+
+                        <p>
+                            <label>短信：</label>
+                            <span class="msg-status success"></span>
+                            <span class="diaoyong-value">30</span>
+                            <span class="msg-status fail"></span>
+                            <span class="diaoyong-value">20</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -36,9 +78,26 @@
                     <div class="ant-card-head">
                         <h3 class="ant-card-head-title">公告信息</h3>
                     </div>
-                    <div class="ant-card-body">
-                        <p>appKey：<%= session.appkey %></p>
-                        <p>appScrect：<%= session.appscrect %></p>
+                    <div class="ant-card-body notice">
+                        <p class="text">
+                            <span class="circle"></span>
+                            <a href="https://blog.yunpian.com/?p=60" target="_blank">
+                                <span class="item" title="关于短信轰炸发现及处理办法告知！">
+                                    关于短信轰炸发现及处理办法告知！
+                                </span>
+                                <span class="date">[置顶]</span>
+                            </a>
+                        </p>
+
+                        <p class="text">
+                            <span class="circle"></span>
+                            <a href="https://blog.yunpian.com/?p=60" target="_blank">
+                                <span class="item" title="关于短信轰炸发现及处理办法告知！">
+                                    关于短信轰炸发现及处理办法告知！
+                                </span>
+                                <span class="date">[置顶]</span>
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
