@@ -70,7 +70,7 @@ CREATE TABLE `t_member` (
   `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `c_status` int(11) DEFAULT '0' COMMENT '是否关注',
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE `t_member` (
 
 LOCK TABLES `t_member` WRITE;
 /*!40000 ALTER TABLE `t_member` DISABLE KEYS */;
-INSERT INTO `t_member` VALUES (1,NULL,'A1','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(97,'http://shp.qpic.cn/bizmp/vaqaZGfVVGiaRp392bCQ3nf2yp99MJFuex2MXpIzh9YqJycf5zSDSXA/','陆凯杰','003',NULL,'13917609856','lukaijie2006@sina.com','lukaijielzmhlzsd',4,1,'2016-08-22 07:15:57',1),(98,'','刘坚','0100',NULL,'18521599459','','',4,1,'2016-08-22 07:15:57',4),(99,'','邬峰','lisi',NULL,'15062431973','498387646@qq.com','',4,1,'2016-08-22 07:15:57',4),(100,'','张三','zhangsan',NULL,'15913112120','zhangsan@gzmailteam.com','zhangsan',4,1,'2016-08-22 07:15:57',4);
+INSERT INTO `t_member` VALUES (1,NULL,'A1','101',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(6,NULL,'b','1001',NULL,'13917609857','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(7,NULL,'lkj','1002',NULL,'13917609856','332847979@qq.com',NULL,4,0,'2016-08-12 09:04:40',0),(107,'http://shp.qpic.cn/bizmp/vaqaZGfVVGiaRp392bCQ3nf2yp99MJFuex2MXpIzh9YqJycf5zSDSXA/','陆凯杰','003',NULL,'13917609856','','lukaijielzmhlzsd',4,1,'2016-08-29 03:21:24',1),(108,'http://shp.qpic.cn/bizmp/vaqaZGfVVGgK8WsBZ9Iicbj7reyEGeL7YeMt63iawMGFu9sYh4Nr3x8g/','杨正','004',NULL,'','zheng.yang@sh-lingxiu.com','hueijin1987',4,1,'2016-08-29 03:21:24',1),(109,'','leo','005',NULL,'18221741738','','',4,1,'2016-08-29 03:21:24',1),(110,'http://shp.qpic.cn/bizmp/vaqaZGfVVGgK8WsBZ9Iicbj7reyEGeL7YYyQHM7LaQKaMhHK9SpiayEA/','周卫国','006',NULL,'13801676794','','david13801676794',4,1,'2016-08-29 03:21:24',1),(111,'http://shp.qpic.cn/bizmp/vaqaZGfVVGgK8WsBZ9Iicbj7reyEGeL7YEOTgwcsWTJ7eywhouJ245Q/','Jonhson','007',NULL,'15900705842','','yuanqibumi7286',4,1,'2016-08-29 03:21:24',1),(112,'','刘坚','0100',NULL,'18521599459','','',4,1,'2016-08-29 03:21:24',4),(113,'','邬峰','lisi',NULL,'15062431973','498387646@qq.com','',4,1,'2016-08-29 03:21:24',4),(114,'','张三','zhangsan',NULL,'15913112120','zhangsan@gzmailteam.com','zhangsan',4,1,'2016-08-29 03:21:24',4);
 /*!40000 ALTER TABLE `t_member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,13 +96,14 @@ CREATE TABLE `t_notice_log` (
   `c_type` varchar(64) DEFAULT NULL COMMENT '消息类型  [邮件、短信、微信]',
   `c_from` varchar(128) DEFAULT NULL COMMENT '发送来源',
   `c_content` text,
-  `c_notice_to` varchar(255) DEFAULT NULL,
+  `c_notice_to` text,
   `c_status` int(11) DEFAULT NULL COMMENT '发送成功标志   1： 成功   0 ： 失败',
-  `c_create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
+  `c_send_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
   `c_desc` text,
+  `c_create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`c_id`),
   KEY `INDEX` (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +112,7 @@ CREATE TABLE `t_notice_log` (
 
 LOCK TABLES `t_notice_log` WRITE;
 /*!40000 ALTER TABLE `t_notice_log` DISABLE KEYS */;
-INSERT INTO `t_notice_log` VALUES (3,'yjMnmfzRQy','weixin',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:28',''),(4,'yjMnmfzRQy','email',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 09:08:29',''),(5,'yjMnmfzRQy','weixin',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:21:50',''),(6,'yjMnmfzRQy','weixin',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:22:49',''),(7,'yjMnmfzRQy','email',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:22:50',''),(8,'yjMnmfzRQy','weixin',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:24:08',''),(9,'yjMnmfzRQy','email',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:24:08',''),(10,'yjMnmfzRQy','weixin',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:30:09',''),(11,'yjMnmfzRQy','email',NULL,'设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-22 10:30:09',''),(12,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-25 08:54:35',''),(13,'yjMnmfzRQy','email','smtp.qq.com','设备报警，报警码0800! 当日生产产量12000，生产效率85%','陆凯杰',1,'2016-08-25 08:54:36','');
+INSERT INTO `t_notice_log` VALUES (57,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',1,'2016-09-02 03:59:34','','2016-09-02 11:59:34'),(58,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 03:59:35','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 11:59:34'),(59,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',1,'2016-09-02 05:18:51','','2016-09-02 13:18:50'),(60,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:18:51','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 13:18:50'),(61,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:21:49','\"微信该服务没有审批通过\"','2016-09-02 13:21:49'),(62,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:21:50','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 13:21:49'),(63,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:22:41','\"微信服务已经过期,请重新申请\"','2016-09-02 13:22:41'),(64,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:22:42','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 13:22:41'),(65,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',1,'2016-09-02 05:23:22','','2016-09-02 13:23:22'),(66,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:23:23','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 13:23:22'),(67,'yjMnmfzRQy','weixin','wx53f7880bd8c78f62','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',1,'2016-09-02 05:26:54','','2016-09-02 13:26:53'),(68,'yjMnmfzRQy','email','332847979@qq.com','设备报警，报警码8000! 当日生产产量1000，生产效率10%','陆凯杰',0,'2016-09-02 05:26:54','{\"code\":\"EENVELOPE\",\"command\":\"API\"}','2016-09-02 13:26:53');
 /*!40000 ALTER TABLE `t_notice_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +134,7 @@ CREATE TABLE `t_notice_total` (
   `c_weixin_success` int(11) DEFAULT NULL,
   `c_weixin_fail` int(11) DEFAULT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +143,7 @@ CREATE TABLE `t_notice_total` (
 
 LOCK TABLES `t_notice_total` WRITE;
 /*!40000 ALTER TABLE `t_notice_total` DISABLE KEYS */;
-INSERT INTO `t_notice_total` VALUES (1,'yjMnmfzRQy','2016-08-22 00:00:00',1,0,0,0,0,0),(2,'yjMnmfzRQy','2016-08-25 00:00:00',1,0,0,0,0,0);
+INSERT INTO `t_notice_total` VALUES (1,'yjMnmfzRQy','2016-08-22 00:00:00',1,0,0,0,0,0),(2,'yjMnmfzRQy','2016-08-25 00:00:00',1,0,0,0,0,0),(3,'yjMnmfzRQy','2016-08-29 00:00:00',1,0,0,0,2,0),(5,'yjMnmfzRQy','2016-09-01 00:00:00',0,5,0,0,4,0),(10,'yjMnmfzRQy','2016-09-02 00:00:00',0,6,0,0,4,2);
 /*!40000 ALTER TABLE `t_notice_total` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,7 +267,7 @@ CREATE TABLE `t_user_service` (
 
 LOCK TABLES `t_user_service` WRITE;
 /*!40000 ALTER TABLE `t_user_service` DISABLE KEYS */;
-INSERT INTO `t_user_service` VALUES (2,4,1,2,'2016-08-08 16:01:12','2016-08-18 10:31:47','2017-08-18 10:31:47'),(3,4,2,2,'2016-08-08 16:02:36','2016-08-18 10:31:44','2017-08-18 10:31:44'),(4,4,3,2,'2016-08-15 12:02:36','2016-08-18 10:30:38','2018-08-18 10:30:38');
+INSERT INTO `t_user_service` VALUES (2,4,1,2,'2016-08-08 16:01:12','2016-08-18 10:31:47','2017-08-18 10:31:47'),(3,4,2,2,'2016-08-08 16:02:36','2016-08-18 10:31:44','2016-08-18 10:31:44'),(4,4,3,2,'2016-08-15 12:02:36','2016-08-18 10:30:38','2017-08-18 10:30:38');
 /*!40000 ALTER TABLE `t_user_service` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -279,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-26 18:04:30
+-- Dump completed on 2016-09-02 17:55:15
