@@ -40,19 +40,9 @@ module.exports = function (app) {
     app.post('/updateapprovalpc', practice.checkSession, serviceCtrl.updateapprovalpc);
     /** end;serverList **/
 
-    ///** start:应用 **/
-    //app.get('/app/new', practice.checkSession, indexCtrl.newapp);
-    //app.post('/app/checkname', indexCtrl.checkName);
-    //app.post('/app/save', indexCtrl.createApp);
-    //app.post('/getAppList', practice.checkSession, indexCtrl.getAppList);
-    //
-    //app.get('/app/edit/:id', practice.checkSession, indexCtrl.editapp);
-    //app.post('/app/update', indexCtrl.updateApp);
-    //
-    //app.get('/app/view/:id', practice.checkSession, indexCtrl.viewapp);
-    //app.post('/app/apply', indexCtrl.apply);
-    //
-    ///** end:应用 **/
+    /** start:控制台 **/
+    app.get('/getTodayData', practice.checkSession, indexCtrl.getTodayData);
+    /** end:应用 **/
 
     /** start:消息模板 **/
     app.get('/template', practice.checkSession, tempCtrl.index);

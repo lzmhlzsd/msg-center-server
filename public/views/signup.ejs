@@ -136,7 +136,10 @@
                     email: $('#email').val()
                 }, function (result) {
                     if (result.status == '0000') {
-                        location.href = '/';
+                        UI.success('恭喜您,注册成功!', 2000);
+                        setTimeout(function () {
+                            location.href = '/';
+                        }, 2000);
                     }
                     else {
                         BootstrapDialog.show({

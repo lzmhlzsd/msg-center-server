@@ -243,3 +243,83 @@ exports.logout = function (req, res) {
     delete req.session['user'];
     res.redirect('/');
 }
+
+/**
+ * @method 获取今日数据
+ * @author lukaijie
+ * @datetime 16/9/2
+ */
+exports.getTodayData = function (req, res) {
+    var now = moment();
+    var startdate = now.format('YYYY-MM-DD');
+    var enddate = now.add(1, 'days').format('YYYY-MM-DD');
+    var sqlInfo = {
+        method: 'getTodayData',
+        memo: '获取今日数据',
+        params: {
+            startdate: startdate,
+            enddate: enddate,
+            c_appkey: req.session['user'].appkey
+        },
+        desc: ""
+    }
+    utool.sqlExect('SELECT c_create_time,COUNT(c_create_time)\
+    FROM t_notice_log  where  c_create_time >= ? and c_create_time < ? and c_appkey = ? \
+    group by c_create_time',
+        [sqlInfo.params.startdate, sqlInfo.params.enddate, sqlInfo.params.c_appkey], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('获取今日数据：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                var sqlInfo1 = {
+                    method: 'getTodayData',
+                    memo: '查询今日统计数据',
+                    params: {
+                        startdate: startdate
+                    },
+                    desc: ""
+                }
+                utool.sqlExect('SELECT * FROM t_notice_total where c_date = ?',
+                    [sqlInfo1.params.startdate], sqlInfo1, function (err, result1) {
+                        if (err) {
+                            logger.info('查询今日统计数据：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            //今日数据 汇总数据 + 各消息的调用情况
+                            var rdata = {
+                                total: result.length,
+                                wx_success: 0,
+                                wx_fail: 0,
+                                email_success: 0,
+                                email_fail: 0,
+                                msg_success: 0,
+                                msg_fail: 0
+                            }
+                            if (result1.length > 0) {
+                                rdata.wx_success = result1[0].c_weixin_success;
+                                rdata.wx_fail = result1[0].c_weixin_fail;
+                                rdata.email_success = result1[0].c_email_success;
+                                rdata.email_fail = result1[0].c_email_fail;
+                                rdata.msg_success = result1[0].c_msg_success;
+                                rdata.msg_fail = result1[0].c_msg_fail;
+                            }
+                            res.send({
+                                status: '0000',
+                                data: rdata,
+                                message: code['0000']
+                            })
+                        }
+                    });
+            }
+        });
+}

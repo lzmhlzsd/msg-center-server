@@ -42,33 +42,30 @@
                     <div class="ant-card-body diaoyong-info">
                         <p>
                             <label>调用次数：</label>
-                            <span></span>
-
-
+                            <span id="tatal">0</span>
                         </p>
-
                         <p>
                             <label>微信：</label>
                             <span class="msg-status success"></span>
-                            <span class="diaoyong-value">30</span>
+                            <span id="wx_success" class="diaoyong-value">0</span>
                             <span class="msg-status fail"></span>
-                            <span class="diaoyong-value">20</span>
+                            <span id="wx_fail" class="diaoyong-value">0</span>
                         </p>
 
                         <p>
                             <label>邮件：</label>
                             <span class="msg-status success"></span>
-                            <span class="diaoyong-value">30</span>
+                            <span id="email_success" class="diaoyong-value">0</span>
                             <span class="msg-status fail"></span>
-                            <span class="diaoyong-value">20</span>
+                            <span id="email_fail" class="diaoyong-value">0</span>
                         </p>
 
                         <p>
                             <label>短信：</label>
                             <span class="msg-status success"></span>
-                            <span class="diaoyong-value">30</span>
+                            <span id="msg_success" class="diaoyong-value">0</span>
                             <span class="msg-status fail"></span>
-                            <span class="diaoyong-value">20</span>
+                            <span id="msg_fail" class="diaoyong-value">0</span>
                         </p>
                     </div>
                 </div>
@@ -106,3 +103,17 @@
     </div>
 </div>
 <% include ../common/footer.ejs %>
+
+<script type="text/javascript">
+    $.get('/getTodayData',function(result){
+        if(result.status == '0000'){
+            $('#total').html(result.data.total);
+            $('#wx_success').html(result.data.wx_success);
+            $('#wx_fail').html(result.data.wx_fail);
+            $('#email_success').html(result.data.email_success);
+            $('#email_fail').html(result.data.email_fail);
+            $('#msg_success').html(result.data.msg_success);
+            $('#msg_fail').html(result.data.msg_fail);
+        }
+    })
+</script>
