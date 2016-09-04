@@ -1,5 +1,21 @@
 <% include ../common/header.ejs %>
+<style type="text/css">
+    .line-menu {
+        display: inline-block;
+        float: right;
+    }
 
+    .line-menu li {
+        display: inline-block;
+        color: #cdcdcd;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .line-menu li.active {
+        color: #2db7f5;
+    }
+</style>
 <div class="content">
     <div class="sidle-left">
         <% include ../common/menu.ejs %>
@@ -19,14 +35,17 @@
                             <label>名称：</label>
                             <span><%= session.customer %></span>
                         </p>
+
                         <p>
                             <label>账号状态：</label>
                             <span>正常</span>
                         </p>
+
                         <p>
                             <label>appKey：</label>
                             <span><%= session.appkey %></span>
                         </p>
+
                         <p>
                             <label>appScrect：</label>
                             <span><%= session.appscrect %></span>
@@ -42,8 +61,9 @@
                     <div class="ant-card-body diaoyong-info">
                         <p>
                             <label>调用次数：</label>
-                            <span id="tatal">0</span>
+                            <span id="total">0</span>
                         </p>
+
                         <p>
                             <label>微信：</label>
                             <span class="msg-status success"></span>
@@ -75,26 +95,91 @@
                     <div class="ant-card-head">
                         <h3 class="ant-card-head-title">公告信息</h3>
                     </div>
-                    <div class="ant-card-body notice">
+                    <div class="ant-card-body notice" style="    height: 140px;">
                         <p class="text">
                             <span class="circle"></span>
-                            <a href="https://blog.yunpian.com/?p=60" target="_blank">
-                                <span class="item" title="关于短信轰炸发现及处理办法告知！">
-                                    关于短信轰炸发现及处理办法告知！
+                            <a href="javascript:void(0)">
+                                <span class="item" title="云服务中心上线！">
+                                    云服务中心上线！
                                 </span>
-                                <span class="date">[置顶]</span>
+                                <span class="date">[9-3]</span>
                             </a>
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ant-card ant-card-bordered" style="width: 100%;">
+                    <div class="ant-card-head">
+                        <h3 class="ant-card-head-title" style="display: inline-block;width: inherit;">调用统计</h3>
+                        <ul class="line-menu service-type">
+                            <li class="active" data-type="total">调用次数</li>
+                            <li data-type="weixin">微信</li>
+                            <li data-type="email">邮件</li>
+                            <li data-type="msg">短信</li>
+                        </ul>
+                    </div>
+                    <div class="ant-card-body account-info">
 
-                        <p class="text">
-                            <span class="circle"></span>
-                            <a href="https://blog.yunpian.com/?p=60" target="_blank">
-                                <span class="item" title="关于短信轰炸发现及处理办法告知！">
-                                    关于短信轰炸发现及处理办法告知！
-                                </span>
-                                <span class="date">[置顶]</span>
-                            </a>
-                        </p>
+                        <!--<a href="javascript:void(0);" style="float: right;cursor: pointer;"-->
+                        <!--class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"-->
+                        <!--aria-expanded="false" style="background-color: transparent !important;">-->
+                        <!--<i class="anticon anticon-circle-o-down"></i>-->
+                        <!--</a>-->
+                        <!--<ul class="dropdown-menu dropdown-ant custom-center">-->
+                        <!--<li class="ant-dropdown-menu-item"><a href="#">系统设置</a></li>-->
+                        <!--<li class="ant-dropdown-menu-item"><a href="#">密码更改</a></li>-->
+                        <!--<li class=" ant-dropdown-menu-item-divider"></li>-->
+                        <!--<li class="ant-dropdown-menu-item"><a href="javascript:void(0);" id="logout">退出系统</a></li>-->
+                        <!--</ul>-->
+
+                        <ul class="nav navbar-nav navbar-menu pull-right">
+                            <li>
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false" style="background-color: transparent !important;
+                                    padding: 0px;
+                                    position: relative;
+                                    top: -1px;
+                                    margin-left: 5px;">
+                                    <i class="anticon anticon-circle-o-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-ant custom-center select-month"
+                                    style="right: 0px !important;">
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(1)">一月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(2)">二月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(3)">三月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(4)">四月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(5)">五月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(6)">六月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(7)">七月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(8)">八月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(9)">九月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(10)">十月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(11)">十一月</a></li>
+                                    <li class="ant-dropdown-menu-item"><a href="javascript:void(0);"
+                                                                          onclick="gethistorydata(12)">十二月</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="line-menu time-type">
+                            <li class="active" data-type="week">周</li>
+                            <li data-type="month">月</li>
+                        </ul>
+                        <div id="main" style="height: 500px;margin-top: 15px;"></div>
                     </div>
                 </div>
             </div>
@@ -103,10 +188,10 @@
     </div>
 </div>
 <% include ../common/footer.ejs %>
-
+<script type="text/javascript" src="/js/echarts.min.js"></script>
 <script type="text/javascript">
-    $.get('/getTodayData',function(result){
-        if(result.status == '0000'){
+    $.get('/getTodayData', function (result) {
+        if (result.status == '0000') {
             $('#total').html(result.data.total);
             $('#wx_success').html(result.data.wx_success);
             $('#wx_fail').html(result.data.wx_fail);
@@ -116,4 +201,212 @@
             $('#msg_fail').html(result.data.msg_fail);
         }
     })
+
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+
+
+    $(function () {
+        $('.service-type li').on('click', function () {
+            $('.service-type li').removeClass('active');
+            $(this).addClass('active');
+            gethistorydata();
+        });
+
+        $('.time-type li').on('click', function () {
+            $('.time-type li').removeClass('active');
+            $(this).addClass('active');
+            gethistorydata();
+        });
+
+        gethistorydata();
+    })
+
+    //查询历史数据
+    function gethistorydata(month) {
+
+        $.post('/getHistoryData', {
+            servicetype: $('.service-type li.active').attr('data-type'),
+            timetype: $('.time-type li.active').attr('data-type'),
+            month: typeof month != 'undefined' ? month : 0
+        }, function (result) {
+            if (result.status == '0000') {
+                switch (result.data.type) {
+                    case 'total':
+                        var xdata = [], series = [{
+                            name: '调用次数',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }];
+                        for (var i = 0; i < result.data.data.length; i++) {
+                            xdata.push(result.data.data[i].date_time);
+                            series[0].data.push(result.data.data[i].num);
+                        }
+                        drawchart(xdata, series, [{
+                            name: '调用次数'
+                        }]);
+                        break;
+                    case 'weixin':
+                        var xdata = [], series = [{
+                            name: '微信成功',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }, {
+                            name: '微信失败',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }];
+                        for (var i = 0; i < result.data.data.length; i++) {
+                            xdata.push(result.data.data[i].date_time);
+                            series[0].data.push(result.data.data[i].weixin_success);
+                            series[1].data.push(result.data.data[i].weixin_fail);
+                        }
+                        drawchart(xdata, series, [
+                            {name: '微信成功'},
+                            {name: '微信失败'}
+                        ]);
+                        break;
+                    case 'email':
+                        var xdata = [], series = [{
+                            name: '邮件成功',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }, {
+                            name: '邮件失败',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }];
+                        for (var i = 0; i < result.data.data.length; i++) {
+                            xdata.push(result.data.data[i].date_time);
+                            series[0].data.push(result.data.data[i].email_success);
+                            series[1].data.push(result.data.data[i].email_fail);
+                        }
+                        drawchart(xdata, series, [
+                            {name: '邮件成功'},
+                            {name: '邮件失败'}]);
+                        break;
+                    case 'msg':
+                        var xdata = [], series = [{
+                            name: '短信成功',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }, {
+                            name: '短信失败',
+                            type: 'line',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#666'
+                                    }
+                                }
+                            },
+                            data: []
+                        }];
+                        for (var i = 0; i < result.data.data.length; i++) {
+                            xdata.push(result.data.data[i].date_time);
+                            series[0].data.push(result.data.data[i].msg_success);
+                            series[1].data.push(result.data.data[i].msg_fail);
+                        }
+                        drawchart(xdata, series, [
+                            {name: '短信成功'},
+                            {name: '短信失败'}]);
+                        break;
+                }
+            }
+        })
+    }
+
+    function drawchart(xdata, series, legend) {
+        var option = {
+            title: {
+                show: false,
+                text: ''
+            },
+            grid: {
+                left: 45,
+                right: 45,
+                top: 45,
+                bottom: 45
+            },
+            legend: {
+                data: legend
+            },
+            tooltip: {
+            },
+            xAxis: {
+                data: xdata,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    interval: 0,
+                    rotate: 45
+                }
+            },
+            yAxis: {},
+            series: series
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option,true);
+        //$('#main').echarts().destory().setOption(option)
+    }
 </script>

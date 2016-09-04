@@ -42,6 +42,7 @@ module.exports = function (app) {
 
     /** start:控制台 **/
     app.get('/getTodayData', practice.checkSession, indexCtrl.getTodayData);
+    app.post('/getHistoryData', practice.checkSession, indexCtrl.getHistoryData);
     /** end:应用 **/
 
     /** start:消息模板 **/

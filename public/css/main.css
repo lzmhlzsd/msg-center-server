@@ -341,7 +341,7 @@ html, body {
 .nav-list {
     position: fixed;
     top: 64px;
-    z-index: 2;
+    z-index: 3;
     backface-visibility: hidden;
     width: 100%;
     background-color: #f3f3f3;
@@ -407,4 +407,17 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.select-month {
+    width: 50px !important;
+    min-width: inherit;
+}
+.select-month li{
+    padding: 3px 3px !important;
+    text-align: center;
+}
+.select-month li a{
+    padding: 0px;
+    /* width: 50px; */
+    margin: 0px;
 }

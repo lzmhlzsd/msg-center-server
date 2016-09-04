@@ -323,3 +323,254 @@ exports.getTodayData = function (req, res) {
             }
         });
 }
+
+/**
+ * @method 查询历史数据
+ * @author lkj
+ * @datetime 2016/9/2
+ */
+exports.getHistoryData = function (req, res) {
+    var sqlInfo = {
+        method: 'getHistoryData',
+        memo: '获取历史数据',
+        params: {
+            servicetype: req.body.servicetype,
+            timetype: req.body.timetype,
+            month: req.body.month,
+            c_appkey: req.session['user'].appkey
+        },
+        desc: ""
+    }
+
+    var startdate, enddate;
+    if (sqlInfo.params.timetype == 'week') {
+        startdate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+        enddate = moment().format('YYYY-MM-DD');
+        console.log('startdate:', startdate, ' ', 'enddate:', enddate);
+        switch (sqlInfo.params.servicetype) {
+            case "total":
+                getHisDataTotal(startdate, enddate, sqlInfo, function (err, result) {
+                        if (err) {
+                            logger.info('查询周total：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            var days = moment(enddate).diff(startdate, 'days') // 1
+                            var init = [];
+                            for (var i = 0; i < days; i++) {
+                                init.push({
+                                    date_time: moment(startdate).add(i, 'days').format('MM-DD'),
+                                    num: 0
+                                })
+                            }
+                            console.log(init)
+                            //合并
+                            for (var m = 0; m < init.length; m++) {
+                                for (var n = 0; n < result.length; n++) {
+                                    if (init[m].date_time == result[n].date_time) {
+                                        init[m].num = result[n].num
+                                    }
+                                }
+                            }
+                            res.send({
+                                status: '0000',
+                                data: {
+                                    type: sqlInfo.params.servicetype,
+                                    data: init
+                                },
+                                message: code['0000']
+                            })
+                        }
+                    }
+                )
+
+                break;
+            case "weixin":
+            case "email":
+            case "msg":
+                utool.sqlExect('SELECT  date_format(c_date, "%m-%d") as  date_time,\
+                c_email_success as email_success,\
+                c_email_fail as email_fail,\
+                c_msg_success as msg_success,\
+                c_msg_fail as msg_fail,\
+                c_weixin_success as weixin_success,\
+                c_weixin_fail as weixin_fail FROM t_notice_total where c_date >= ? and c_date < ? and c_appkey = ?',
+                    [startdate, enddate, sqlInfo.params.c_appkey], sqlInfo, function (err, result) {
+                        if (err) {
+                            logger.info('查询周：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            var days = moment(enddate).diff(startdate, 'days') // 1
+                            var init = [];
+                            for (var i = 0; i < days; i++) {
+                                init.push({
+                                    date_time: moment(startdate).add(i, 'days').format('MM-DD'),
+                                    email_fail: 0,
+                                    email_success: 0,
+                                    msg_fail: 0,
+                                    msg_success: 0,
+                                    weixin_fail: 0,
+                                    weixin_success: 0
+                                })
+                            }
+                            //合并
+                            for (var m = 0; m < init.length; m++) {
+                                for (var n = 0; n < result.length; n++) {
+                                    if (init[m].date_time == result[n].date_time) {
+                                        init[m].email_fail = result[n].email_fail;
+                                        init[m].email_success = result[n].email_success;
+                                        init[m].msg_fail = result[n].msg_fail;
+                                        init[m].msg_success = result[n].msg_success;
+                                        init[m].weixin_fail = result[n].weixin_fail;
+                                        init[m].weixin_success = result[n].weixin_success;
+                                    }
+                                }
+                            }
+                            res.send({
+                                status: '0000',
+                                data: {
+                                    type: sqlInfo.params.servicetype,
+                                    data: init
+                                },
+                                message: code['0000']
+                            })
+                        }
+                    })
+                break;
+        }
+    }
+    else if (sqlInfo.params.timetype == 'month') {
+        if (sqlInfo.params.month == 0) { //是否按月份
+            startdate = moment().format('YYYY-MM') + '-01';
+            enddate = moment().add(1, 'months').format('YYYY-MM') + '-01';
+        }
+        else {
+            if (sqlInfo.params.month == 12) {
+                startdate = moment().format('YYYY') + '-12-01';
+                enddate = moment().add(1, 'years').format('YYYY') + '-01-01';
+            }
+            else {
+                startdate = moment().format('YYYY') + '-' + sqlInfo.params.month + '-01';
+                enddate = moment().format('YYYY') + '-' + (parseInt(sqlInfo.params.month) + 1) + '-01';
+            }
+        }
+        console.log('startdate:', startdate, ' ', 'enddate:', enddate);
+
+        switch (sqlInfo.params.servicetype) {
+            case "total":
+                getHisDataTotal(startdate, enddate, sqlInfo, function (err, result) {
+                    if (err) {
+                        logger.info('查询月total：' + JSON.stringify(err));
+                        res.send({
+                            status: '-1000',
+                            message: JSON.stringify(err)
+                        });
+                        return;
+                    }
+                    else {
+                        var days = moment(enddate).diff(startdate, 'days') // 1
+                        var init = [];
+                        for (var i = 0; i < days; i++) {
+                            init.push({
+                                date_time: moment(startdate).add(i, 'days').format('MM-DD'),
+                                num: 0
+                            })
+                        }
+                        //合并
+                        for (var m = 0; m < init.length; m++) {
+                            for (var n = 0; n < result.length; n++) {
+                                if (init[m].date_time == result[n].date_time) {
+                                    init[m].num = result[n].num
+                                }
+                            }
+                        }
+                        res.send({
+                            status: '0000',
+                            data: {
+                                type: sqlInfo.params.servicetype,
+                                data: init
+                            },
+                            message: code['0000']
+                        })
+                    }
+                })
+                break;
+            case "weixin":
+            case "email":
+            case "msg":
+                utool.sqlExect('SELECT  date_format(c_date, "%m-%d") as  date_time,\
+                c_email_success as email_success,\
+                c_email_fail as email_fail,\
+                c_msg_success as msg_success,\
+                c_msg_fail as msg_fail,\
+                c_weixin_success as weixin_success,\
+                c_weixin_fail as weixin_fail FROM t_notice_total where c_date >= ? and c_date < ? and c_appkey = ?',
+                    [startdate, enddate, sqlInfo.params.c_appkey], sqlInfo, function (err, result) {
+                        if (err) {
+                            logger.info('查询周：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            var days = moment(enddate).diff(startdate, 'days') // 1
+                            var init = [];
+                            for (var i = 0; i < days; i++) {
+                                init.push({
+                                    date_time: moment(startdate).add(i, 'days').format('MM-DD'),
+                                    email_fail: 0,
+                                    email_success: 0,
+                                    msg_fail: 0,
+                                    msg_success: 0,
+                                    weixin_fail: 0,
+                                    weixin_success: 0
+                                })
+                            }
+                            //合并
+                            for (var m = 0; m < init.length; m++) {
+                                for (var n = 0; n < result.length; n++) {
+                                    if (init[m].date_time == result[n].date_time) {
+                                        init[m].email_fail = result[n].email_fail;
+                                        init[m].email_success = result[n].email_success;
+                                        init[m].msg_fail = result[n].msg_fail;
+                                        init[m].msg_success = result[n].msg_success;
+                                        init[m].weixin_fail = result[n].weixin_fail;
+                                        init[m].weixin_success = result[n].weixin_success;
+                                    }
+                                }
+                            }
+                            res.send({
+                                status: '0000',
+                                data: {
+                                    type: sqlInfo.params.servicetype,
+                                    data: init
+                                },
+                                message: code['0000']
+                            })
+                        }
+                    })
+                break;
+        }
+    }
+}
+
+function getHisDataTotal(startdate, enddate, sqlInfo, callback) {
+    utool.sqlExect('select  date_format(c_create_time, "%m-%d") as  date_time,count(cts) as num from \
+                (SELECT c_create_time,COUNT(c_create_time) as cts \
+                FROM t_notice_log where c_create_time >= ? and c_create_time < ? and c_appkey = ? \
+                group by c_create_time) t_c_l group by  date_time',
+        [startdate, enddate, sqlInfo.params.c_appkey], sqlInfo, function (err, result) {
+            callback(err, result);
+        })
+}
