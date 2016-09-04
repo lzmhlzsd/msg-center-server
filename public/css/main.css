@@ -348,7 +348,7 @@ html, body {
 }
 
 .ant-table th {
-    background: #6b6b6b;
+    background: #6b6b6b !important;
     color: #fefefe;
 }
 
