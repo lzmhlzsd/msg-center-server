@@ -54,6 +54,7 @@ module.exports = function (app) {
     app.post('/template/update', practice.checkSession, tempCtrl.updatetemplate);
     app.post('/template/checkno', practice.checkSession, tempCtrl.checktemplateno);
     app.post('/template/checkno2', practice.checkSession, tempCtrl.checktemplateno2);
+    app.post('/getTemplateFromYPW', practice.checkSession, tempCtrl.getTemplateFromYPW);
     /** end:消息模板 **/
 
     /** start:人员管理 **/
@@ -67,6 +68,7 @@ module.exports = function (app) {
     app.post('/member/sync', practice.checkSession, memCtrl.sync);
     app.post('/member/checkno', practice.checkSession, memCtrl.checkno);
     app.post('/member/checkno2', practice.checkSession, memCtrl.checkno2);
+    app.post('/deleteMember', practice.checkSession, memCtrl.deleteMember);
 
     //微信
     app.get('/getweixinUsers', practice.checkSession, memCtrl.getweixinUsers);

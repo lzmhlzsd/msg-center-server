@@ -31,6 +31,7 @@ exports.index = function (req, res, next) {
                 url: '/template'
             }
         ],
+        msgserver: u.where(req.session['user'].serviceList, {c_serviceid: 2}).length > 0 ? true : false,
         menu: 'admin',
         submenu: 'admin_template'
     });
@@ -318,6 +319,105 @@ exports.checktemplateno2 = function (req, res) {
                 }
             }
         })
+}
+
+/**
+ * @method 获取模版from 云片网
+ * @author lukaijie
+ * @datetime 16/9/5
+ */
+exports.getTemplateFromYPW = function (req, res) {
+    var smsProvider = require('yunpian-sms-client').v2;
+    var apiKey = req.session['user'].msg_apikey;
+    var provider = smsProvider.initWithKey(apiKey);
+
+    //获取所有模版
+    provider.getSmsTpl().then(function (result) {
+        if (result) {
+            console.log(result);
+            //保存到数据库
+            //1.删除所有已经存在的模版编号
+            //2.插入新的模版编号
+            var templateno = '';
+            u.each(result, function (value, key) {
+                templateno = templateno + '"' + value.tpl_id + '"';
+                if (key < result.length - 1) {
+                    templateno = templateno + ',';
+                }
+            })
+            //删除表中已经存在的编号模版
+            var sqlInfo = {
+                method: 'getTemplateFromYPW',
+                memo: '删除表中已经存在的编号模版',
+                params: {
+                    templateno: templateno.toString()
+                },
+                desc: '删除表中已经存在的编号模版'
+            }
+            console.log('DELETE FROM t_template WHERE c_temp_no IN (' + sqlInfo.params.templateno + ')')
+            utool.sqlExect('DELETE FROM t_template WHERE c_temp_no IN (' + sqlInfo.params.templateno + ')', null, sqlInfo, function (err, result1) {
+                if (err) {
+                    logger.info('删除表中已经存在的编号模版：' + JSON.stringify(err));
+                    res.send({
+                        status: '-1000',
+                        message: JSON.stringify(err)
+                    });
+                    return;
+                }
+                else {
+                    console.log('删除成功');
+                    //插入新的数据
+                    var insertdata = '';
+
+                    u.each(result, function (value, key) {
+                        insertdata = insertdata + '("' + value.tpl_id + '","' +
+                            value.name + '",' +
+                            (value.check_status == 'SUCCESS' ? 1 : 0) + ',' +
+                            req.session['user'].userid + ')';
+                        if (key < result.userlist.length - 1) {
+                            insertdata = insertdata + ',';
+                        }
+                    })
+
+                    var sqlInfo = {
+                        method: 'getTemplateFromYPW',
+                        memo: '插入新的数据',
+                        params: {
+                            insertdata: insertdata
+                        },
+                        desc: '插入新的数据'
+                    }
+                    console.log('INSERT INTO t_template (c_temp_no, c_temp_content, c_temp_status, c_userid) VALUES ' + sqlInfo.params.insertdata);
+                    utool.sqlExect('INSERT INTO t_member (c_temp_no, c_temp_content, c_temp_status, c_userid) VALUES ' +
+                        sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
+                        if (err) {
+                            logger.info('插入新的数据：' + JSON.stringify(err));
+                            res.send({
+                                status: '-1000',
+                                message: JSON.stringify(err)
+                            });
+                            return;
+                        }
+                        else {
+                            res.send({
+                                status: '0000',
+                                message: code['0000']
+                            })
+                        }
+
+                    });
+                }
+            });
+
+        }
+    }).catch(function (err) {
+        console.log(err);
+        res.send({
+            status: '-1000',
+            message: code['-1000']
+        })
+    });
+
 }
 
 /**

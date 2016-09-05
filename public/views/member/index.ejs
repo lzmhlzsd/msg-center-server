@@ -75,7 +75,16 @@
                                 {{item.c_userno}}
                             </td>
                             <td class="">
-                                {{item.c_status == 0 ? '未同步': '已同步'}}
+                                {{item.c_sync == 0 ? '未同步': '已同步'}}
+                                <% if(item.c_sync == 1) { %>
+                                    <% if(item.c_status == 1) { %>
+                                        (已关注)
+                                    <% } else if(item.c_status == 2) { %>
+                                        (已禁用)
+                                    <% } else if(item.c_status == 4) { %>
+                                        (未关注)
+                                    <% }%>
+                                <% } %>
                             </td>
                             <td class="">{{item.c_mobile}}</td>
                             <td class="">{{item.c_email}}</td>
@@ -83,15 +92,14 @@
                                 <span>
                                     <a ng-href="/member/edit/{{item.c_userno}}">编辑</a>
                                     <span class="ant-divider"></span>
-                                    <a>删除</a>
-                                    <% if(weixinserver) { %>
-                                    <span class="ant-divider"></span>
-
-                                    <a href="#" title="同步到微信" ng-click="sync()">
-                                        同步
-                                        <!--<i class="anticon anticon-loading"></i>同步中...-->
-                                    </a>
-                                    <% } %>
+                                    <a ng-click="delete()">删除</a>
+                                    <!--<% if(weixinserver) { %>-->
+                                    <!--<span class="ant-divider"></span>-->
+                                    <!--<a href="#" title="同步到微信" ng-click="sync()">-->
+                                        <!--同步-->
+                                        <!--&lt;!&ndash;<i class="anticon anticon-loading"></i>同步中...&ndash;&gt;-->
+                                    <!--</a>-->
+                                    <!--<% } %>-->
                                     <!--<a href="#" class="ant-dropdown-link">更多-->
                                         <!--<i class="anticon anticon-down"></i>-->
                                     <!--</a>-->
@@ -289,11 +297,11 @@
                     });
                 }
 
-                $scope.sync = function () {
+                $scope.delete = function(){
                     BootstrapDialog.show({
                         title: '提示',
                         message: '<i class="icon-model anticon anticon-question-circle"></i>' +
-                        '<span class="ant-confirm-title">确认同步到微信</span>',
+                        '<span class="ant-confirm-title">确认是否删除</span>',
                         buttons: [{
                             label: '取消',
                             cssClass: 'btn-model btn-default',
@@ -304,13 +312,11 @@
                             label: '确认',
                             cssClass: 'btn-model btn-ant',
                             action: function (dialogItself) {
-                                $http.post('/applyservice', {
-                                    serviceid: self.item.c_serviceid,
-                                    servicename: self.item.c_servicename
+                                $http.post('/deleteMember', {
+                                    mem_id: self.item.c_id,
                                 }).success(function (result) {
                                     if (result.status == '0000') {
-                                        self.item.c_apply_status = 1;
-                                        self.item.c_apply_time = result.data;
+                                        $scope.getAppApplyList();
                                     }
                                 });
                                 dialogItself.close();
@@ -318,19 +324,50 @@
                         }],
                         type: BootstrapDialog.TYPE_DEFAULT
                     });
-                    var params = [];
-                    _.each($scope.table, function (value, key) {
-                        params.push(value.c_userno);
-                    })
-                    $http.post('/member/sync', {c_userno: params})
-                            .success(function (result) {
-                                if (result.status == '0000') {
+                }
 
-                                }
-                                else {
-
-                                }
-                            })
+                $scope.sync = function () {
+//                    BootstrapDialog.show({
+//                        title: '提示',
+//                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+//                        '<span class="ant-confirm-title">确认同步到微信</span>',
+//                        buttons: [{
+//                            label: '取消',
+//                            cssClass: 'btn-model btn-default',
+//                            action: function (dialogItself) {
+//                                dialogItself.close();
+//                            }
+//                        }, {
+//                            label: '确认',
+//                            cssClass: 'btn-model btn-ant',
+//                            action: function (dialogItself) {
+//                                $http.post('/applyservice', {
+//                                    serviceid: self.item.c_serviceid,
+//                                    servicename: self.item.c_servicename
+//                                }).success(function (result) {
+//                                    if (result.status == '0000') {
+//                                        self.item.c_apply_status = 1;
+//                                        self.item.c_apply_time = result.data;
+//                                    }
+//                                });
+//                                dialogItself.close();
+//                            }
+//                        }],
+//                        type: BootstrapDialog.TYPE_DEFAULT
+//                    });
+//                    var params = [];
+//                    _.each($scope.table, function (value, key) {
+//                        params.push(value.c_userno);
+//                    })
+//                    $http.post('/member/sync', {c_userno: params})
+//                            .success(function (result) {
+//                                if (result.status == '0000') {
+//
+//                                }
+//                                else {
+//
+//                                }
+//                            })
                 }
             }])
 </script>

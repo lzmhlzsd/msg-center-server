@@ -67,6 +67,7 @@ exports.login = function (req, res, next) {
                                     qyh_cropid: user.c_weixin_qyh_cropid,
                                     qyh_screct: user.c_weixin_qyh_screct,
                                     qyh_agentid: user.c_weixin_qyh_agentid,   //企业应用ID
+                                    msg_apikey: user.c_msg_apikey,
                                     serviceList: result1
                                 }
                                 res.send({

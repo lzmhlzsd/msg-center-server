@@ -110,22 +110,22 @@
                 </div>
                 <div class="ant-card-body">
                     <form class="ant-form-horizontal">
-                        <div class="ant-row ant-form-item">
-                            <div class="ant-col-5 ant-form-item-label">
-                                <label class="">微信</label>
-                            </div>
-                            <div class="ant-col-12">
-                                <div class="ant-form-item-control">
-                                <span class="ant-input-wrapper">
-                                    <select class="ant-input ant-input-lg" ng-model="params.host">
-                                        <option value="qyh">企业号</option>
-                                        <option value="fwh">服务号</option>
-                                        <option value="dyh">订阅号</option>
-                                    </select>
-                                </span>
-                                </div>
-                            </div>
-                        </div>
+                        <!--<div class="ant-row ant-form-item">-->
+                            <!--<div class="ant-col-5 ant-form-item-label">-->
+                                <!--<label class="">微信</label>-->
+                            <!--</div>-->
+                            <!--<div class="ant-col-12">-->
+                                <!--<div class="ant-form-item-control">-->
+                                <!--<span class="ant-input-wrapper">-->
+                                    <!--<select class="ant-input ant-input-lg" ng-model="params.host">-->
+                                        <!--<option value="qyh">企业号</option>-->
+                                        <!--<option value="fwh">服务号</option>-->
+                                        <!--<option value="dyh">订阅号</option>-->
+                                    <!--</select>-->
+                                <!--</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="ant-row ant-form-item">
                             <div class="ant-col-5 ant-form-item-label">
                                 <label class="">CorpID</label>
@@ -148,6 +148,19 @@
                                 <span class="ant-input-wrapper">
                                     <input type="text" id="warning" class="ant-input ant-input-lg"
                                            ng-model="params.wxqy_secret">
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ant-row ant-form-item">
+                            <div class="ant-col-5 ant-form-item-label">
+                                <label class="">应用ID</label>
+                            </div>
+                            <div class="ant-col-12">
+                                <div class="ant-form-item-control">
+                                <span class="ant-input-wrapper">
+                                    <input type="text" id="warning" class="ant-input ant-input-lg"
+                                           ng-model="params.c_weixin_qyh_agentid">
                                 </span>
                                 </div>
                             </div>
@@ -196,7 +209,8 @@
                                         password: result.data[0].c_email_password,
                                         apikey: result.data[0].c_msg_apikey,
                                         wxqy_corpid: result.data[0].c_weixin_qyh_cropid,
-                                        wxqy_secret: result.data[0].c_weixin_qyh_screct
+                                        wxqy_secret: result.data[0].c_weixin_qyh_screct,
+                                        c_weixin_qyh_agentid: result.data[0].c_weixin_qyh_agentid
                                     }
                                 }
                             }

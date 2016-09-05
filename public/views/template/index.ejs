@@ -22,6 +22,10 @@
 
 
         </div>
+
+        <% if(msgserver) { %>
+        <a class="btn btn-ant" style="float: right;position: relative;top: -5px; margin-left: 5px;" ng-click="getmsg()">获取短信模板</a>
+        <% } %>
         <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/template/new">新建模板</a>
 
         <div class="ant-table ant-table-large ant-table-scroll-position-left">
@@ -231,6 +235,33 @@
                         $scope.param.pagenum++;
                         $scope.getAppApplyList();
                     }
+                }
+
+                $scope.getmsg = function () {
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认将短信模板盖到本地</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.post('/getTemplateFromYPW').success(function (result) {
+                                    if (result.status == '0000') {
+                                        $scope.getAppApplyList();
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
                 }
 
             }])

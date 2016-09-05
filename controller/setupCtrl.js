@@ -86,7 +86,8 @@ exports.saveConfig = function (req, res) {
             c_email_password: req.body.password,
             c_msg_apikey: req.body.apikey,
             c_weixin_qyh_cropid: req.body.wxqy_corpid,
-            c_weixin_qyh_screct: req.body.wxqy_secret
+            c_weixin_qyh_screct: req.body.wxqy_secret,
+            c_weixin_qyh_agentid: req.body.c_weixin_qyh_agentid
         },
         desc: '保存配置'
     }
@@ -124,11 +125,11 @@ exports.saveConfig = function (req, res) {
             else {
                 sqlInfo.desc = '更新数据';
                 utool.sqlExect('UPDATE t_config SET c_email_host = ?, c_email_port = ?, \
-                    c_email_username = ?,c_email_password = ?,c_msg_apikey = ?,c_weixin_qyh_cropid = ?,c_weixin_qyh_screct = ?\
+                    c_email_username = ?,c_email_password = ?,c_msg_apikey = ?,c_weixin_qyh_cropid = ?,c_weixin_qyh_screct = ?,c_weixin_qyh_agentid = ?\
                     WHERE c_userid = ?',
                     [sqlInfo.params.c_email_host, sqlInfo.params.c_email_port,
                         sqlInfo.params.c_email_username, sqlInfo.params.c_email_password,
-                        sqlInfo.params.c_msg_apikey, sqlInfo.params.c_weixin_qyh_cropid, sqlInfo.params.c_weixin_qyh_screct,
+                        sqlInfo.params.c_msg_apikey, sqlInfo.params.c_weixin_qyh_cropid, sqlInfo.params.c_weixin_qyh_screct, sqlInfo.params.c_weixin_qyh_agentid,
                         sqlInfo.params.c_userid], sqlInfo, function (err, result) {
                         if (err) {
                             res.send({

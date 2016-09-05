@@ -535,7 +535,8 @@ exports.getweixinUsers = function (req, res) {
                         desc: '插入新的数据'
                     }
                     console.log('INSERT INTO t_member (c_avatar, c_name, c_userno, c_mobile, c_email, c_weixinid, c_userid, c_sync,c_status) VALUES ' + sqlInfo.params.insertdata);
-                    utool.sqlExect('INSERT INTO t_member (c_avatar, c_name, c_userno, c_mobile, c_email, c_weixinid, c_userid, c_sync,c_status) VALUES ' + sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
+                    utool.sqlExect('INSERT INTO t_member (c_avatar, c_name, c_userno, c_mobile, c_email, c_weixinid, c_userid, c_sync,c_status) VALUES ' +
+                        sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
                         if (err) {
                             logger.info('插入新的数据：' + JSON.stringify(err));
                             res.send({
@@ -608,4 +609,37 @@ exports.sync = function (req, res) {
             });
         }
     })
+}
+
+/**
+ * @method 删除人员
+ * @author lukaijie
+ * @datetime 16/9/5
+ */
+exports.deleteMember = function(req, res){
+    var sqlInfo = {
+        method: 'deleteMember',
+        memo: '删除人员',
+        params: {
+            c_id: req.body.mem_id
+        },
+        desc: '删除人员'
+    }
+    utool.sqlExect('DELETE FROM t_member WHERE c_id= ?',
+        [sqlInfo.params.c_id], sqlInfo, function (err, result) {
+            if (err) {
+                logger.info('删除人员：' + JSON.stringify(err));
+                res.send({
+                    status: '-1000',
+                    message: JSON.stringify(err)
+                });
+                return;
+            }
+            else {
+                res.send({
+                    status: '0000',
+                    message: code['0000']
+                });
+            }
+        })
 }
