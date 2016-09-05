@@ -233,6 +233,7 @@ html, body {
 .ant-message-notice-content {
     top: 80px;
     position: fixed;
+    z-index: 9999;
 }
 
 .ant-message-notice-content .anticon {
