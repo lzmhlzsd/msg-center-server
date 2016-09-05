@@ -371,10 +371,10 @@ exports.getTemplateFromYPW = function (req, res) {
 
                     u.each(result, function (value, key) {
                         insertdata = insertdata + '("' + value.tpl_id + '","' +
-                            value.name + '",' +
+                            value.tpl_content + '",' +
                             (value.check_status == 'SUCCESS' ? 1 : 0) + ',' +
                             req.session['user'].userid + ')';
-                        if (key < result.userlist.length - 1) {
+                        if (key < result.length - 1) {
                             insertdata = insertdata + ',';
                         }
                     })
@@ -387,8 +387,8 @@ exports.getTemplateFromYPW = function (req, res) {
                         },
                         desc: '插入新的数据'
                     }
-                    console.log('INSERT INTO t_template (c_temp_no, c_temp_content, c_temp_status, c_userid) VALUES ' + sqlInfo.params.insertdata);
-                    utool.sqlExect('INSERT INTO t_member (c_temp_no, c_temp_content, c_temp_status, c_userid) VALUES ' +
+                    console.log('INSERT INTO t_template (c_temp_no, c_temp_content, c_temp_status, c_temp_userid) VALUES ' + sqlInfo.params.insertdata);
+                    utool.sqlExect('INSERT INTO t_member (c_temp_no, c_temp_content, c_temp_status, c_temp_userid) VALUES ' +
                         sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
                         if (err) {
                             logger.info('插入新的数据：' + JSON.stringify(err));
