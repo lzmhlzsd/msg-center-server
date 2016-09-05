@@ -76,15 +76,7 @@
                             </td>
                             <td class="">
                                 {{item.c_sync == 0 ? '未同步': '已同步'}}
-                                <% if(item.c_sync == 1) { %>
-                                    <% if(item.c_status == 1) { %>
-                                        (已关注)
-                                    <% } else if(item.c_status == 2) { %>
-                                        (已禁用)
-                                    <% } else if(item.c_status == 4) { %>
-                                        (未关注)
-                                    <% }%>
-                                <% } %>
+                                {{item.c_sync == 1 ? (item.c_status | format_c_status) : ''}}
                             </td>
                             <td class="">{{item.c_mobile}}</td>
                             <td class="">{{item.c_email}}</td>
@@ -298,6 +290,7 @@
                 }
 
                 $scope.delete = function(){
+                    var self = this;
                     BootstrapDialog.show({
                         title: '提示',
                         message: '<i class="icon-model anticon anticon-question-circle"></i>' +
@@ -313,7 +306,7 @@
                             cssClass: 'btn-model btn-ant',
                             action: function (dialogItself) {
                                 $http.post('/deleteMember', {
-                                    mem_id: self.item.c_id,
+                                    mem_id: self.item.c_id
                                 }).success(function (result) {
                                     if (result.status == '0000') {
                                         $scope.getAppApplyList();
@@ -370,4 +363,19 @@
 //                            })
                 }
             }])
+            .filter('format_c_status', function () {
+                return function (input) {
+                    switch (input) {
+                        case 1:
+                            return '(已关注)'
+                            break;
+                        case 2:
+                            return '(已禁用)'
+                            break;
+                        case 3:
+                            return '(未关注)'
+                            break;
+                    }
+                }
+            });
 </script>

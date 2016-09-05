@@ -388,7 +388,7 @@ exports.getTemplateFromYPW = function (req, res) {
                         desc: '插入新的数据'
                     }
                     console.log('INSERT INTO t_template (c_temp_no, c_temp_content, c_temp_status, c_temp_userid) VALUES ' + sqlInfo.params.insertdata);
-                    utool.sqlExect('INSERT INTO t_member (c_temp_no, c_temp_content, c_temp_status, c_temp_userid) VALUES ' +
+                    utool.sqlExect('INSERT INTO t_template (c_temp_no, c_temp_content, c_temp_status, c_temp_userid) VALUES ' +
                         sqlInfo.params.insertdata, null, sqlInfo, function (err, result) {
                         if (err) {
                             logger.info('插入新的数据：' + JSON.stringify(err));

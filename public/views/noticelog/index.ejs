@@ -87,13 +87,13 @@
                         <thead class="ant-table-thead">
                         <tr>
                             <!--<th class=""><span>appkey</span></th>-->
-                            <th class=""><span>发送时间</span></th>
-                            <th class=""><span>类型</span></th>
+                            <th class="" width="160"><span>发送时间</span></th>
+                            <th class="" width="60"><span>类型</span></th>
                             <th class=""><span>消息来源</span></th>
-                            <th class=""><span>发送到</span></th>
-                            <th class=""><span>内容</span></th>
+                            <th class="" width="90"><span>发送到</span></th>
+                            <th class="" width="250"><span>内容</span></th>
                             <!--<th class=""><span>状态</span></th>-->
-                            <th class=""><span>失败原因</span></th>
+                            <th class="" width="250"><span>失败原因</span></th>
                         </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
@@ -139,7 +139,17 @@
                             <!--{{item.c_status}}-->
                             <!--</td>-->
                             <td class="">
-                                {{item.c_desc}}
+                                <span style="white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: inline-block;
+                                max-width: 200px;">
+                                    {{item.c_desc}}
+
+                                </span>
+                                <i class="icon-model anticon anticon-exclamation-circle"
+                                   style="font-size: 14px;cursor: pointer;position: relative;top:-4px;"
+                                   data-toggle="tooltip" data-placement="top" data-original-title="{{item.c_desc}}"></i>
                             </td>
                         </tr>
                         </tbody>

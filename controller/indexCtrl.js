@@ -52,6 +52,7 @@ exports.login = function (req, res, next) {
                                 });
                             }
                             else {
+                                console.log(user);
                                 req.session['user'] = {
                                     customer: user.c_customer,
                                     username: user.c_username,
