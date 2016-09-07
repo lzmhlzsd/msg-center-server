@@ -30,7 +30,23 @@ exports.login = function (req, res, next) {
         },
         desc: ""
     }
-    utool.sqlExect('SELECT * FROM t_user t1 LEFT JOIN t_config t2 on t1.c_userid = t2.c_userid WHERE c_username = ?', [sqlInfo.params.c_username], sqlInfo, function (err, result) {
+    utool.sqlExect('SELECT \
+        t1.c_customer as c_customer, \
+        t1.c_username as c_username, \
+        t1.c_userid as c_userid, \
+        t1.c_is_use as c_is_use, \
+        t1.c_type as c_type, \
+        t1.c_appkey as c_appkey, \
+        t1.c_appscrect as c_appscrect, \
+        t1.c_pwd as c_pwd, \
+        t1.c_phone as c_phone, \
+        t1.c_email as c_email, \
+        t1.c_desc as c_desc, \
+        t2.c_weixin_qyh_cropid as c_weixin_qyh_cropid, \
+        t2.c_weixin_qyh_screct as c_weixin_qyh_screct, \
+        t2.c_weixin_qyh_agentid as c_weixin_qyh_agentid, \
+        t2.c_msg_apikey as c_msg_apikey \
+        FROM t_user t1 LEFT JOIN t_config t2 on t1.c_userid = t2.c_userid WHERE c_username = ?', [sqlInfo.params.c_username], sqlInfo, function (err, result) {
         if (err) {
             logger.info('根据用户名查询失败：' + JSON.stringify(err));
             res.send({
