@@ -6,6 +6,7 @@ var indexCtrl = require('../controller/indexCtrl'),
     memCtrl = require('../controller/memCtrl'),
     systemCtrl = require('../controller/systemCtrl'),
     noticeCtrl = require('../controller/noticeCtrl'),
+    bigScreenCtrl = require('../controller/bigScreenCtrl'),
     config = require('../libs/config'),
     practice = require('../libs/practice'),
     u = require("underscore");
@@ -84,6 +85,12 @@ module.exports = function (app) {
     app.get('/noticelog', practice.checkSession, noticeCtrl.index);
     app.post('/getLog', practice.checkSession, noticeCtrl.getLog);
     /** end:消息日志 **/
+
+    /** start:大屏看板 */
+    app.get('/bigScreen', practice.checkSession, bigScreenCtrl.index);
+    app.get('/bigScreen/new', practice.checkSession, bigScreenCtrl.new);
+    app.get('/bigScreen/save', practice.checkSession, bigScreenCtrl.save);
+    /** end:大屏看板 */
 
     /** start:系统管理 **/
     app.get('/account', practice.checkSession, practice.checkRole, systemCtrl.account);
