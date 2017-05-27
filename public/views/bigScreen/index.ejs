@@ -1,0 +1,285 @@
+<% include ../common/header.ejs %>
+<style type="text/css">
+    .user-img {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border: 1px solid #cdcdcd;
+        border-radius: 16px;
+        background-color: #cdcdcd;
+        text-align: center;
+        margin-right: 5px;
+    }
+
+    .user-img i {
+        font-size: 20px;
+        line-height: 32px;
+        color: #FFF;
+    }
+</style>
+<div class="content" ng-app="myApp" ng-controller="appCtrl">
+    <div class="sidle-left">
+        <% include ../common/menu.ejs %>
+    </div>
+    <div class="sidle-right">
+        <div class="title">
+            <h4>工厂设置</h4>   
+        </div>
+        <div class="ant-search-input-wrapper" style="width: 200px;margin-bottom: 10px;">
+            <span class="ant-input-group ant-search-input">
+                <span class="ant-input-wrapper">
+                    <input type="text" placeholder="公司编号或名称" value="" class="ant-input"
+                           ng-model="keyword">
+                </span>
+                <div class="ant-input-group-wrap">
+                    <button type="button" ng-click="keywordSearch()" class="ant-btn ant-btn-icon-only ant-search-btn">
+                        <i class="anticon anticon-search"></i></button>
+                </div>
+            </span>
+
+
+        </div>
+
+        <a class="btn btn-ant" style="float: right;position: relative;top: -5px;" ng-href="/bigscreen/new">新建工厂</a>
+
+
+        <div class="ant-table ant-table-large ant-table-scroll-position-left">
+            <div class="ant-table-content">
+                <div class="ant-table-body">
+                    <table class="">
+                        <thead class="ant-table-thead">
+                        <tr>
+                            <th class=""><span>公司编号</span></th>
+                            <th class=""><span>公司名称</span></th>
+                            <th class=""><span>地址</span></th>
+                            <th class=""><span>经度</span></th>
+                            <th class=""><span>纬度</span></th>
+                            <th class=""><span>时区</span></th>
+                            <th class=""><span>联系方式</span></th>
+                            <th class=""><span>联系人</span></th>
+                            <th class=""><span>描述</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="ant-table-tbody">
+                        <tr class="ant-table-row  ant-table-row-level-0" ng-repeat="item in table">
+                            <td>{{item.c_company_no}}</td>
+                            <td>{{item.c_company}}</td>
+                            <td>{{item.c_address}}</td>
+                            <td>{{item.c_x}}</td>
+                            <td>{{item.c_y}}</td>
+                            <td>{{item.c_timezone}}</td>
+                            <td>{{item.c_phone}}</td>
+                            <td>{{item.c_contact}}</td>
+                            <td>{{item.c_desc}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+</div>
+<% include ../common/footer.ejs %>
+<script type="text/javascript">
+    angular.module('myApp', ['angular-loading-bar'])
+            .config(['$httpProvider', 'cfpLoadingBarProvider', function ($httpProvider, cfpLoadingBarProvider) {
+                cfpLoadingBarProvider.includeSpinner = true;
+                cfpLoadingBarProvider.latencyThreshold = 5;
+            }])
+            .run(function (cfpLoadingBar) {
+                cfpLoadingBar.start();
+                cfpLoadingBar.complete();
+
+            })
+            .controller('appCtrl', ['$scope', '$http', 'cfpLoadingBar', function ($scope, $http, cfpLoadingBar) {
+                $scope.table = [];
+                $scope.keyword = ''; //默认账号名
+                $scope.filtes = {
+                    utype1: false,
+                    utype2: false
+                }
+                //查询参数
+                $scope.param = {
+                    pagenum: 1,    //页码
+                    pagesize: 10,        //页大小
+                    count: 0,
+                    pages: 0,
+                    searchParams: {
+                        filters: [],
+                        logic: 'OR'
+                    }
+                }
+
+                //查询所有公司
+                $scope.getAppApplyList = function (index) {
+                    // $scope.param.pagenum = index || $scope.param.pagenum;
+                    // $scope.param.searchParams = {
+                    //     filters: [],
+                    //     logic: 'OR'
+                    // }
+                    // if ($scope.keyword != '') {
+                    //     var array = [];
+                    //     array.push(
+                    //             {
+                    //                 filed: 'c_userno', operator: 'like', value: $scope.keyword
+                    //             }, {
+                    //                 filed: 'c_name', operator: 'like', value: $scope.keyword
+                    //             });
+                    //     $scope.param.searchParams['filters'] = array;
+                    // }
+                    // var fd_utype_filter = {
+                    //     filters: [],
+                    //     logic: 'OR'
+                    // };
+                    // if ($scope.filtes.utype1) {
+                    //     fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 1});
+                    // }
+                    // if ($scope.filtes.utype2) {
+                    //     fd_utype_filter.filters.push({filed: 'app_type', operator: 'eq', value: 2});
+                    // }
+
+                    // if (fd_utype_filter.filters.length > 0) {
+                    //     $scope.param.searchParams['filters'].push(fd_utype_filter);
+                    // }
+
+                    $http.post('/bigScreen/getdata').success(function (result) {
+                        if (result.status == '0000') {
+                            $scope.table = result.data.datasouce;
+                            // $scope.param.pagenum = result.data.pagenum;
+                            // $scope.param.pages = result.data.pages;
+                            // $scope.param.pagesize = result.data.pagesize;
+                            // $scope.param['count'] = result.data.count;
+
+                            // $scope.pagination = [];
+                            // for (var i = 1; i <= $scope.param.pages; i++) {
+                            //     $scope.pagination.push({
+                            //         key: i,
+                            //         active: i == $scope.param.pagenum ? true : false
+                            //     })
+                            // }
+                        }
+                    });
+                }
+
+                $scope.getAppApplyList();
+
+                //切换用户
+                $scope.checkUType1 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype1 = !$scope.filtes.utype1;
+                }
+                $scope.checkUType2 = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.filtes.utype2 = !$scope.filtes.utype2;
+                }
+
+                $scope.reset = function ($event) {
+                    $event.stopPropagation();
+                    $scope.filtes = {
+                        utype1: false,
+                        utype2: false
+                    }
+                }
+
+                $scope.keywordSearch = function () {
+                    $scope.getAppApplyList(1);
+                }
+
+                $scope.showpage = function () {
+                    $scope.param.pagenum = this.pag.key;    //页码
+                    $scope.getAppApplyList();
+                }
+
+                $scope.prev = function () {
+                    if ($scope.param.pagenum > 1) {
+                        $scope.param.pagenum--;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                $scope.next = function () {
+                    if ($scope.param.pagenum < $scope.param.pages) {
+                        $scope.param.pagenum++;
+                        $scope.getAppApplyList();
+                    }
+                }
+
+                $scope.getwx = function () {
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认将微信通讯录覆盖到本地</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.get('/getweixinUsers').success(function (result) {
+                                    if (result.status == '0000') {
+                                        $scope.getAppApplyList();
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
+                }
+
+                $scope.delete = function(){
+                    var self = this;
+                    BootstrapDialog.show({
+                        title: '提示',
+                        message: '<i class="icon-model anticon anticon-question-circle"></i>' +
+                        '<span class="ant-confirm-title">确认是否删除</span>',
+                        buttons: [{
+                            label: '取消',
+                            cssClass: 'btn-model btn-default',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: '确认',
+                            cssClass: 'btn-model btn-ant',
+                            action: function (dialogItself) {
+                                $http.post('/deleteMember', {
+                                    mem_id: self.item.c_id
+                                }).success(function (result) {
+                                    if (result.status == '0000') {
+                                        $scope.getAppApplyList();
+                                    }
+                                });
+                                dialogItself.close();
+                            }
+                        }],
+                        type: BootstrapDialog.TYPE_DEFAULT
+                    });
+                }
+            }])
+            .filter('format_c_status', function () {
+                return function (input) {
+                    switch (input) {
+                        case 1:
+                            return '(已关注)'
+                            break;
+                        case 2:
+                            return '(已禁用)'
+                            break;
+                        case 3:
+                            return '(未关注)'
+                            break;
+                    }
+                }
+            });
+</script>
+

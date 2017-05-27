@@ -1,0 +1,179 @@
+<% include ../common/header.ejs %>
+
+<div class="content">
+    <div class="sidle-left">
+        <% include ../common/menu.ejs %>
+    </div>
+    <div class="sidle-right">
+        <div class="title">
+            <h4>新建工厂</h4>
+        </div>
+        <form id="loginForm" class="new-form" style="width: 500px;margin-left: 10px;">
+            <div class="type-input">
+                <div class="form-group">
+                    <label for="template_no">公司编号:</label>
+                    <input type="text" class="form-control" id="userno" name="userno"
+                           placeholder="公司编号">
+                </div>
+                <div class="form-group">
+                    <label for="template_content">公司名称:</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           placeholder="公司名称">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">地址:</label>
+                    <input type="text" class="form-control" id="mobile" name="mobile"
+                           placeholder="地址">
+                           <a href="http://www.gpsspg.com/maps.htm" target="blank">经纬度查询</a>
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">经度:</label>
+                    <input type="text" class="form-control" id="email" name="email"
+                           placeholder="经度">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">维度:</label>
+                    <input type="text" class="form-control" id="email" name="email"
+                           placeholder="维度">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">时区:</label>
+                    <input type="text" class="form-control" id="timezone" name="timezone"
+                           placeholder="时区">
+                           <a href="javascript:void(0);" class="gettimezone">获取时区</a>
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">联系方式:</label>
+                    <input type="text" class="form-control" id="email" name="email"
+                           placeholder="联系方式">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">联系人:</label>
+                    <input type="text" class="form-control" id="email" name="email"
+                           placeholder="联系人">
+                </div>
+                <div class="form-group">
+                    <label for="template_desc">描述:</label>
+                    <textarea rows="3" class="form-control" name="template_desc" id="template_desc"
+                              placeholder="描述"></textarea>
+                </div>
+                <div class="form-group last" style="margin-top: 30px;">
+                    <button type="submit" class="btn btn-ant">保存</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<% include ../common/footer.ejs %>
+<script type="text/javascript" src="/jquery-validation-1.15.0/dist/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.new-form').validate({
+            errorElement: 'span',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            rules: {
+                userno: {
+                    required: true,
+                    remote: {
+                        type: "post",
+                        url: "/member/checkno",
+                        data: {
+                            userno: function () {
+                                return $("#userno").val();
+                            }
+                        },
+                        dataType: "json",
+                        dataFilter: function (data, type) {
+                            data = JSON.parse(data);
+                            if (data.status == '0000')
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                name: {
+                    required: true
+                },
+                mobile: {
+                    required: true
+                },
+                email: {
+                    required: true
+                }
+            },
+            messages: {
+                userno: {
+                    required: "人员编号不能为空!",
+                    remote: '模板编号已经存在!'
+                },
+                name: {
+                    required: "姓名不能为空!"
+                },
+                mobile: {
+                    required: "手机号不能为空!",
+                },
+                email: {
+                    required: "邮箱不能为空!"
+                }
+            },
+
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+
+            errorPlacement: function (error, element) {
+                element.parent('div').append(error);
+            },
+
+            submitHandler: function (form) {
+                //form.submit();
+                $.post('/member/save', {
+                    userno: $('#userno').val(),
+                    name: $('#name').val(),
+                    mobile: $('#mobile').val(),
+                    email: $('#email').val()
+                }, function (result) {
+                    if (result.status == '0000') {
+                        location.href = '/member';
+                    }
+                    else {
+                        BootstrapDialog.show({
+                            title: '提示',
+                            message: '<i class="icon-model anticon anticon-cross-circle"></i>' +
+                            '<span class="ant-confirm-title">' + result.message + '</span>',
+                            type: BootstrapDialog.TYPE_DEFAULT,
+                            onshow: function (dialogRef) {
+                                setTimeout(function () {
+                                    dialogRef.close();
+                                }, 2000);
+                            }
+                        });
+                    }
+                })
+            }
+        });
+
+        $('.gettimezone').on('click',function(){
+            $.get('http://api.map.baidu.com/timezone/v1?coord_type=wgs84ll&location=31,121&timestamp=1473130354&ak=WpN2jsYSU9G1G0ytnRG134eVFUUKc02A',function(data){
+                console.log(data);
+            })
+        })
+
+//        $('.form-horizontal input').keypress(function (e) {
+//            if (e.which == 13) {
+//                if ($('.form-horizontal').validate().form()) {
+//                    $('.form-horizontal').submit();
+//                }
+//                return false;
+//            }
+//        });
+    });
+</script>

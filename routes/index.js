@@ -89,6 +89,7 @@ module.exports = function (app) {
     /** start:大屏看板 */
     app.get('/bigScreen', practice.checkSession, bigScreenCtrl.index);
     app.get('/bigScreen/new', practice.checkSession, bigScreenCtrl.new);
+    app.post('/bigScreen/getdata', practice.checkSession, bigScreenCtrl.getdata);
     app.get('/bigScreen/save', practice.checkSession, bigScreenCtrl.save);
     /** end:大屏看板 */
 

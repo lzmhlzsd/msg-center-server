@@ -302,8 +302,8 @@ exports.getTodayData = function (req, res) {
                     },
                     desc: ""
                 }
-                utool.sqlExect('SELECT * FROM t_notice_total where c_date = ?',
-                    [sqlInfo1.params.startdate], sqlInfo1, function (err, result1) {
+                utool.sqlExect('SELECT * FROM t_notice_total where c_date = ? and c_appkey = ?',
+                    [sqlInfo1.params.startdate,req.session['user'].appkey], sqlInfo1, function (err, result1) {
                         if (err) {
                             logger.info('查询今日统计数据：' + JSON.stringify(err));
                             res.send({
